@@ -294,6 +294,17 @@
         }
     }
 
+    // Hàm phát âm tiếng Nhật
+    function speakJapanese(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Hủy giọng đọc cũ nếu đang đọc dở
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ja-JP'; // Cài đặt ngôn ngữ là tiếng Nhật
+            utterance.rate = 0.85; // Tốc độ đọc
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
     function showAnswer() {
         isShowingAnswer = true;
         const currentVN = questions[currentIndex];
@@ -302,6 +313,9 @@
         const answerElement = document.getElementById('word-jp');
         answerElement.innerText = correctJP;
         answerElement.style.display = 'block';
+        
+        // Gọi hàm đọc tiếng Nhật khi hiện đáp án
+        speakJapanese(correctJP);
         
         const actionBtn = document.getElementById('action-btn');
         
