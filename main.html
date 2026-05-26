@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khảo Từ Vựng Tiếng Nhật</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --primary: #4a5568;
+            --accent: #e53e3e;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            text-align: center;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .progress {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .word-vn {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 20px 0;
+            min-height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #1a202c;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            text-align: center;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .input-box:focus {
+            border-color: var(--primary);
+        }
+
+        .answer-box {
+            margin: 25px 0;
+            min-height: 80px;
+        }
+
+        .word-jp {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #2d3748;
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="progress" id="progress">Vòng 1 | Câu 0/0</div>
+        
+        <div class="word-vn" id="word-vn">Đang tải...</div>
+        
+        <input type="text" class="input-box" id="user-input" placeholder="Nhập từ nháp tại đây (hoặc để trống)..." autocomplete="off">
+        
+        <div class="answer-box">
+            <div class="word-jp" id="word-jp" style="display: none;"></div>
+        </div>
+        
+        <button class="btn" id="action-btn" onclick="handleAction()">Xem đáp án (Enter)</button>
+        
+        <div class="hint">Mẹo: Bạn có thể nhấn phím <b>Enter</b> trên bàn phím để tương tác nhanh.</div>
+    </div>
+</div>
+
+<script>
+    // Toàn bộ từ vựng đã được trích xuất từ tất cả các ảnh và sửa lỗi chính tả
+    const vocab = {
+        // --- CÂU CHÀO HỎI & GIAO TIẾP ---
+        "Chào buổi sáng": "おはよう ございます",
+        "Chào buổi trưa": "こんにちは",
+        "Chào buổi tối": "こんばんは",
+        "Tạm biệt bạn nhé": "さようなら",
+        "Chúc bạn ngủ ngon": "おやすみなさい",
+        "Xin chúc mừng bạn": "おめでとう ございます",
+        "Xin cảm ơn bạn": "ありがとう ございます",
+        "Bạn khỏe không?": "おげんきですか",
+        "Vâng, tôi khỏe": "はい、げんきです",
+        "Hân hạnh được gặp bạn": "はじめまして",
+        "Rất mong được bạn giúp đỡ": "よろしく おねがいします",
+        
+        // --- ĐẠI TỪ & NGƯỜI ---
+        "Tôi": "わたし",
+        "Chúng tôi": "わたしたち",
+        "Bạn, anh, chị (ngôi thứ 2)": "あなた",
+        "Người": "ひと",
+        "Người này": "この ひと",
+        "Người kia": "あの ひと",
+        "Vị": "かた",
+        "Vị này": "この かた",
+        "Vị kia": "あの かた",
+        "Bạn~, anh~, chị~, ông~, bà~": "～さん",
+        "Ai?": "だれ？",
+        "Ai, vị nào?": "どなた？",
+        
+        // --- NGHỀ NGHIỆP & CHỨC VỤ ---
+        "Thầy, Cô": "せんせい",
+        "Học sinh, học viên": "がくせい",
+        "Sinh viên": "だいがくせい",
+        "Giáo viên": "きょうし",
+        "Nhân viên cửa hàng": "てんいん",
+        "Nhân viên công ty": "かいしゃいん",
+        "Nhân viên ngân hàng": "ぎんこういん",
+        "Bác sĩ": "いしゃ",
+        "Nội trợ": "しゅふ",
+        "Ca sĩ": "かしゅ",
+        "Tài xế": "うんてんしゅ",
+        "Hiệu trưởng": "こうちょう",
+        "Giám đốc": "しゃちょう",
+        "Cửa hàng trưởng": "てんちょう",
+        "Cán bộ nhà nước": "こうむいん",
+        "Cảnh sát": "けいさつかん",
+        "Đầu bếp": "ちょうりし",
+        "Luật sư": "べんごし",
+        "Y tá": "かんごし",
+        "Điều dưỡng": "かいごし",
+        "Kỹ sư": "えんじにあ",
+        
+        // --- QUỐC GIA & QUỐC TỊCH ---
+        "Việt Nam": "べとなむ",
+        "Nhật Bản": "にほん",
+        "Hàn Quốc": "かんこく",
+        "Trung Quốc": "ちゅうごく",
+        "Đài Loan": "たいわん",
+        "Thái Lan": "たい",
+        "Ấn Độ": "いんど",
+        "Anh": "いぎりす",
+        "Pháp": "ふらんす",
+        "Mỹ": "あめりか",
+        "Đức": "どいつ",
+        "Ý": "いたりあ",
+        "Người ~": "～じん",
+        "Người Việt Nam": "べとなむじん",
+        "Người Nhật Bản": "にほんじん",
+        "Quốc tịch": "こくせき",
+        "(Anh / Chị) quốc tịch gì?": "ごこくせきは？",
+
+        // --- TỪ VỰNG KHÁC ---
+        "Công việc": "しごと",
+        "(Anh / Chị) làm công việc gì?": "おしごとは？",
+        "Vâng": "はい",
+        "Không": "いいえ",
+        "Tên": "なまえ",
+        "(Anh / Chị) tên gì?": "おなまえは？",
+
+        // --- CÂU MỆNH LỆNH TRÊN LỚP (VIẾT TAY) ---
+        "Một lần nữa": "もういちど",
+        "Xin vui lòng lặp lại lần nữa": "もういちど おねがいします",
+        "Hãy đứng lên": "たってください",
+        "Hãy ngồi xuống": "すわってください",
+        "Hãy nói": "いってください",
+        "Hãy viết": "かいてください",
+        "Hãy nghe": "きいてください",
+        "Hãy đọc": "よんでください",
+        "Hãy nhìn": "みてください",
+        "Hãy nhớ": "おぼえてください",
+        "Chúng ta bắt đầu nào": "はじめましょう",
+        "Chúng ta nghỉ giải lao nào": "やすみましょう",
+        "Chúng ta kết thúc nào": "おわりましょう",
+        "Xin lỗi (khi làm phiền/gọi ai đó)": "すみません",
+        "Xin mời": "どうぞ"
+    };
+
+    let questions = Object.keys(vocab);
+    let currentIndex = 0;
+    let isShowingAnswer = false;
+    let roundNumber = 1;
+
+    // Hàm trộn mảng ngẫu nhiên (Fisher-Yates Shuffle)
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function initRound() {
+        shuffleArray(questions);
+        currentIndex = 0;
+        showQuestion();
+    }
+
+    function showQuestion() {
+        isShowingAnswer = false;
+        document.getElementById('progress').innerText = `Vòng ${roundNumber} | Câu ${currentIndex + 1}/${questions.length}`;
+        document.getElementById('word-vn').innerText = questions[currentIndex];
+        document.getElementById('word-jp').style.display = 'none';
+        document.getElementById('user-input').value = '';
+        document.getElementById('action-btn').innerText = 'Xem đáp án (Enter)';
+        document.getElementById('user-input').focus();
+    }
+
+    function showAnswer() {
+        isShowingAnswer = true;
+        const currentVN = questions[currentIndex];
+        const correctJP = vocab[currentVN];
+        
+        const answerElement = document.getElementById('word-jp');
+        answerElement.innerText = correctJP;
+        answerElement.style.display = 'block';
+        
+        document.getElementById('action-btn').innerText = 'Tiếp theo (Enter)';
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        if (currentIndex >= questions.length) {
+            alert(`🎉 Chúc mừng! Bạn đã hoàn thành xuất sắc tất cả ${questions.length} từ vựng ở Vòng ${roundNumber}! Hệ thống sẽ xáo trộn lại bài học mới.`);
+            roundNumber++;
+            initRound();
+        } else {
+            showQuestion();
+        }
+    }
+
+    function handleAction() {
+        if (!isShowingAnswer) {
+            showAnswer();
+        } else {
+            nextQuestion();
+        }
+    }
+
+    // Bắt sự kiện phím Enter
+    document.getElementById('user-input').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            handleAction();
+        }
+    });
+
+    // Tự động chạy khi mở trang web
+    window.onload = initRound;
+</script>
+
+</body>
+</html>
