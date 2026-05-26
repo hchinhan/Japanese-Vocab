@@ -72,10 +72,12 @@
 
         .answer-box {
             margin: 30px 0;
-            min-height: 90px;
+            min-height: 110px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            gap: 15px;
         }
 
         .word-jp {
@@ -83,6 +85,33 @@
             font-weight: 700;
             color: var(--accent);
             animation: fadeIn 0.2s ease-in-out;
+        }
+
+        /* Nút Loa phát âm */
+        .speak-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            pointer-events: auto;
+        }
+
+        .speak-btn:hover {
+            background-color: #edf2f7;
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .speak-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
         }
 
         /* Container chứa các nút */
@@ -102,7 +131,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.2s;
-            pointer-events: auto; /* Cho phép click trực tiếp vào nút */
+            pointer-events: auto;
         }
 
         /* Nút quay lại */
@@ -157,6 +186,11 @@
         
         <div class="answer-box">
             <div class="word-jp" id="word-jp" style="display: none;"></div>
+            <button class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)" title="Nghe phát âm">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                </svg>
+            </button>
         </div>
         
         <div class="button-group">
@@ -275,17 +309,15 @@
     function showQuestion() {
         isShowingAnswer = false;
         
-        // Cập nhật text UI
         document.getElementById('progress').innerText = `Vòng ${roundNumber} | Câu ${currentIndex + 1}/${questions.length}`;
         document.getElementById('word-vn').innerText = questions[currentIndex];
         document.getElementById('word-jp').style.display = 'none';
+        document.getElementById('speak-btn').style.display = 'none'; // Ẩn nút loa
         
-        // Trạng thái nút Hành động chính
         const actionBtn = document.getElementById('action-btn');
         actionBtn.innerText = 'Xem đáp án (Enter)';
         actionBtn.classList.remove('btn-finish');
 
-        // Trạng thái nút Quay lại (Ẩn ở câu đầu tiên)
         const prevBtn = document.getElementById('prev-btn');
         if (currentIndex === 0) {
             prevBtn.style.display = 'none';
@@ -294,15 +326,25 @@
         }
     }
 
-    // Hàm phát âm tiếng Nhật
+    // Hàm đọc API Tiếng Nhật
     function speakJapanese(text) {
         if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); // Hủy giọng đọc cũ nếu đang đọc dở
+            window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'ja-JP'; // Cài đặt ngôn ngữ là tiếng Nhật
-            utterance.rate = 0.85; // Tốc độ đọc
+            utterance.lang = 'ja-JP'; 
+            utterance.rate = 0.85; 
             window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Trình duyệt của bạn không hỗ trợ tính năng đọc giọng nói.");
         }
+    }
+
+    // Xử lý khi bấm nút Loa
+    function playAudio(event) {
+        if(event) event.stopPropagation(); // Ngăn việc lật sang thẻ tiếp theo
+        const currentVN = questions[currentIndex];
+        const correctJP = vocab[currentVN];
+        speakJapanese(correctJP);
     }
 
     function showAnswer() {
@@ -314,12 +356,11 @@
         answerElement.innerText = correctJP;
         answerElement.style.display = 'block';
         
-        // Gọi hàm đọc tiếng Nhật khi hiện đáp án
-        speakJapanese(correctJP);
+        // Hiện nút loa khi có đáp án
+        document.getElementById('speak-btn').style.display = 'flex';
         
         const actionBtn = document.getElementById('action-btn');
         
-        // Kiểm tra xem có phải câu cuối không để đổi giao diện nút
         if (currentIndex === questions.length - 1) {
             actionBtn.innerText = 'Kết thúc vòng';
             actionBtn.classList.add('btn-finish');
@@ -340,7 +381,6 @@
     }
 
     function prevQuestion(event) {
-        // Ngăn sự kiện click lan truyền ra thẻ card bên ngoài
         if(event) event.stopPropagation();
         
         if (currentIndex > 0) {
@@ -349,20 +389,17 @@
         }
     }
 
-    // Xử lý khi click vào nút hành động chính (để ngăn nổi bọt sự kiện)
     function handleActionClick(event) {
         if(event) event.stopPropagation();
         handleMainLogic();
     }
 
-    // Xử lý khi click vào bất cứ đâu trên thẻ Card
     function handleCardClick(event) {
-        // Tránh bị gọi 2 lần nếu click trúng vào các button đã có sự kiện riêng
-        if (event.target.tagName.toLowerCase() === 'button') return;
+        // Tránh gọi 2 lần nếu click trúng vào các button / icon loa
+        if (event.target.closest('button')) return;
         handleMainLogic();
     }
 
-    // Logic chính của việc lật thẻ / đi tiếp
     function handleMainLogic() {
         if (!isShowingAnswer) {
             showAnswer();
@@ -371,7 +408,6 @@
         }
     }
 
-    // Hỗ trợ điều hướng bằng bàn phím
     window.addEventListener('keydown', function(event) {
         if (event.key === 'Enter' || event.key === 'ArrowRight') {
             handleMainLogic();
