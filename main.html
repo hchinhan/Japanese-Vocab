@@ -24,7 +24,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            user-select: none; /* Ngăn bôi đen chữ khi bấm nhanh trên điện thoại */
+            user-select: none;
             -webkit-user-select: none;
         }
 
@@ -72,6 +72,9 @@
         .answer-box {
             margin: 30px 0;
             min-height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .word-jp {
@@ -92,7 +95,7 @@
             cursor: pointer;
             width: 100%;
             transition: background-color 0.2s;
-            pointer-events: none; /* Để sự kiện click ăn vào toàn bộ thẻ card */
+            pointer-events: none;
         }
 
         .card:hover .btn {
@@ -126,26 +129,23 @@
         
         <button class="btn" id="action-btn">Xem đáp án (Enter)</button>
         
-        <div class="hint">Mẹo: Bạn có thể nhấn phím <b>Enter</b> trên bàn phím hoặc <b>Chạm thẳng vào màn hình</b> để học tiếp.</div>
+        <div class="hint">Mẹo: Bạn có thể nhấn phím <b>Enter</b> hoặc <b>Chạm thẳng vào màn hình</b> để học tiếp.</div>
     </div>
 </div>
 
 <script>
     const vocab = {
-        // --- CÂU CHÀO HỎI & GIAO TIẾP ---
         "Chào buổi sáng": "おはよう ございます",
         "Chào buổi trưa": "こんにちは",
         "Chào buổi tối": "こんばんは",
         "Tạm biệt bạn nhé": "さようなら",
-        "Chúc bạn ngủ ngon": "おやすみなさい",
+        "Chúc bạn ngủ ngon": "おやすみ なさい",
         "Xin chúc mừng bạn": "おめでとう ございます",
         "Xin cảm ơn bạn": "ありがとう ございます",
-        "Bạn khỏe không?": "おげんきですか",
-        "Vâng, tôi khỏe": "はい、げんきです",
+        "Bạn khỏe không?": "おげんき ですか",
+        "Vâng, tôi khỏe": "はい、げんき です",
         "Hân hạnh được gặp bạn": "はじめまして",
         "Rất mong được bạn giúp đỡ": "よろしく おねがいします",
-        
-        // --- ĐẠI TỪ & NGƯỜI ---
         "Tôi": "わたし",
         "Chúng tôi": "わたしたち",
         "Bạn, anh, chị (ngôi thứ 2)": "あなた",
@@ -156,10 +156,6 @@
         "Vị này": "この かた",
         "Vị kia": "あの かた",
         "Bạn~, anh~, chị~, ông~, bà~": "～さん",
-        "Ai?": "だれ？",
-        "Ai, vị nào?": "どなた？",
-        
-        // --- NGHỀ NGHIỆP & CHỨC VỤ ---
         "Thầy, Cô": "せんせい",
         "Học sinh, học viên": "がくせい",
         "Sinh viên": "だいがくせい",
@@ -171,6 +167,24 @@
         "Nội trợ": "しゅふ",
         "Ca sĩ": "かしゅ",
         "Tài xế": "うんてんしゅ",
+        "Công việc": "しごと",
+        "(Anh / Chị) làm công việc gì?": "おしごとは？",
+        "Vâng": "はい",
+        "Không": "いいえ",
+        "Ai?": "だれ？",
+        "Ai, vị nào?": "どなた？",
+        "Tên": "なまえ",
+        "(Anh / Chị) tên gì?": "おなまえha？",
+        "Việt Nam": "べとなむ",
+        "Nhật Bản": "にほん",
+        "Hàn Quốc": "かんこく",
+        "Trung Quốc": "ちゅうごく",
+        "Đài Loan": "たいわん",
+        "Người ~": "～じん",
+        "Người Việt Nam": "べとなむじん",
+        "Người Nhật Bản": "にほんじん",
+        "Quốc tịch": "こくせき",
+        "(Anh / Chị) quốc tịch gì?": "ごこくせきは？",
         "Hiệu trưởng": "こうちょう",
         "Giám đốc": "しゃちょう",
         "Cửa hàng trưởng": "てんちょう",
@@ -180,14 +194,7 @@
         "Luật sư": "べんごし",
         "Y tá": "かんごし",
         "Điều dưỡng": "かいごし",
-        "Kỹ sư": "えんじにあ",
-        
-        // --- QUỐC GIA & QUỐC TỊCH ---
-        "Việt Nam": "べとなむ",
-        "Nhật Bản": "にほん",
-        "Hàn Quốc": "かんこく",
-        "Trung Quốc": "ちゅうごく",
-        "Đài Loan": "たいわん",
+        "Kỹ sư": "えんじnia",
         "Thái Lan": "たい",
         "Ấn Độ": "いんど",
         "Anh": "いぎりす",
@@ -195,21 +202,6 @@
         "Mỹ": "あめりか",
         "Đức": "どいつ",
         "Ý": "いたりあ",
-        "Người ~": "～じん",
-        "Người Việt Nam": "べとなむじん",
-        "Người Nhật Bản": "にほんじん",
-        "Quốc tịch": "こくせき",
-        "(Anh / Chị) quốc tịch gì?": "ごこくせきは？",
-
-        // --- TỪ VỰNG KHÁC ---
-        "Công việc": "しごと",
-        "(Anh / Chị) làm công việc gì?": "おしごとは？",
-        "Vâng": "はい",
-        "Không": "いいえ",
-        "Tên": "なまえ",
-        "(Anh / Chị) tên gì?": "おなまえは？",
-
-        // --- CÂU MỆNH LỆNH TRÊN LỚP (VIẾT TAY) ---
         "Một lần nữa": "もういちど",
         "Xin vui lòng lặp lại lần nữa": "もういちど おねがいします",
         "Hãy đứng lên": "たってください",
@@ -284,7 +276,6 @@
         }
     }
 
-    // Nhấn Enter ở bất kỳ vị trí nào trên trang web đều nhận lệnh
     window.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             handleAction();
