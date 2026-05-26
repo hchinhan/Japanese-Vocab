@@ -24,6 +24,8 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            user-select: none; /* Ngăn bôi đen chữ khi bấm nhanh trên điện thoại */
+            -webkit-user-select: none;
         }
 
         .container {
@@ -37,79 +39,71 @@
             background: var(--card-bg);
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            padding: 30px;
+            padding: 40px 30px;
             text-align: center;
             border: 1px solid var(--border);
-            position: relative;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+        
+        .card:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
         }
 
         .progress {
             font-size: 0.9rem;
             color: var(--text-muted);
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .word-vn {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            margin: 20px 0;
-            min-height: 60px;
+            margin: 30px 0;
+            min-height: 70px;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #1a202c;
         }
 
-        .input-box {
-            width: 100%;
-            padding: 12px;
-            font-size: 1.1rem;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            outline: none;
-            text-align: center;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-
-        .input-box:focus {
-            border-color: var(--primary);
-        }
-
         .answer-box {
-            margin: 25px 0;
-            min-height: 80px;
+            margin: 30px 0;
+            min-height: 90px;
         }
 
         .word-jp {
-            font-size: 2rem;
+            font-size: 2.4rem;
             font-weight: 700;
             color: var(--accent);
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.2s ease-in-out;
         }
 
         .btn {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 12px 30px;
-            font-size: 1rem;
+            padding: 14px 30px;
+            font-size: 1.1rem;
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
             width: 100%;
             transition: background-color 0.2s;
+            pointer-events: none; /* Để sự kiện click ăn vào toàn bộ thẻ card */
         }
 
-        .btn:hover {
+        .card:hover .btn {
             background-color: #2d3748;
         }
 
         .hint {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            margin-top: 15px;
+            margin-top: 25px;
+            line-height: 1.4;
         }
 
         @keyframes fadeIn {
@@ -121,17 +115,22 @@
 <body>
 
 <div class="container">
-    <div class="card">
+    <div class="card" onclick="handleAction()">
         <div class="progress" id="progress">Vòng 1 | Câu 0/0</div>
         
-        <button class="btn" id="action-btn" onclick="handleAction()">Xem đáp án (Enter)</button>
+        <div class="word-vn" id="word-vn">Đang tải...</div>
         
-        <div class="hint">Mẹo: Bạn có thể nhấn phím <b>Enter</b> trên bàn phím để tương tác nhanh.</div>
+        <div class="answer-box">
+            <div class="word-jp" id="word-jp" style="display: none;"></div>
+        </div>
+        
+        <button class="btn" id="action-btn">Xem đáp án (Enter)</button>
+        
+        <div class="hint">Mẹo: Bạn có thể nhấn phím <b>Enter</b> trên bàn phím hoặc <b>Chạm thẳng vào màn hình</b> để học tiếp.</div>
     </div>
 </div>
 
 <script>
-    // Toàn bộ từ vựng đã được trích xuất từ tất cả các ảnh và sửa lỗi chính tả
     const vocab = {
         // --- CÂU CHÀO HỎI & GIAO TIẾP ---
         "Chào buổi sáng": "おはよう ございます",
@@ -233,7 +232,6 @@
     let isShowingAnswer = false;
     let roundNumber = 1;
 
-    // Hàm trộn mảng ngẫu nhiên (Fisher-Yates Shuffle)
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -252,9 +250,7 @@
         document.getElementById('progress').innerText = `Vòng ${roundNumber} | Câu ${currentIndex + 1}/${questions.length}`;
         document.getElementById('word-vn').innerText = questions[currentIndex];
         document.getElementById('word-jp').style.display = 'none';
-        document.getElementById('user-input').value = '';
         document.getElementById('action-btn').innerText = 'Xem đáp án (Enter)';
-        document.getElementById('user-input').focus();
     }
 
     function showAnswer() {
@@ -272,7 +268,7 @@
     function nextQuestion() {
         currentIndex++;
         if (currentIndex >= questions.length) {
-            alert(`🎉 Chúc mừng! Bạn đã hoàn thành xuất sắc tất cả ${questions.length} từ vựng ở Vòng ${roundNumber}! Hệ thống sẽ xáo trộn lại bài học mới.`);
+            alert(`🎉 Chúc mừng! Bạn đã hoàn thành xuất sắc tất cả ${questions.length} từ vựng ở Vòng ${roundNumber}! Hệ thống sẽ tự động xáo trộn sang vòng tiếp theo.`);
             roundNumber++;
             initRound();
         } else {
@@ -288,14 +284,13 @@
         }
     }
 
-    // Bắt sự kiện phím Enter
-    document.getElementById('user-input').addEventListener('keydown', function(event) {
+    // Nhấn Enter ở bất kỳ vị trí nào trên trang web đều nhận lệnh
+    window.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             handleAction();
         }
     });
 
-    // Tự động chạy khi mở trang web
     window.onload = initRound;
 </script>
 
