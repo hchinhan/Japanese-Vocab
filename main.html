@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Khảo Từ Vựng Tiếng Nhật</title>
-    <!-- GỌI CÁC FILE DATA VÀO ĐÂY -->
     <script src="chuong1.js"></script>
     <script src="chuong2.js"></script>
-    <script src="tuoi.js"></script>
+    <script src="chuong3.js"></script>
+    <script src="dem.js"></script>
     
     <style>
         :root {
@@ -58,16 +58,26 @@
             text-align: center;
         }
 
-        /* Tùy chỉnh danh sách chọn chương */
-        .chapter-selection {
+        .section-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: block;
+            text-align: left;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 5px;
+        }
+
+        /* Tùy chỉnh danh sách chọn */
+        .option-group {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 25px;
             text-align: left;
         }
 
-        .checkbox-label {
+        .custom-label {
             display: flex;
             align-items: center;
             padding: 12px 15px;
@@ -75,17 +85,17 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 500;
             transition: all 0.2s;
         }
 
-        .checkbox-label:hover {
+        .custom-label:hover {
             border-color: var(--primary);
             background-color: #edf2f7;
         }
 
-        .checkbox-label input[type="checkbox"] {
+        .custom-label input {
             margin-right: 12px;
             width: 18px;
             height: 18px;
@@ -118,7 +128,7 @@
             border: 1px solid var(--border);
             cursor: pointer;
             transition: transform 0.1s, box-shadow 0.2s;
-            display: none; /* Ẩn thẻ card ban đầu */
+            display: none; 
         }
         
         .card:active { transform: scale(0.98); }
@@ -157,6 +167,24 @@
             align-items: center;
             color: #1a202c;
         }
+
+        /* Nút loa bự cho chế độ nghe */
+        .listen-prompt {
+            margin: 30px 0;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #edf2f7;
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .listen-prompt:hover { background: #e2e8f0; transform: scale(1.03); }
+        .listen-prompt .big-icon { font-size: 3.5rem; margin-bottom: 10px; }
+        .listen-prompt .small-text { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
 
         .answer-box {
             margin: 30px 0;
@@ -232,30 +260,44 @@
 <body>
 
 <div class="container">
-    <!-- MENU CHỌN CHƯƠNG -->
     <div class="menu-container" id="menu">
-        <h2 class="menu-title">📚 Chọn bài ôn tập</h2>
+        <h2 class="menu-title">📚 Cài đặt ôn tập</h2>
         
-        <div class="chapter-selection">
-            <!-- Sau này có thêm data thì cứ copy thêm thẻ <label> này xuống dưới -->
-            <label class="checkbox-label">
-                <input type="checkbox" id="chk-chuong1"> 
-                Chương 1: 
+        <span class="section-title">1. Chế độ học</span>
+        <div class="option-group">
+            <label class="custom-label">
+                <input type="radio" name="studyMode" value="flashcard" checked> 
+                👁️ FlashCard Tiếng Việt ➔ Tiếng Nhật
             </label>
-            <label class="checkbox-label">
+            <label class="custom-label">
+                <input type="radio" name="studyMode" value="listening"> 
+                🎧 Nghe Tiếng Nhật ➔ Chính tả
+            </label>
+        </div>
+
+        <span class="section-title">2. Chọn bài học</span>
+        <div class="option-group">
+            <label class="custom-label">
+                <input type="checkbox" id="chk-chuong1" checked> 
+                Chương 1: Chào hỏi & Nghề nghiệp
+            </label>
+            <label class="custom-label">
                 <input type="checkbox" id="chk-chuong2"> 
-                Chương 2:
+                Chương 2: Đồ vật & Sở hữu
             </label>
-            <label class="checkbox-label">
-                <input type="checkbox" id="chk-tuoi"> 
-                Tuổi tác:
+            <label class="custom-label">
+                <input type="checkbox" id="chk-chuong3"> 
+                Chương 3: Nơi chốn & Phương hướng
+            </label>
+            <label class="custom-label">
+                <input type="checkbox" id="chk-dem"> 
+                Đếm các loại đối tượng
             </label>
         </div>
 
         <button class="start-btn" onclick="startReview()">Bắt đầu ôn tập</button>
     </div>
 
-    <!-- KHU VỰC FLASHCARD -->
     <div class="card" id="flashcard" onclick="handleCardClick(event)">
         <div class="header-bar">
             <button class="back-menu-btn" onclick="returnToMenu(event)">⬅ Menu</button>
@@ -263,6 +305,11 @@
         </div>
         
         <div class="word-vn" id="word-vn">Đang tải...</div>
+
+        <div class="listen-prompt" id="listen-prompt" style="display: none;" onclick="playAudio(event)">
+            <div class="big-icon">🔊</div>
+            <div class="small-text">Bấm để nghe lại</div>
+        </div>
         
         <div class="answer-box">
             <div class="word-jp" id="word-jp" style="display: none;"></div>
@@ -285,13 +332,17 @@
     let currentIndex = 0;
     let isShowingAnswer = false;
     let currentChapterName = "";
+    let currentMode = "flashcard"; // Mặc định là flashcard
 
     // Gộp data và bắt đầu
     function startReview() {
         currentVocab = {};
         let selectedNames = [];
 
-        // Kiểm tra xem checkbox nào được tick thì gộp data vào
+        // Lấy chế độ học từ Radio button
+        currentMode = document.querySelector('input[name="studyMode"]:checked').value;
+
+        // Gộp data từ các checkbox
         if (document.getElementById('chk-chuong1').checked && typeof vocabChuong1 !== 'undefined') {
             Object.assign(currentVocab, vocabChuong1);
             selectedNames.push("Ch.1");
@@ -300,18 +351,22 @@
             Object.assign(currentVocab, vocabChuong2);
             selectedNames.push("Ch.2");
         }
-
-        if (document.getElementById('chk-tuoi').checked && typeof generateTuoiVocab === 'function') {
-            Object.assign(currentVocab, generateTuoiVocab(10));
-            selectedNames.push("Tuổi");
+        if (document.getElementById('chk-chuong3').checked && typeof vocabChuong3 !== 'undefined') {
+            Object.assign(currentVocab, vocabChuong3);
+            selectedNames.push("Ch.3");
         }
-        // Nếu người dùng không tick cái nào
+        if (document.getElementById('chk-dem').checked && typeof generateMixedCounters === 'function') {
+            // Số 5 ở đây có nghĩa là: Lấy 5 tuổi, 5 tầng, 5 thứ... trộn chung vào nhau
+            Object.assign(currentVocab, generateMixedCounters(5)); 
+            selectedNames.push("Đếm số");
+        }
+        
         if (selectedNames.length === 0) {
             alert("Vui lòng chọn ít nhất 1 chương để ôn tập!");
             return;
         }
 
-        currentChapterName = selectedNames.join(" + "); // Ví dụ: Ch.1 + Ch.2
+        currentChapterName = selectedNames.join(" + ");
         questions = Object.keys(currentVocab);
         
         document.getElementById('menu').style.display = 'none';
@@ -320,7 +375,6 @@
         initRound();
     }
 
-    // Quay lại Menu
     function returnToMenu(event) {
         if(event) event.stopPropagation();
         document.getElementById('flashcard').style.display = 'none';
@@ -344,9 +398,21 @@
     function showQuestion() {
         isShowingAnswer = false;
         
-        // Cập nhật giao diện đếm câu, bỏ đi phần đếm Vòng
         document.getElementById('progress').innerText = `${currentChapterName} | Câu ${currentIndex + 1}/${questions.length}`;
-        document.getElementById('word-vn').innerText = questions[currentIndex];
+        
+        // Cài đặt giao diện theo chế độ
+        if (currentMode === 'flashcard') {
+            document.getElementById('word-vn').innerText = questions[currentIndex];
+            document.getElementById('word-vn').style.display = 'flex';
+            document.getElementById('listen-prompt').style.display = 'none';
+        } else {
+            // Chế độ nghe: Ẩn chữ VN, hiện nút bấm nghe to
+            document.getElementById('word-vn').style.display = 'none';
+            document.getElementById('listen-prompt').style.display = 'flex';
+            // Tự động phát âm thanh với độ trễ nhẹ để trình duyệt không chặn
+            setTimeout(() => playAudio(null), 150); 
+        }
+
         document.getElementById('word-jp').style.display = 'none';
         document.getElementById('speak-btn').style.display = 'none'; 
         
@@ -384,14 +450,25 @@
         const currentVN = questions[currentIndex];
         const correctJP = currentVocab[currentVN];
         
+        // Khi hiện đáp án, luôn hiện cả VN và JP dù đang ở chế độ nào
+        const vnElement = document.getElementById('word-vn');
+        vnElement.innerText = currentVN;
+        vnElement.style.display = 'flex';
+        
+        document.getElementById('listen-prompt').style.display = 'none'; // Ẩn cái loa bự đi
+        
         const answerElement = document.getElementById('word-jp');
         answerElement.innerText = correctJP;
         answerElement.style.display = 'block';
         
-        document.getElementById('speak-btn').style.display = 'flex';
+        document.getElementById('speak-btn').style.display = 'flex'; // Hiện loa nhỏ
         
+        // Nếu ở chế độ Flashcard thì đọc âm thanh (vì chế độ nghe đã đọc từ trước rồi)
+        if (currentMode === 'flashcard') {
+            playAudio(null);
+        }
+
         const actionBtn = document.getElementById('action-btn');
-        
         if (currentIndex === questions.length - 1) {
             actionBtn.innerText = 'Kết thúc';
             actionBtn.classList.add('btn-finish');
@@ -400,18 +477,18 @@
         }
     }
 
-    // Logic kết thúc
     function nextQuestion() {
         currentIndex++;
         if (currentIndex >= questions.length) {
-            // Hiện hộp thoại hỏi người dùng
             let userChoice = confirm(`🎉 Chúc mừng! Bạn đã hoàn thành bộ ${questions.length} từ vựng!\n\nBạn có muốn ÔN LẠI ngay bây giờ không?\n- Chọn "OK" để bắt đầu lại.\n- Chọn "Cancel" (Hủy) để về Menu.`);
             
             if (userChoice) {
-                // Nhấn OK -> Xáo trộn và bắt đầu lại từ đầu bộ hiện tại
-                initRound();
+                if (document.getElementById('chk-tuoi').checked) {
+                    startReview();
+                } else {
+                    initRound();
+                }
             } else {
-                // Nhấn Cancel -> Về giao diện chọn bài
                 returnToMenu();
             }
         } else {
@@ -421,7 +498,6 @@
 
     function prevQuestion(event) {
         if(event) event.stopPropagation();
-        
         if (currentIndex > 0) {
             currentIndex--;
             showQuestion();
@@ -434,7 +510,8 @@
     }
 
     function handleCardClick(event) {
-        if (event.target.closest('button') || event.target.closest('input')) return;
+        // Cập nhật: tránh gọi khi click vào class .listen-prompt
+        if (event.target.closest('button') || event.target.closest('input') || event.target.closest('.listen-prompt')) return;
         handleMainLogic();
     }
 
