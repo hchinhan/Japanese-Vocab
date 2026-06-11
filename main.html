@@ -19,6 +19,7 @@
             --accent: #e53e3e;
             --border: #e2e8f0;
             --success: #38a169;
+            --star: #fbbf24;
         }
 
         body {
@@ -68,7 +69,6 @@
             padding-bottom: 5px;
         }
 
-        /* Tùy chỉnh danh sách chọn */
         .option-group {
             display: flex;
             flex-direction: column;
@@ -113,6 +113,7 @@
             cursor: pointer;
             width: 100%;
             transition: background-color 0.2s, transform 0.1s;
+            margin-bottom: 10px;
         }
 
         .start-btn:hover { background-color: #2d3748; }
@@ -157,6 +158,19 @@
             font-weight: 600;
         }
 
+        /* Nút đánh dấu sao */
+        .star-btn {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #cbd5e0; 
+            transition: all 0.2s;
+            padding: 0 5px;
+        }
+        .star-btn:hover { transform: scale(1.1); }
+        .star-btn.marked { color: var(--accent); }
+
         .word-vn {
             font-size: 2.2rem;
             font-weight: 700;
@@ -168,7 +182,6 @@
             color: #1a202c;
         }
 
-        /* Nút loa bự cho chế độ nghe */
         .listen-prompt {
             margin: 30px 0;
             min-height: 70px;
@@ -251,6 +264,14 @@
             line-height: 1.4;
         }
 
+        /* Giao diện kết thúc */
+        #end-screen {
+            padding: 20px 0;
+            display: none;
+        }
+        #end-screen h2 { font-size: 2rem; color: var(--success); margin-bottom: 10px; }
+        #end-screen p { color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem; }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-5px); }
             to { opacity: 1; transform: translateY(0); }
@@ -299,50 +320,60 @@
     </div>
 
     <div class="card" id="flashcard" onclick="handleCardClick(event)">
-        <div class="header-bar">
+        <div class="header-bar" id="flashcard-header">
             <button class="back-menu-btn" onclick="returnToMenu(event)">⬅ Menu</button>
             <div class="progress" id="progress">Câu 0/0</div>
+            <button id="star-btn" class="star-btn" onclick="toggleMark(event)" title="Đánh dấu câu này">☆</button>
         </div>
         
-        <div class="word-vn" id="word-vn">Đang tải...</div>
+        <div id="flashcard-content">
+            <div class="word-vn" id="word-vn">Đang tải...</div>
 
-        <div class="listen-prompt" id="listen-prompt" style="display: none;" onclick="playAudio(event)">
-            <div class="big-icon">🔊</div>
-            <div class="small-text">Bấm để nghe lại</div>
+            <div class="listen-prompt" id="listen-prompt" style="display: none;" onclick="playAudio(event)">
+                <div class="big-icon">🔊</div>
+                <div class="small-text">Bấm để nghe lại</div>
+            </div>
+            
+            <div class="answer-box">
+                <div class="word-jp" id="word-jp" style="display: none;"></div>
+                <button class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)" title="Nghe phát âm">🔊</button>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-prev" id="prev-btn" onclick="prevQuestion(event)">Quay lại</button>
+                <button class="btn btn-main" id="action-btn" onclick="handleActionClick(event)">Xem đáp án</button>
+            </div>
+            
+            <div class="hint">Mẹo: Nhấn <b>Enter / Mũi tên phải</b> hoặc <b>Chạm màn hình</b> để đi tiếp. <br>Nhấn <b>Mũi tên trái</b> để quay lại.</div>
         </div>
-        
-        <div class="answer-box">
-            <div class="word-jp" id="word-jp" style="display: none;"></div>
-            <button class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)" title="Nghe phát âm">🔊</button>
+
+        <div id="end-screen">
+            <h2>🎉 Hoàn thành!</h2>
+            <p>Bạn đã xuất sắc đi hết bộ từ vựng lần này.</p>
+            <div class="option-group" style="align-items: center; margin-bottom: 0;">
+                <button class="start-btn" onclick="restartAll(event)">🔄 Ôn lại bộ này từ đầu</button>
+                <button class="start-btn" id="btn-review-marked" onclick="reviewMarked(event)" style="background-color: var(--accent); display: none;">⭐ Ôn lại câu đã đánh dấu (0)</button>
+                <button class="start-btn" onclick="returnToMenu(event)" style="background-color: var(--text-muted);">🏠 Trở về Menu chọn bài</button>
+            </div>
         </div>
-        
-        <div class="button-group">
-            <button class="btn btn-prev" id="prev-btn" onclick="prevQuestion(event)">Quay lại</button>
-            <button class="btn btn-main" id="action-btn" onclick="handleActionClick(event)">Xem đáp án</button>
-        </div>
-        
-        <div class="hint">Mẹo: Nhấn <b>Enter / Mũi tên phải</b> hoặc <b>Chạm màn hình</b> để đi tiếp. <br>Nhấn <b>Mũi tên trái</b> để quay lại.</div>
     </div>
 </div>
 
 <script>
-    // Các biến toàn cục
     let currentVocab = {}; 
     let questions = [];
     let currentIndex = 0;
     let isShowingAnswer = false;
     let currentChapterName = "";
-    let currentMode = "flashcard"; // Mặc định là flashcard
+    let currentMode = "flashcard"; 
+    let markedQuestions = new Set(); // Bộ nhớ lưu các câu đã đánh dấu
 
-    // Gộp data và bắt đầu
     function startReview() {
         currentVocab = {};
         let selectedNames = [];
 
-        // Lấy chế độ học từ Radio button
         currentMode = document.querySelector('input[name="studyMode"]:checked').value;
 
-        // Gộp data từ các checkbox
         if (document.getElementById('chk-chuong1').checked && typeof vocabChuong1 !== 'undefined') {
             Object.assign(currentVocab, vocabChuong1);
             selectedNames.push("Ch.1");
@@ -356,7 +387,6 @@
             selectedNames.push("Ch.3");
         }
         if (document.getElementById('chk-dem').checked && typeof generateMixedCounters === 'function') {
-            // Số 5 ở đây có nghĩa là: Lấy 5 tuổi, 5 tầng, 5 thứ... trộn chung vào nhau
             Object.assign(currentVocab, generateMixedCounters(5)); 
             selectedNames.push("Đếm số");
         }
@@ -369,10 +399,39 @@
         currentChapterName = selectedNames.join(" + ");
         questions = Object.keys(currentVocab);
         
+        // Reset bộ nhớ đánh dấu khi bắt đầu bộ mới hoàn toàn
+        markedQuestions.clear();
+
         document.getElementById('menu').style.display = 'none';
         document.getElementById('flashcard').style.display = 'block';
         
         initRound();
+    }
+
+    // Toggle (Bật/Tắt) đánh dấu sao
+    function toggleMark(event) {
+        if (event) event.stopPropagation(); 
+        let currentWord = questions[currentIndex];
+        
+        if (markedQuestions.has(currentWord)) {
+            markedQuestions.delete(currentWord);
+        } else {
+            markedQuestions.add(currentWord);
+        }
+        updateStarUI();
+    }
+
+    // Cập nhật giao diện của nút Sao
+    function updateStarUI() {
+        let currentWord = questions[currentIndex];
+        let starBtn = document.getElementById('star-btn');
+        if (markedQuestions.has(currentWord)) {
+            starBtn.innerText = '★';
+            starBtn.classList.add('marked');
+        } else {
+            starBtn.innerText = '☆';
+            starBtn.classList.remove('marked');
+        }
     }
 
     function returnToMenu(event) {
@@ -390,6 +449,11 @@
     }
 
     function initRound() {
+        // Đảm bảo hiển thị giao diện flashcard, ẩn màn hình kết thúc
+        document.getElementById('flashcard-content').style.display = 'block';
+        document.getElementById('flashcard-header').style.display = 'flex';
+        document.getElementById('end-screen').style.display = 'none';
+        
         shuffleArray(questions);
         currentIndex = 0;
         showQuestion();
@@ -399,17 +463,15 @@
         isShowingAnswer = false;
         
         document.getElementById('progress').innerText = `${currentChapterName} | Câu ${currentIndex + 1}/${questions.length}`;
+        updateStarUI(); // Cập nhật trạng thái sao cho từ hiện tại
         
-        // Cài đặt giao diện theo chế độ
         if (currentMode === 'flashcard') {
             document.getElementById('word-vn').innerText = questions[currentIndex];
             document.getElementById('word-vn').style.display = 'flex';
             document.getElementById('listen-prompt').style.display = 'none';
         } else {
-            // Chế độ nghe: Ẩn chữ VN, hiện nút bấm nghe to
             document.getElementById('word-vn').style.display = 'none';
             document.getElementById('listen-prompt').style.display = 'flex';
-            // Tự động phát âm thanh với độ trễ nhẹ để trình duyệt không chặn
             setTimeout(() => playAudio(null), 150); 
         }
 
@@ -450,20 +512,18 @@
         const currentVN = questions[currentIndex];
         const correctJP = currentVocab[currentVN];
         
-        // Khi hiện đáp án, luôn hiện cả VN và JP dù đang ở chế độ nào
         const vnElement = document.getElementById('word-vn');
         vnElement.innerText = currentVN;
         vnElement.style.display = 'flex';
         
-        document.getElementById('listen-prompt').style.display = 'none'; // Ẩn cái loa bự đi
+        document.getElementById('listen-prompt').style.display = 'none'; 
         
         const answerElement = document.getElementById('word-jp');
         answerElement.innerText = correctJP;
         answerElement.style.display = 'block';
         
-        document.getElementById('speak-btn').style.display = 'flex'; // Hiện loa nhỏ
+        document.getElementById('speak-btn').style.display = 'flex'; 
         
-        // Nếu ở chế độ Flashcard thì đọc âm thanh (vì chế độ nghe đã đọc từ trước rồi)
         if (currentMode === 'flashcard') {
             playAudio(null);
         }
@@ -480,20 +540,42 @@
     function nextQuestion() {
         currentIndex++;
         if (currentIndex >= questions.length) {
-            let userChoice = confirm(`🎉 Chúc mừng! Bạn đã hoàn thành bộ ${questions.length} từ vựng!\n\nBạn có muốn ÔN LẠI ngay bây giờ không?\n- Chọn "OK" để bắt đầu lại.\n- Chọn "Cancel" (Hủy) để về Menu.`);
-            
-            if (userChoice) {
-                if (document.getElementById('chk-tuoi').checked) {
-                    startReview();
-                } else {
-                    initRound();
-                }
-            } else {
-                returnToMenu();
-            }
+            showEndScreen();
         } else {
             showQuestion();
         }
+    }
+
+    // Hiển thị màn hình tổng kết
+    function showEndScreen() {
+        document.getElementById('flashcard-content').style.display = 'none';
+        document.getElementById('flashcard-header').style.display = 'none';
+        document.getElementById('end-screen').style.display = 'block';
+
+        let btnMarked = document.getElementById('btn-review-marked');
+        if (markedQuestions.size > 0) {
+            btnMarked.innerText = `⭐ Ôn lại câu đã đánh dấu (${markedQuestions.size})`;
+            btnMarked.style.display = 'block';
+        } else {
+            btnMarked.style.display = 'none';
+        }
+    }
+
+    // Ôn lại từ đầu bộ hiện tại
+    function restartAll(event) {
+        if(event) event.stopPropagation();
+        startReview(); // Gọi lại startReview để bốc ngẫu nhiên lại từ đầu
+    }
+
+    // Chỉ ôn lại các câu đã đánh dấu sao
+    function reviewMarked(event) {
+        if(event) event.stopPropagation();
+        // Lấy danh sách các câu đã đánh dấu làm bộ câu hỏi mới
+        questions = Array.from(markedQuestions);
+        currentChapterName = "⭐ Đã đánh dấu";
+        
+        // Không clear markedQuestions để người học có thể bỏ đánh dấu từ từ khi đã thuộc
+        initRound();
     }
 
     function prevQuestion(event) {
@@ -510,7 +592,8 @@
     }
 
     function handleCardClick(event) {
-        // Cập nhật: tránh gọi khi click vào class .listen-prompt
+        // Ngăn chặn click khi đang ở màn hình End Screen hoặc bấm vào các nút điều khiển
+        if (document.getElementById('end-screen').style.display === 'block') return;
         if (event.target.closest('button') || event.target.closest('input') || event.target.closest('.listen-prompt')) return;
         handleMainLogic();
     }
@@ -524,7 +607,7 @@
     }
 
     window.addEventListener('keydown', function(event) {
-        if (document.getElementById('flashcard').style.display === 'block') {
+        if (document.getElementById('flashcard').style.display === 'block' && document.getElementById('end-screen').style.display === 'none') {
             if (event.key === 'Enter' || event.key === 'ArrowRight') {
                 handleMainLogic();
             } else if (event.key === 'ArrowLeft') {
