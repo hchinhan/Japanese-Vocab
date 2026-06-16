@@ -7,6 +7,8 @@
     <script src="chuong1.js"></script>
     <script src="chuong2.js"></script>
     <script src="chuong3.js"></script>
+    <script src="chuong4.js"></script>
+    <script src="chuong5.js"></script>
     <script src="dem.js"></script>
     
     <style>
@@ -311,6 +313,14 @@
                 Chương 3: Nơi chốn & Phương hướng
             </label>
             <label class="custom-label">
+                <input type="checkbox" id="chk-chuong4"> 
+                Chương 4: Thời gian & Sự kiện
+            </label>
+            <label class="custom-label">
+                <input type="checkbox" id="chk-chuong5"> 
+                Chương 5: Các tính từ
+            </label>
+            <label class="custom-label">
                 <input type="checkbox" id="chk-dem"> 
                 Đếm các loại đối tượng
             </label>
@@ -385,6 +395,14 @@
         if (document.getElementById('chk-chuong3').checked && typeof vocabChuong3 !== 'undefined') {
             Object.assign(currentVocab, vocabChuong3);
             selectedNames.push("Ch.3");
+        }
+        if (document.getElementById('chk-chuong4').checked && typeof vocabChuong4 !== 'undefined') {
+            Object.assign(currentVocab, vocabChuong4);
+            selectedNames.push("Ch.4");
+        }
+        if (document.getElementById('chk-chuong5').checked && typeof vocabChuong5 !== 'undefined') {
+            Object.assign(currentVocab, vocabChuong5);
+            selectedNames.push("Ch.5");
         }
         if (document.getElementById('chk-dem').checked && typeof generateMixedCounters === 'function') {
             Object.assign(currentVocab, generateMixedCounters(5)); 

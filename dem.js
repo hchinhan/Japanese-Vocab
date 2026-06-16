@@ -112,6 +112,43 @@ const daysOfWeek = [
     { vn: "Chủ nhật", jp: "にちようび" }
 ];
 
+// 5. Quy tắc đếm Ngày (1-31)
+function getJapaneseDay(day) {
+    const dayMap = {
+        1: "ついたち", 2: "ふつか", 3: "みっか", 4: "よっか", 5: "いつか", 6: "むいか", 7: "なのか", 8: "ようか", 9: "ここのか", 10: "とおか",
+        14: "じゅうよっか", 20: "はつか", 24: "にじゅうよっか"
+    };
+    if (dayMap[day]) return dayMap[day];
+    
+    // Các ngày còn lại: số + にち
+    const tens = ["", "じゅう", "にじゅう", "さんじゅう"];
+    const ones = ["", "いち", "に", "さん", "よん", "ご", "ろく", "なな", "はち", "きゅう"];
+    let t = Math.floor(day / 10);
+    let u = day % 10;
+    return (tens[t] || "") + (ones[u] || "") + "にち";
+}
+
+// 6. Quy tắc đếm Giờ
+function getJapaneseTime(h, m, period) {
+    const hours = ["", "いちじ", "にじ", "さんじ", "よじ", "ごじ", "ろくじ", "しちじ", "はちじ", "くじ", "じゅうじ", "じゅういちじ", "じゅうにじ"];
+    const minutes = ["", "いっぷん", "にふん", "さんぷん", "よんぷん", "ごふん", "ろっぷん", "ななふん", "はっぷん", "きゅうふん", "じゅっぷん"];
+    
+    let jpPeriod = (period === "AM") ? "ごぜん" : "ごご";
+    let resH = hours[h % 12 === 0 ? 12 : h % 12];
+    
+    let resM = "";
+    if (m === 0) {
+        resM = "ちょうど";
+    } else {
+        let t = Math.floor(m / 10);
+        let u = m % 10;
+        // Xử lý biến âm phút: 1, 3, 4, 6, 8, 10
+        let mPrefix = (t === 1 ? "じゅう" : (t === 2 ? "にじゅう" : (t === 3 ? "さんじゅう" : (t === 4 ? "よんじゅう" : (t === 5 ? "ごじゅう" : "")))));
+        resM = mPrefix + minutes[u];
+    }
+    
+    return `${jpPeriod}\n${resH}\n${resM}`;
+}
 
 // ==========================================
 // PHẦN 2: BỘ MÁY SẢN XUẤT TỪ VỰNG NGẪU NHIÊN
@@ -192,7 +229,43 @@ const CounterGenerators = {
         let selected = shuffled.slice(0, maxAmount);
         selected.forEach(item => result[item.vn] = item.jp);
         return result;
-    }
+    },
+
+    ngaythang: function(amount) {
+        let result = {};
+        for(let i = 0; i < amount; i++) {
+            let m = Math.floor(Math.random() * 12) + 1;
+            let d = Math.floor(Math.random() * 28) + 1;
+            let y = 2024 + Math.floor(Math.random() * 3);
+            
+            // Format hiển thị cho câu hỏi
+            let vn = `${d.toString().padStart(2, '0')}/${m.toString().padStart(2, '0')}/${y}`;
+            
+            // Xử lý đọc năm (đơn giản hoá: số + ねん)
+            let jpYear = y + "ねん";
+            let jpMonth = m + "がつ";
+            let jpDay = getJapaneseDay(d);
+            
+            // Dùng \n để xuống dòng
+            result[vn] = `${jpYear}\n${jpMonth}\n${jpDay}`;
+        }
+        return result;
+    },
+
+    // Sản xuất Giờ/Phút (Format: hh:mm AM/PM)
+    gio: function(amount) {
+        let result = {};
+        for(let i = 0; i < amount; i++) {
+            let h = Math.floor(Math.random() * 12) + 1;
+            let m = Math.floor(Math.random() * 60);
+            let period = Math.random() > 0.5 ? "AM" : "PM";
+            let vn = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${period}`;
+            
+            // Gọi hàm mới với tham số period
+            result[vn] = getJapaneseTime(h, m, period);
+        }
+        return result;
+    },
 };
 
 // ==========================================

@@ -79,5 +79,7 @@ const vocabChuong3 = {
     "\"À...\", \"Xin lỗi...\", \"Cho tôi hỏi...\"": "あのう", //
     "Xin lỗi!": "すみません", //
     "Sân thượng": "おくじょう", 
-    "Siêu thị": "すーぱー"
+    "Nhà hàng": "レストラン",
+    "Siêu thị": "スーパー",
+    "Cửa hàng bách hóa": "デパート"
 };
