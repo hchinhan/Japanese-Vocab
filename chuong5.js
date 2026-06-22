@@ -58,6 +58,9 @@ const vocabChuong5 = {
     "Vất vả, khó khăn": "たいへん",
     "Nổi tiếng": "ゆうめい",
     "Đẹp, sạch, trong": "きれい",
+    "Tiện lợi": "べんり",  
+    "Bất tiện": "ふべん", 
+
 
     // Nhóm Danh từ và các từ khác
     "Món ăn": "りょうり",
@@ -73,6 +76,9 @@ const vocabChuong5 = {
     "Miền quê, nông thôn": "いなか",
     "Quê hương": "ふるさと",
     "Sushi": "おすし",
+    "Cuộc sống": "せいかつ",     
+    "Bài tập": "しゅくだい",   
+    "Thời tiết": "てんき",  
     "Hoa anh đào": "さくらの はな",
     "Như thế nào?": "どうですか",
     "~ như thế nào?": "どんな～ですか"
