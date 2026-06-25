@@ -36,6 +36,11 @@ function startReview() {
         Object.assign(currentVocab, vocabChuong6);
         selectedNames.push("Ch.6");
     }
+    if (document.getElementById('chk-chuong7').checked && typeof vocabChuong7 !== 'undefined') {
+        Object.assign(currentVocab, vocabChuong7);
+        selectedNames.push("Ch.7");
+    }
+
     if (document.getElementById('chk-dem').checked && typeof generateMixedCounters === 'function') {
         Object.assign(currentVocab, generateMixedCounters(5)); 
         selectedNames.push("Đếm số");
