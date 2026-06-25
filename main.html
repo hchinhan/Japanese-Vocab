@@ -9,6 +9,7 @@
     <script src="chuong3.js"></script>
     <script src="chuong4.js"></script>
     <script src="chuong5.js"></script>
+    <script src="chuong6.js"></script>
     <script src="dem.js"></script>
     
     <style>
@@ -321,6 +322,10 @@
                 Chương 5: Các tính từ
             </label>
             <label class="custom-label">
+                <input type="checkbox" id="chk-chuong6"> 
+                Chương 6: Các động từ p1
+            </label>
+            <label class="custom-label">
                 <input type="checkbox" id="chk-dem"> 
                 Đếm các loại đối tượng
             </label>
@@ -403,6 +408,10 @@
         if (document.getElementById('chk-chuong5').checked && typeof vocabChuong5 !== 'undefined') {
             Object.assign(currentVocab, vocabChuong5);
             selectedNames.push("Ch.5");
+        }
+        if (document.getElementById('chk-chuong6').checked && typeof vocabChuong6 !== 'undefined') {
+            Object.assign(currentVocab, vocabChuong6);
+            selectedNames.push("Ch.6");
         }
         if (document.getElementById('chk-dem').checked && typeof generateMixedCounters === 'function') {
             Object.assign(currentVocab, generateMixedCounters(5)); 
