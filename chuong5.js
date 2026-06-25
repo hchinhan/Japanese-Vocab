@@ -59,7 +59,8 @@ const vocabChuong5 = {
     "Nổi tiếng": "ゆうめい",
     "Đẹp, sạch, trong": "きれい",
     "Tiện lợi": "べんり",  
-    "Bất tiện": "ふべん", 
+    "Bất tiện": "ふべん",
+    "Rảnh rỗi": "ひま",
 
 
     // Nhóm Danh từ và các từ khác
