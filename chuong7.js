@@ -13,6 +13,7 @@ const vocabChuong7 = {
     "Đi (công viên)": "こうえんに いく",
     "Về (nhà)": "うちにかえる",
     "Quay lại (phòng)": "へやに もどる",
+    "Vào (phòng, quán nước...)": "へやに はいる",
 
     // --- V2: Động từ nhóm 2 ---
     "Chỉ, dạy (tiếng Nhật)": "にほんごを おしえる",

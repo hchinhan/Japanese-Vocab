@@ -82,5 +82,15 @@ const vocabChuong5 = {
     "Thời tiết": "てんき",  
     "Hoa anh đào": "さくらの はな",
     "Như thế nào?": "どうですか",
-    "~ như thế nào?": "どんな～ですか"
+    "Con đường, tuyến đường": "みち",
+    "~ như thế nào?": "どんな～ですか",
+
+    //Nhóm biếu thị mức độ
+    "Rất": "とても",
+    "Nhưng (đứng đầu câu, văn nói)": "でも",
+    "Nhưng (đứng đầu câu, văn viết lịch sự)": "しかし",
+    "Không... lắm (đi với thể phủ định)": "あまり",
+    "Hoàn toàn không (đi với thể phủ định)": "ぜんぜん",
+    "Một chút, ít (trang trọng, lịch sự)": "すこし",
+    "Một chút, một lát (văn nói, hội thoại)": "ちょっと"
 };
