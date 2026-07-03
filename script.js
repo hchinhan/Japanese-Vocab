@@ -45,6 +45,15 @@ function startReview() {
         Object.assign(currentVocab, generateMixedCounters(5)); 
         selectedNames.push("Đếm số");
     }
+    if (document.getElementById('chk-kanji').checked && typeof vocabKanjiCoBan !== 'undefined') {
+        let reversedKanji = {};
+        for (let key in vocabKanjiCoBan) {
+            let kanjiChar = vocabKanjiCoBan[key];
+            reversedKanji[kanjiChar] = key; 
+        }
+        Object.assign(currentVocab, reversedKanji);
+        selectedNames.push("Kanji CB");
+    }
     
     if (selectedNames.length === 0) {
         alert("Vui lòng chọn ít nhất 1 chương để ôn tập!");
