@@ -122,6 +122,7 @@ const vocabKanjiCoBan = {
     "TỰ (Bản thân)": "自",
     "TIỂU": "小",
     "TÂM": "心",
-    "DƯƠNG": "羊",
-    "GIAO": "交"
+    "GIAO": "交",
+    "DƯƠNG": "羊"
+    
 };
