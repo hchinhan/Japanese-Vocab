@@ -1,0 +1,19 @@
+// File: chuong8.js
+const vocabChuong8 = {
+    // --- PHẦN CHÍNH ---
+    "Xe máy, xe môtô": "オートバイ",
+    "Xe buýt": "バス",
+    "Xe taxi": "タクシー",
+    "Bút, bút máy": "ペン",
+    "Bút bi": "ボールペン",
+    "Bút chì bấm": "シャープペンシル",
+    "Cái muỗng": "スプーン",
+    "Cái nĩa": "フォーク",
+    "Con dao": "ナイフ",
+
+    // --- PHẦN MỞ RỘNG ---
+    "Một ngày": "いちにち",
+    "Lúc nào cũng, thường hay": "いつも",
+    "Thường, rõ, kỹ": "よく",
+    "Sau đó": "それから"
+};

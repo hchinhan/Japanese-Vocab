@@ -4,7 +4,7 @@ let currentIndex = 0;
 let isShowingAnswer = false;
 let currentChapterName = "";
 let currentMode = "flashcard"; 
-let markedQuestions = new Set(); // Bộ nhớ lưu các câu đã đánh dấu
+let markedQuestions = new Set(); 
 
 function startReview() {
     currentVocab = {};
@@ -40,6 +40,24 @@ function startReview() {
         Object.assign(currentVocab, vocabChuong7);
         selectedNames.push("Ch.7");
     }
+    // --- BỔ SUNG CÁC CHƯƠNG MỚI ---
+    if (document.getElementById('chk-chuong8').checked && typeof vocabChuong8 !== 'undefined') {
+        Object.assign(currentVocab, vocabChuong8);
+        selectedNames.push("Ch.8");
+    }
+    if (document.getElementById('chk-chuong9').checked && typeof vocabChuong9 !== 'undefined') {
+        Object.assign(currentVocab, vocabChuong9);
+        selectedNames.push("Ch.9");
+    }
+    if (document.getElementById('chk-chuong10').checked && typeof vocabChuong10 !== 'undefined') {
+        Object.assign(currentVocab, vocabChuong10);
+        selectedNames.push("Ch.10");
+    }
+    if (document.getElementById('chk-chuong11').checked && typeof vocabChuong11 !== 'undefined') {
+        Object.assign(currentVocab, vocabChuong11);
+        selectedNames.push("Ch.11");
+    }
+    // -----------------------------
 
     if (document.getElementById('chk-dem').checked && typeof generateMixedCounters === 'function') {
         Object.assign(currentVocab, generateMixedCounters(5)); 
@@ -63,7 +81,6 @@ function startReview() {
     currentChapterName = selectedNames.join(" + ");
     questions = Object.keys(currentVocab);
     
-    // Reset bộ nhớ đánh dấu khi bắt đầu bộ mới hoàn toàn
     markedQuestions.clear();
 
     document.getElementById('menu').style.display = 'none';
@@ -72,7 +89,6 @@ function startReview() {
     initRound();
 }
 
-// Toggle (Bật/Tắt) đánh dấu sao
 function toggleMark(event) {
     if (event) event.stopPropagation(); 
     let currentWord = questions[currentIndex];

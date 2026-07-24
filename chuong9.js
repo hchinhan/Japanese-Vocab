@@ -1,0 +1,40 @@
+// File: chuong9.js
+const vocabChuong9 = {
+    // --- PHẦN CHÍNH ---
+    "Chụp ảnh": "しゃしんをとる",
+    "Nóng": "あつい",
+    "Lạnh": "さむい",
+    "Ấm": "あたたかい",
+    "Mát": "すずしい",
+    "Vui": "たのしい",
+    "Bận rộn": "いそがしい",
+    "Rảnh rỗi": "ひま",
+    "Đơn giản": "かんたん",
+    "Phức tạp": "ふくざつ",
+    "Tuần trước nữa": "せんせんしゅう",
+    "Tuần trước": "せんしゅう",
+    "Tuần này": "こんしゅう",
+    "Tuần tới": "らいしゅう",
+    "Tuần tới nữa": "さらいしゅう",
+    "Sáng nay": "けさ",
+    "Tối qua": "ゆうべ",
+    "Ngày xưa": "むかし",
+    "Thời tiết": "てんき",
+    "Vùng, khu vực": "へん",
+    "Em bé": "あかちゃん",
+    "Bài kiểm tra": "テスト",
+    "Bữa tiệc": "パーティー",
+    "Nhà hàng": "レストラン",
+    "Karaoke": "カラオケ",
+    "Đã, rồi": "もう",
+    "Chưa, vẫn": "まだ",
+    "Từ bây giờ": "これから・いまから",
+    "Cùng nhau": "いっしょに",
+    "Lại, nữa": "また",
+
+    // --- PHẦN MỞ RỘNG ---
+    "Người lớn": "おとな",
+    "Trẻ con, con cái": "こども",
+    "Vé": "きっぷ",
+    "Việc ngắm hoa": "はなみ"
+};
