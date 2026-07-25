@@ -48,6 +48,7 @@ const vocabChuong7 = {
     "Máy bay": "ひこうき",
     "Tàu cao tốc": "しんかんせん",
     "Thuyền": "ふね",
+    "Tàu cánh ngầm cao tốc": "こうそくせん",
     "Đôi đũa": "はし",
     "Gia đình": "かぞく",
     "Bố mẹ": "りょうしん",
