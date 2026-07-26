@@ -5,6 +5,7 @@ const vocabChuong11 = {
     "Trả lại": "かえす",
     "Gửi": "おくる",
     "Cho xem": "みせる",
+    "Sử dụng / Dùng": "つかう",
     "Gọi điện thoại": "でんわをかける",
     "Nghe (từ bạn bè)": "きく",
     "Học": "ならう",

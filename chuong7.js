@@ -31,6 +31,7 @@ const vocabChuong7 = {
     "Mặt": "かお",
     "Lá thư": "てがみ",
     "Nhật ký": "にっき",
+    "Tiểu thuyết": "しょうせつ",
     "Âm nhạc": "おんがく",
     "Phim": "えいが",
     "Nước": "みず",
@@ -108,5 +109,6 @@ const vocabChuong7 = {
     "Kết hôn": "けっこん（を）する",
     "Hát karaoke": "カラオケ（を）する",
     "Chạy bộ": "ジョギング（を）する",
-    "Đi chơi dã ngoại": "ハイキング（を）する"
+    "Đi chơi dã ngoại": "ハイキング（を）する",
+    "Quê ba má / Nhà bố mẹ đẻ": "じっか",
 };

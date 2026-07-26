@@ -4,7 +4,7 @@ const vocabChuong10 = {
     "Tốn (thời gian, tiền)": "かかる",
     "(giờ học) Bắt đầu": "はじまる",
     "(giờ học) Kết thúc": "おわる",
-    "Đánh (răng)": "みがく",
+    "Đánh (răng)": "(はを)みがく",
     "Kiểm tra sức khỏe": "うける",
     "Mỗi sáng": "まいあさ",
     "Mỗi tối": "まいばん",
@@ -28,6 +28,8 @@ const vocabChuong10 = {
     "Chị gái": "あね",
     "Em gái": "いもうと",
     "Bạn thân": "しんゆう",
+    "Anh ấy / Bạn trai": "かれ",
+    "Chị ấy / Bạn gái": "かのじょ",
 
     // --- PHẦN MỞ RỘNG & THỜI LƯỢNG ---
     "Mệt": "つかれる",
@@ -47,7 +49,7 @@ const vocabChuong10 = {
     "Chín giờ": "くじかん",
     "Mười giờ": "じゅうじかん",
     "Mấy giờ (thời lượng)": "なんじかん",
-    "Một ngày (thời lượng)": "いちにち(かん)",
+    "Một ngày (thời lượng)": "いちにち(かん) 時間",
     "Hai ngày": "ふつか(かん)",
     "Ba ngày": "みっか(かん)",
     "Bốn ngày": "よっか(かん)",
@@ -80,5 +82,8 @@ const vocabChuong10 = {
     "Chín tháng": "きゅうかげつ",
     "Mười tháng": "じゅっかげつ",
     "Mấy tháng": "なんかげつ",
-    "Khoảng chừng (thời gian/số lượng)": "どのぐらい"
+    "Khoảng chừng (thời gian/số lượng)": "どのぐらい",
+    "Tốn / Mất (thời gian, tiền bạc)": "かかる",
+    "Chỉ (đi với khẳng định)": "だけ",
+    "Mấy lần / Bao nhiêu lần?": "なんかい (何回)",
 };
