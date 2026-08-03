@@ -57,6 +57,10 @@ function startReview() {
         Object.assign(currentVocab, vocabChuong11);
         selectedNames.push("Ch.11");
     }
+    if (document.getElementById('chk-chuong12').checked && typeof vocabChuong12 !== 'undefined') {
+        Object.assign(currentVocab, vocabChuong12);
+        selectedNames.push("Ch.12");
+    }
     // -----------------------------
 
     if (document.getElementById('chk-dem').checked && typeof generateMixedCounters === 'function') {
@@ -295,3 +299,10 @@ window.addEventListener('keydown', function(event) {
         }
     }
 });
+
+function toggleSelectAll(selectAll) {
+    const container = document.getElementById('chapter-options');
+    if (!container) return;
+    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(chk => chk.checked = selectAll);
+}

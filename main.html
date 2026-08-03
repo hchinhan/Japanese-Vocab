@@ -18,6 +18,7 @@
     <script src="chuong9.js"></script>
     <script src="chuong10.js"></script>
     <script src="chuong11.js"></script>
+    <script src="chuong12.js"></script>
     
     <script src="dem.js"></script>
     <script src="kanji.js"></script>
@@ -40,8 +41,14 @@
             </label>
         </div>
 
-        <span class="section-title">2. Chọn bài học</span>
-        <div class="option-group">
+        <div class="section-header">
+            <span class="section-title">2. Chọn bài học</span>
+            <div class="select-all-bar">
+                <button type="button" class="mini-btn" onclick="toggleSelectAll(true)">Chọn tất cả</button>
+                <button type="button" class="mini-btn" onclick="toggleSelectAll(false)">Bỏ chọn</button>
+            </div>
+        </div>
+        <div class="option-group" id="chapter-options">
             <label class="custom-label">
                 <input type="checkbox" id="chk-chuong1" checked> 
                 Chương 1: Chào hỏi & Nghề nghiệp
@@ -70,7 +77,6 @@
                 <input type="checkbox" id="chk-chuong7"> 
                 Chương 7: Các động từ p2 và danh từ đi kèm
             </label>
-            <!-- Thêm Checkbox chọn Bài 8, 9, 10, 11 -->
             <label class="custom-label">
                 <input type="checkbox" id="chk-chuong8"> 
                 Chương 8: Phương tiện & Đồ dùng
@@ -86,6 +92,10 @@
             <label class="custom-label">
                 <input type="checkbox" id="chk-chuong11"> 
                 Chương 11: Động từ chuyển động & Mở rộng
+            </label>
+            <label class="custom-label">
+                <input type="checkbox" id="chk-chuong12"> 
+                Chương 12: Tồn tại, Vị trí & Loài vật, Trái cây
             </label>
             
             <label class="custom-label">
