@@ -44,6 +44,7 @@ const vocabChuong7 = {
     "Trứng": "たまご",
     "Trái cây": "くだもの",
     "Thịt": "にく", // Lấy từ list cũ bù vào nếu cần theo mạch học
+    "Du học sinh": "りゅうがくせい (留学生)",
     
     // --- Phương tiện & Gia đình (Trang 85) ---
     "Máy bay": "ひこうき",
