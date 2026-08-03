@@ -24,12 +24,13 @@
     --shadow-active: 0 12px 24px -4px rgba(16, 185, 129, 0.22);
 }
 
-* {
+*, *::before, *::after {
     box-sizing: border-box;
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
-    font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: var(--bg-main);
     color: var(--text-main);
     margin: 0;
@@ -37,6 +38,10 @@ body {
     min-height: 100vh;
     user-select: none;
     -webkit-user-select: none;
+}
+
+button, input, select, textarea, label {
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* APP HEADER */
@@ -71,7 +76,7 @@ body {
 }
 
 .brand-name {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Be Vietnam Pro', sans-serif;
     font-size: 1.6rem;
     font-weight: 800;
     color: #064e3b;
@@ -147,7 +152,7 @@ body {
 .section-badge {
     background: var(--primary);
     color: #ffffff;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Be Vietnam Pro', sans-serif;
     font-size: 0.78rem;
     font-weight: 800;
     padding: 3px 8px;
@@ -155,17 +160,17 @@ body {
 }
 
 .section-heading {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Be Vietnam Pro', sans-serif;
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-main);
     margin: 0;
 }
 
-/* MODE SELECTION GRID */
+/* MODE SELECTION GRID (2 trên, 2 dưới) */
 .mode-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
 }
 
