@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 
@@ -53,29 +53,58 @@
             </div>
             
             <div class="mode-grid">
-                <label class="mode-card">
+                <!-- Mode 1: VN -> JP -->
+                <label class="mode-card active">
                     <input type="radio" name="studyMode" value="flashcard" checked onchange="updateSelectedCount()">
                     <div class="mode-card-inner">
                         <div class="mode-icon">👁️</div>
                         <div class="mode-info">
-                            <div class="mode-title">FlashCard</div>
-                            <div class="mode-desc">Tiếng Việt ➔ Tiếng Nhật</div>
+                            <div class="mode-title">FlashCard (Việt ➔ Nhật)</div>
+                            <div class="mode-desc">Nhìn tiếng Việt ➔ Đoán tiếng Nhật</div>
                         </div>
                         <div class="radio-indicator"></div>
                     </div>
                 </label>
                 
+                <!-- Mode 2: JP -> VN -->
+                <label class="mode-card">
+                    <input type="radio" name="studyMode" value="jp_to_vn" onchange="updateSelectedCount()">
+                    <div class="mode-card-inner">
+                        <div class="mode-icon">🇯🇵</div>
+                        <div class="mode-info">
+                            <div class="mode-title">FlashCard (Nhật ➔ Việt)</div>
+                            <div class="mode-desc">Nhìn tiếng Nhật ➔ Đoán tiếng Việt</div>
+                        </div>
+                        <div class="radio-indicator"></div>
+                    </div>
+                </label>
+
+                <!-- Mode 3: Listening -->
                 <label class="mode-card">
                     <input type="radio" name="studyMode" value="listening" onchange="updateSelectedCount()">
                     <div class="mode-card-inner">
                         <div class="mode-icon">🎧</div>
                         <div class="mode-info">
                             <div class="mode-title">Luyện Nghe</div>
-                            <div class="mode-desc">Nghe Tiếng Nhật ➔ Gõ / Đoán</div>
+                            <div class="mode-desc">Nghe tiếng Nhật ➔ Đoán nghĩa</div>
                         </div>
                         <div class="radio-indicator"></div>
                     </div>
                 </label>
+
+                <!-- Mode 4: Grammar (COMING SOON) -->
+                <div class="mode-card disabled-card">
+                    <div class="mode-card-inner">
+                        <div class="mode-icon">📖</div>
+                        <div class="mode-info">
+                            <div class="mode-title flex-align gap-8">
+                                Ngữ pháp
+                                <span class="coming-soon-badge">COMING SOON</span>
+                            </div>
+                            <div class="mode-desc">Cấu trúc câu & Mẫu ngữ pháp N5</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -95,7 +124,7 @@
             <div class="chapter-grid" id="chapter-options">
                 
                 <!-- Chapter 1 -->
-                <label class="product-card">
+                <label class="product-card active">
                     <input type="checkbox" id="chk-chuong1" checked onchange="updateSelectedCount()">
                     <div class="card-content">
                         <div class="card-header-row">
@@ -319,7 +348,7 @@
             
             <div class="answer-box">
                 <div class="word-jp" id="word-jp" style="display: none;"></div>
-                <button class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)" title="Nghe phát âm">🔊 Phụ âm</button>
+                <button class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)" title="Nghe phát âm">🔊 Phát âm</button>
             </div>
             
             <div class="button-group">
