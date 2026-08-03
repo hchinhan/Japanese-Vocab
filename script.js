@@ -6,6 +6,27 @@ let currentChapterName = "";
 let currentMode = "flashcard"; 
 let markedQuestions = new Set(); 
 
+function updateSelectedCount() {
+    const container = document.getElementById('chapter-options');
+    if (!container) return;
+    const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+    const count = checkboxes.length;
+    
+    const countNum = document.getElementById('count-num');
+    if (countNum) countNum.innerText = count;
+    
+    const startBadge = document.getElementById('start-count-badge');
+    if (startBadge) startBadge.innerText = `${count} bài được chọn`;
+}
+
+function toggleSelectAll(selectAll) {
+    const container = document.getElementById('chapter-options');
+    if (!container) return;
+    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(chk => chk.checked = selectAll);
+    updateSelectedCount();
+}
+
 function startReview() {
     currentVocab = {};
     let selectedNames = [];
@@ -40,7 +61,6 @@ function startReview() {
         Object.assign(currentVocab, vocabChuong7);
         selectedNames.push("Ch.7");
     }
-    // --- BỔ SUNG CÁC CHƯƠNG MỚI ---
     if (document.getElementById('chk-chuong8').checked && typeof vocabChuong8 !== 'undefined') {
         Object.assign(currentVocab, vocabChuong8);
         selectedNames.push("Ch.8");
@@ -61,7 +81,6 @@ function startReview() {
         Object.assign(currentVocab, vocabChuong12);
         selectedNames.push("Ch.12");
     }
-    // -----------------------------
 
     if (document.getElementById('chk-dem').checked && typeof generateMixedCounters === 'function') {
         Object.assign(currentVocab, generateMixedCounters(5)); 
@@ -78,7 +97,7 @@ function startReview() {
     }
     
     if (selectedNames.length === 0) {
-        alert("Vui lòng chọn ít nhất 1 chương để ôn tập!");
+        alert("Vui lòng chọn ít nhất 1 bài học để ôn tập!");
         return;
     }
 
@@ -133,7 +152,6 @@ function shuffleArray(array) {
 }
 
 function initRound() {
-    // Đảm bảo hiển thị giao diện flashcard, ẩn màn hình kết thúc
     document.getElementById('flashcard-content').style.display = 'block';
     document.getElementById('flashcard-header').style.display = 'flex';
     document.getElementById('end-screen').style.display = 'none';
@@ -147,7 +165,7 @@ function showQuestion() {
     isShowingAnswer = false;
     
     document.getElementById('progress').innerText = `${currentChapterName} | Câu ${currentIndex + 1}/${questions.length}`;
-    updateStarUI(); // Cập nhật trạng thái sao cho từ hiện tại
+    updateStarUI(); 
     
     if (currentMode === 'flashcard') {
         document.getElementById('word-vn').innerText = questions[currentIndex];
@@ -230,7 +248,6 @@ function nextQuestion() {
     }
 }
 
-// Hiển thị màn hình tổng kết
 function showEndScreen() {
     document.getElementById('flashcard-content').style.display = 'none';
     document.getElementById('flashcard-header').style.display = 'none';
@@ -245,20 +262,15 @@ function showEndScreen() {
     }
 }
 
-// Ôn lại từ đầu bộ hiện tại
 function restartAll(event) {
     if(event) event.stopPropagation();
-    startReview(); // Gọi lại startReview để bốc ngẫu nhiên lại từ đầu
+    startReview(); 
 }
 
-// Chỉ ôn lại các câu đã đánh dấu sao
 function reviewMarked(event) {
     if(event) event.stopPropagation();
-    // Lấy danh sách các câu đã đánh dấu làm bộ câu hỏi mới
     questions = Array.from(markedQuestions);
     currentChapterName = "⭐ Đã đánh dấu";
-    
-    // Không clear markedQuestions để người học có thể bỏ đánh dấu từ từ khi đã thuộc
     initRound();
 }
 
@@ -276,7 +288,6 @@ function handleActionClick(event) {
 }
 
 function handleCardClick(event) {
-    // Ngăn chặn click khi đang ở màn hình End Screen hoặc bấm vào các nút điều khiển
     if (document.getElementById('end-screen').style.display === 'block') return;
     if (event.target.closest('button') || event.target.closest('input') || event.target.closest('.listen-prompt')) return;
     handleMainLogic();
@@ -300,9 +311,6 @@ window.addEventListener('keydown', function(event) {
     }
 });
 
-function toggleSelectAll(selectAll) {
-    const container = document.getElementById('chapter-options');
-    if (!container) return;
-    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(chk => chk.checked = selectAll);
-}
+document.addEventListener('DOMContentLoaded', () => {
+    updateSelectedCount();
+});

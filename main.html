@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Khảo Từ Vựng Tiếng Nhật</title>
+    <title>Japanese-Vocab | Khảo Từ Vựng Tiếng Nhật</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 
     <script src="chuong1.js"></script>
@@ -25,95 +29,282 @@
 </head>
 <body>
 
+<!-- Header Navigation -->
+<header class="app-header">
+    <div class="header-container">
+        <div class="brand">
+            <span class="brand-logo">🇯🇵</span>
+            <h1 class="brand-name">Japanese-Vocab</h1>
+        </div>
+        <div class="header-status" id="selected-count-badge">
+            <span class="status-dot"></span> Đã chọn: <strong id="count-num">1</strong> bài học
+        </div>
+    </div>
+</header>
+
 <div class="container">
     <div class="menu-container" id="menu">
-        <h2 class="menu-title">📚 Cài đặt ôn tập</h2>
         
-        <span class="section-title">1. Chế độ học</span>
-        <div class="option-group">
-            <label class="custom-label">
-                <input type="radio" name="studyMode" value="flashcard" checked> 
-                👁️ FlashCard Tiếng Việt ➔ Tiếng Nhật
-            </label>
-            <label class="custom-label">
-                <input type="radio" name="studyMode" value="listening"> 
-                🎧 Nghe Tiếng Nhật ➔ Chính tả
-            </label>
-        </div>
-
-        <div class="section-header">
-            <span class="section-title">2. Chọn bài học</span>
-            <div class="select-all-bar">
-                <button type="button" class="mini-btn" onclick="toggleSelectAll(true)">Chọn tất cả</button>
-                <button type="button" class="mini-btn" onclick="toggleSelectAll(false)">Bỏ chọn</button>
+        <!-- Section 1: Mode Selection -->
+        <div class="section-block">
+            <div class="section-title-wrap">
+                <span class="section-badge">01</span>
+                <h3 class="section-heading">Chế độ học</h3>
+            </div>
+            
+            <div class="mode-grid">
+                <label class="mode-card">
+                    <input type="radio" name="studyMode" value="flashcard" checked onchange="updateSelectedCount()">
+                    <div class="mode-card-inner">
+                        <div class="mode-icon">👁️</div>
+                        <div class="mode-info">
+                            <div class="mode-title">FlashCard</div>
+                            <div class="mode-desc">Tiếng Việt ➔ Tiếng Nhật</div>
+                        </div>
+                        <div class="radio-indicator"></div>
+                    </div>
+                </label>
+                
+                <label class="mode-card">
+                    <input type="radio" name="studyMode" value="listening" onchange="updateSelectedCount()">
+                    <div class="mode-card-inner">
+                        <div class="mode-icon">🎧</div>
+                        <div class="mode-info">
+                            <div class="mode-title">Luyện Nghe</div>
+                            <div class="mode-desc">Nghe Tiếng Nhật ➔ Gõ / Đoán</div>
+                        </div>
+                        <div class="radio-indicator"></div>
+                    </div>
+                </label>
             </div>
         </div>
-        <div class="option-group" id="chapter-options">
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong1" checked> 
-                Chương 1: Chào hỏi & Nghề nghiệp
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong2"> 
-                Chương 2: Đồ vật & Sở hữu
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong3"> 
-                Chương 3: Nơi chốn & Phương hướng
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong4"> 
-                Chương 4: Thời gian & Sự kiện
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong5"> 
-                Chương 5: Các tính từ
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong6"> 
-                Chương 6: Các động từ p1
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong7"> 
-                Chương 7: Các động từ p2 và danh từ đi kèm
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong8"> 
-                Chương 8: Phương tiện & Đồ dùng
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong9"> 
-                Chương 9: Thời tiết & Trạng thái
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong10"> 
-                Chương 10: Tần suất, Gia đình & Thời lượng
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong11"> 
-                Chương 11: Động từ chuyển động & Mở rộng
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-chuong12"> 
-                Chương 12: Tồn tại, Vị trí & Loài vật, Trái cây
-            </label>
-            
-            <label class="custom-label">
-                <input type="checkbox" id="chk-dem"> 
-                Đếm các loại đối tượng
-            </label>
-            <label class="custom-label">
-                <input type="checkbox" id="chk-kanji"> 
-                Kanji
-            </label>
+
+        <!-- Section 2: Chapter Grid -->
+        <div class="section-block">
+            <div class="section-title-wrap flex-between">
+                <div class="flex-align gap-8">
+                    <span class="section-badge">02</span>
+                    <h3 class="section-heading">Chọn bài học ôn tập</h3>
+                </div>
+                <div class="select-all-bar">
+                    <button type="button" class="mini-btn btn-mint" onclick="toggleSelectAll(true)">✓ Chọn tất cả</button>
+                    <button type="button" class="mini-btn btn-ghost" onclick="toggleSelectAll(false)">✕ Bỏ chọn</button>
+                </div>
+            </div>
+
+            <div class="chapter-grid" id="chapter-options">
+                
+                <!-- Chapter 1 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong1" checked onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 01</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🙋‍♂️</div>
+                        <div class="card-title">Chào hỏi & Nghề nghiệp</div>
+                        <div class="card-desc">Giao tiếp cơ bản, quốc tịch & xưng hô</div>
+                    </div>
+                </label>
+
+                <!-- Chapter 2 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong2" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 02</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">📦</div>
+                        <div class="card-title">Đồ vật & Sở hữu</div>
+                        <div class="card-desc">Vật dụng hàng ngày, đồ dùng cá nhân</div>
+                    </div>
+                </label>
+
+                <!-- Chapter 3 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong3" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 03</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🗺️</div>
+                        <div class="card-title">Nơi chốn & Phương hướng</div>
+                        <div class="card-desc">Địa điểm, phòng học & vị trí xung quanh</div>
+                    </div>
+                </label>
+
+                <!-- Chapter 4 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong4" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 04</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">⏰</div>
+                        <div class="card-title">Thời gian & Sự kiện</div>
+                        <div class="card-desc">Giờ giấc, ngày tháng, lịch làm việc</div>
+                    </div>
+                </label>
+
+                <!-- Chapter 5 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong5" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 05</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🎨</div>
+                        <div class="card-title">Các tính từ</div>
+                        <div class="card-desc">Tính từ đuôi い và đuôi な miêu tả</div>
+                    </div>
+                </label>
+
+                <!-- Chapter 6 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong6" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 06</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🏃</div>
+                        <div class="card-title">Các động từ P1</div>
+                        <div class="card-desc">Hành động sinh hoạt, ăn uống, di chuyển</div>
+                    </div>
+                </label>
+
+                <!-- Chapter 7 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong7" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 07</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🍽️</div>
+                        <div class="card-title">Động từ P2 & Danh từ</div>
+                        <div class="card-desc">Công cụ, quà tặng & từ vựng đi kèm</div>
+                    </div>
+                </label>
+
+                <!-- Chapter 8 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong8" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 08</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🚗</div>
+                        <div class="card-title">Phương tiện & Đồ dùng</div>
+                        <div class="card-desc">Xe cộ, phương tiện giao thông & thiết bị</div>
+                    </div>
+                </label>
+
+                <!-- Chapter 9 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong9" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 09</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🌤️</div>
+                        <div class="card-title">Thời tiết & Trạng thái</div>
+                        <div class="card-desc">Nắng mưa, cảm xúc & khả năng sở thích</div>
+                    </div>
+                </label>
+
+                <!-- Chapter 10 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong10" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 10</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">👨‍👩‍👧‍👦</div>
+                        <div class="card-title">Tần suất & Gia đình</div>
+                        <div class="card-desc">Thời lượng, xưng hô gia đình & mức độ</div>
+                    </div>
+                </label>
+
+                <!-- Chapter 11 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong11" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 11</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🚀</div>
+                        <div class="card-title">Động từ chuyển động</div>
+                        <div class="card-desc">Động từ di chuyển & từ vựng mở rộng</div>
+                    </div>
+                </label>
+
+                <!-- Chapter 12 -->
+                <label class="product-card">
+                    <input type="checkbox" id="chk-chuong12" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag">Bài 12</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🌸</div>
+                        <div class="card-title">Tồn tại, Vị trí & Động thực vật</div>
+                        <div class="card-desc">Vị trí ở/có, động vật & trái cây</div>
+                    </div>
+                </label>
+
+                <!-- Counting -->
+                <label class="product-card special-card">
+                    <input type="checkbox" id="chk-dem" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag tag-emerald">Đặc biệt</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🔢</div>
+                        <div class="card-title">Luyện đếm các loại</div>
+                        <div class="card-desc">Tuổi, tầng, tiền, thứ, ngày, giờ & vật đếm</div>
+                    </div>
+                </label>
+
+                <!-- Kanji -->
+                <label class="product-card special-card">
+                    <input type="checkbox" id="chk-kanji" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag tag-emerald">Đặc biệt</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🈁</div>
+                        <div class="card-title">Kanji cơ bản</div>
+                        <div class="card-desc">Hán tự N5 cơ bản & Hiragana</div>
+                    </div>
+                </label>
+            </div>
         </div>
 
-        <button class="start-btn" onclick="startReview()">Bắt đầu ôn tập</button>
+        <!-- Floating Start Action Bar -->
+        <div class="action-footer">
+            <button class="start-btn-main" onclick="startReview()">
+                <span class="btn-text">✨ Bắt đầu ôn tập ngay</span>
+                <span class="btn-badge" id="start-count-badge">1 bài được chọn</span>
+            </button>
+        </div>
     </div>
 
+    <!-- Flashcard Interface -->
     <div class="card" id="flashcard" onclick="handleCardClick(event)">
         <div class="header-bar" id="flashcard-header">
-            <button class="back-menu-btn" onclick="returnToMenu(event)">⬅ Menu</button>
+            <button class="back-menu-btn" onclick="returnToMenu(event)">⬅ Menu chọn bài</button>
             <div class="progress" id="progress">Câu 0/0</div>
             <button id="star-btn" class="star-btn" onclick="toggleMark(event)" title="Đánh dấu câu này">☆</button>
         </div>
@@ -123,12 +314,12 @@
 
             <div class="listen-prompt" id="listen-prompt" style="display: none;" onclick="playAudio(event)">
                 <div class="big-icon">🔊</div>
-                <div class="small-text">Bấm để nghe lại</div>
+                <div class="small-text">Bấm để nghe lại phát âm</div>
             </div>
             
             <div class="answer-box">
                 <div class="word-jp" id="word-jp" style="display: none;"></div>
-                <button class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)" title="Nghe phát âm">🔊</button>
+                <button class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)" title="Nghe phát âm">🔊 Phụ âm</button>
             </div>
             
             <div class="button-group">
@@ -136,16 +327,16 @@
                 <button class="btn btn-main" id="action-btn" onclick="handleActionClick(event)">Xem đáp án</button>
             </div>
             
-            <div class="hint">Mẹo: Nhấn <b>Enter / Mũi tên phải</b> hoặc <b>Chạm màn hình</b> để đi tiếp. <br>Nhấn <b>Mũi tên trái</b> để quay lại.</div>
+            <div class="hint">💡 Phím tắt: Press <b>Enter / Mũi tên phải</b> để đi tiếp. Press <b>Mũi tên trái</b> để quay lại.</div>
         </div>
 
         <div id="end-screen">
-            <h2>🎉 Hoàn thành!</h2>
-            <p>Bạn đã xuất sắc đi hết bộ từ vựng lần này.</p>
-            <div class="option-group" style="align-items: center; margin-bottom: 0;">
-                <button class="start-btn" onclick="restartAll(event)">🔄 Ôn lại bộ này từ đầu</button>
-                <button class="start-btn" id="btn-review-marked" onclick="reviewMarked(event)" style="background-color: var(--accent); display: none;">⭐ Ôn lại câu đã đánh dấu (0)</button>
-                <button class="start-btn" onclick="returnToMenu(event)" style="background-color: var(--text-muted);">🏠 Trở về Menu chọn bài</button>
+            <h2>🎉 Hoàn thành xuất sắc!</h2>
+            <p>Bạn đã hoàn thành xong bộ từ vựng đã chọn.</p>
+            <div class="end-actions">
+                <button class="start-btn-main" onclick="restartAll(event)">🔄 Ôn lại bộ này từ đầu</button>
+                <button class="start-btn-main btn-star-marked" id="btn-review-marked" onclick="reviewMarked(event)" style="display: none;">⭐ Ôn lại câu đã đánh dấu (0)</button>
+                <button class="start-btn-main btn-secondary" onclick="returnToMenu(event)">🏠 Trở về Menu chọn bài</button>
             </div>
         </div>
     </div>
