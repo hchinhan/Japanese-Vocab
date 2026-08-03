@@ -7,10 +7,27 @@ let currentMode = "flashcard";
 let markedQuestions = new Set(); 
 
 function updateSelectedCount() {
-    const container = document.getElementById('chapter-options');
-    if (!container) return;
-    const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
-    const count = checkboxes.length;
+    const modeCards = document.querySelectorAll('.mode-card');
+    modeCards.forEach(card => {
+        const input = card.querySelector('input[type="radio"]');
+        if (input && input.checked) {
+            card.classList.add('active');
+        } else {
+            card.classList.remove('active');
+        }
+    });
+
+    const productCards = document.querySelectorAll('.product-card');
+    let count = 0;
+    productCards.forEach(card => {
+        const input = card.querySelector('input[type="checkbox"]');
+        if (input && input.checked) {
+            card.classList.add('active');
+            count++;
+        } else {
+            card.classList.remove('active');
+        }
+    });
     
     const countNum = document.getElementById('count-num');
     if (countNum) countNum.innerText = count;
@@ -31,7 +48,10 @@ function startReview() {
     currentVocab = {};
     let selectedNames = [];
 
-    currentMode = document.querySelector('input[name="studyMode"]:checked').value;
+    const selectedModeInput = document.querySelector('input[name="studyMode"]:checked');
+    if (selectedModeInput) {
+        currentMode = selectedModeInput.value;
+    }
 
     if (document.getElementById('chk-chuong1').checked && typeof vocabChuong1 !== 'undefined') {
         Object.assign(currentVocab, vocabChuong1);
@@ -124,7 +144,6 @@ function toggleMark(event) {
     updateStarUI();
 }
 
-// Cập nhật giao diện của nút Sao
 function updateStarUI() {
     let currentWord = questions[currentIndex];
     let starBtn = document.getElementById('star-btn');
@@ -167,19 +186,33 @@ function showQuestion() {
     document.getElementById('progress').innerText = `${currentChapterName} | Câu ${currentIndex + 1}/${questions.length}`;
     updateStarUI(); 
     
+    const currentVN = questions[currentIndex];
+    const correctJP = currentVocab[currentVN];
+
     if (currentMode === 'flashcard') {
-        document.getElementById('word-vn').innerText = questions[currentIndex];
+        // Việt -> Nhật
+        document.getElementById('word-vn').innerText = currentVN;
         document.getElementById('word-vn').style.display = 'flex';
         document.getElementById('listen-prompt').style.display = 'none';
+        document.getElementById('word-jp').style.display = 'none';
+        document.getElementById('speak-btn').style.display = 'none'; 
+    } else if (currentMode === 'jp_to_vn') {
+        // Nhật -> Việt
+        document.getElementById('word-vn').innerText = correctJP; 
+        document.getElementById('word-vn').style.display = 'flex';
+        document.getElementById('listen-prompt').style.display = 'none';
+        document.getElementById('word-jp').style.display = 'none';
+        document.getElementById('speak-btn').style.display = 'none'; 
+        playAudio(null);
     } else {
+        // Luyện Nghe
         document.getElementById('word-vn').style.display = 'none';
         document.getElementById('listen-prompt').style.display = 'flex';
+        document.getElementById('word-jp').style.display = 'none';
+        document.getElementById('speak-btn').style.display = 'none'; 
         setTimeout(() => playAudio(null), 150); 
     }
 
-    document.getElementById('word-jp').style.display = 'none';
-    document.getElementById('speak-btn').style.display = 'none'; 
-    
     const actionBtn = document.getElementById('action-btn');
     actionBtn.innerText = 'Xem đáp án (Enter)';
     actionBtn.classList.remove('btn-finish');
@@ -215,20 +248,28 @@ function showAnswer() {
     const correctJP = currentVocab[currentVN];
     
     const vnElement = document.getElementById('word-vn');
-    vnElement.innerText = currentVN;
-    vnElement.style.display = 'flex';
-    
-    document.getElementById('listen-prompt').style.display = 'none'; 
-    
     const answerElement = document.getElementById('word-jp');
-    answerElement.innerText = correctJP;
-    answerElement.style.display = 'block';
-    
-    document.getElementById('speak-btn').style.display = 'flex'; 
     
     if (currentMode === 'flashcard') {
+        vnElement.innerText = currentVN;
+        vnElement.style.display = 'flex';
+        answerElement.innerText = correctJP;
+        answerElement.style.display = 'block';
         playAudio(null);
+    } else if (currentMode === 'jp_to_vn') {
+        vnElement.innerText = correctJP; 
+        vnElement.style.display = 'flex';
+        answerElement.innerText = currentVN; 
+        answerElement.style.display = 'block';
+    } else {
+        vnElement.innerText = currentVN;
+        vnElement.style.display = 'flex';
+        answerElement.innerText = correctJP;
+        answerElement.style.display = 'block';
     }
+
+    document.getElementById('listen-prompt').style.display = 'none'; 
+    document.getElementById('speak-btn').style.display = 'flex'; 
 
     const actionBtn = document.getElementById('action-btn');
     if (currentIndex === questions.length - 1) {
