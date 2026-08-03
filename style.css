@@ -57,6 +57,43 @@ body {
     padding-bottom: 5px;
 }
 
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #edf2f7;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.section-header .section-title {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.select-all-bar {
+    display: flex;
+    gap: 6px;
+}
+
+.mini-btn {
+    background: #edf2f7;
+    border: 1px solid var(--border);
+    color: var(--primary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mini-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
 .option-group {
     display: flex;
     flex-direction: column;
