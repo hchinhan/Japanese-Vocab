@@ -12,7 +12,7 @@ const vocabChuong8 = {
     "Con dao": "ナイフ",
 
     // --- PHẦN MỞ RỘNG ---
-    "Một ngày": "いちにち",
+    "Một ngày": "一日 (いちにち)",
     "Lúc nào cũng, thường hay": "いつも",
     "Thường, rõ, kỹ": "よく",
     "Sau đó": "それから",
