@@ -36,8 +36,13 @@
             <span class="brand-logo">🇯🇵</span>
             <h1 class="brand-name">Japanese-Vocab</h1>
         </div>
-        <div class="header-status" id="selected-count-badge">
-            <span class="status-dot"></span> Đã chọn: <strong id="count-num">0</strong> bài học
+        <div class="header-right">
+            <button class="nav-vocab-btn" onclick="openVocabSummaryModal()" title="Tra cứu từ vựng & Xuất MD">
+                📖 Tổng hợp từ vựng
+            </button>
+            <div class="header-status" id="selected-count-badge">
+                <span class="status-dot"></span> Đã chọn: <strong id="count-num">0</strong> bài học
+            </div>
         </div>
     </div>
 </header>
@@ -45,6 +50,21 @@
 <div class="container">
     <div class="menu-container" id="menu">
         
+        <!-- Summary Quick Banner -->
+        <div class="vocab-summary-banner" onclick="openVocabSummaryModal()">
+            <div class="banner-icon-wrap">📚</div>
+            <div class="banner-info">
+                <div class="banner-badge flex-align gap-8">
+                    <span>MỚI</span>
+                    <span>•</span>
+                    <span>Tra cứu & Xuất MD</span>
+                </div>
+                <h3 class="banner-title">Tổng Hợp & Tra Cứu Từ Vựng Tiếng Nhật N5</h3>
+                <p class="banner-desc">Xem toàn bộ từ vựng, tìm kiếm từ thông minh và xuất danh sách ra file Markdown (.md)</p>
+            </div>
+            <button class="banner-action-btn">🔍 Mở bảng từ vựng & Xuất MD</button>
+        </div>
+
         <!-- Section 1: Mode Selection -->
         <div class="section-block">
             <div class="section-title-wrap">
@@ -366,6 +386,95 @@
                 <button class="start-btn-main" onclick="restartAll(event)">🔄 Ôn lại bộ này từ đầu</button>
                 <button class="start-btn-main btn-star-marked" id="btn-review-marked" onclick="reviewMarked(event)" style="display: none;">⭐ Ôn lại câu đã đánh dấu (0)</button>
                 <button class="start-btn-main btn-secondary" onclick="returnToMenu(event)">🏠 Trở về Menu chọn bài</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vocabulary Summary & Search Modal -->
+<div class="modal-overlay" id="vocab-summary-modal" style="display: none;" onclick="closeVocabSummaryOnOverlay(event)">
+    <div class="modal-card">
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <div class="modal-title-group">
+                <div class="modal-title-icon">📖</div>
+                <div>
+                    <h2 class="modal-heading">Tổng Hợp & Tra Cứu Từ Vựng</h2>
+                    <p class="modal-subheading">Tìm kiếm từ vựng tiếng Nhật, nghe phát âm & xuất file Markdown (.md)</p>
+                </div>
+            </div>
+            <button class="modal-close-btn" onclick="closeVocabSummaryModal()" title="Đóng cửa sổ">✕</button>
+        </div>
+
+        <!-- Modal Toolbar -->
+        <div class="modal-toolbar">
+            <!-- Search Box -->
+            <div class="search-input-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="vocab-search-input" placeholder="Tìm kiếm từ vựng (Tiếng Nhật, Tiếng Việt, Bài học...)" oninput="filterVocabTable()">
+                <button class="search-clear-btn" id="search-clear-btn" onclick="clearVocabSearch()" style="display: none;" title="Xóa từ khóa">✕</button>
+            </div>
+
+            <!-- Filter Chapter Select -->
+            <div class="filter-select-box">
+                <select id="vocab-chapter-filter" onchange="filterVocabTable()">
+                    <option value="all">📚 Tất cả các bài (Toàn bộ từ vựng)</option>
+                    <option value="chuong1">Bài 01 - Chào hỏi & Nghề nghiệp</option>
+                    <option value="chuong2">Bài 02 - Đồ vật & Sở hữu</option>
+                    <option value="chuong3">Bài 03 - Nơi chốn & Phương hướng</option>
+                    <option value="chuong4">Bài 04 - Thời gian & Sự kiện</option>
+                    <option value="chuong5">Bài 05 - Các tính từ</option>
+                    <option value="chuong6">Bài 06 - Các động từ P1</option>
+                    <option value="chuong7">Bài 07 - Động từ P2 & Danh từ</option>
+                    <option value="chuong8">Bài 08 - Phương tiện & Đồ dùng</option>
+                    <option value="chuong9">Bài 09 - Thời tiết & Trạng thái</option>
+                    <option value="chuong10">Bài 10 - Tần suất & Gia đình</option>
+                    <option value="chuong11">Bài 11 - Động từ chuyển động</option>
+                    <option value="chuong12">Bài 12 - Tồn tại, Vị trí & Động thực vật</option>
+                    <option value="kanji">🈁 Kanji cơ bản</option>
+                    <option value="dem">🔢 Luyện đếm số</option>
+                </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="toolbar-actions">
+                <button class="btn-md-export" onclick="exportVocabToMarkdown()">
+                    <span>📥</span> Xuất File .MD
+                </button>
+                <button class="btn-md-copy" onclick="copyVocabMarkdown()">
+                    <span>📋</span> Copy MD
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Bar -->
+        <div class="modal-info-bar">
+            <span id="vocab-count-info" class="count-badge-text">Đang tải dữ liệu...</span>
+            <span class="tip-sound-text">💡 Bấm biểu tượng 🔊 bên cạnh từ để nghe phát âm giọng Nhật chuẩn</span>
+        </div>
+
+        <!-- Table Container -->
+        <div class="vocab-table-wrapper">
+            <table class="vocab-data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 55px; text-align: center;">STT</th>
+                        <th style="width: 140px;">Bài học</th>
+                        <th>Tiếng Nhật</th>
+                        <th>Nghĩa Tiếng Việt</th>
+                        <th style="width: 75px; text-align: center;">Phát âm</th>
+                    </tr>
+                </thead>
+                <tbody id="vocab-table-body">
+                    <!-- Dynamic vocabulary rows -->
+                </tbody>
+            </table>
+
+            <!-- Empty Search Results -->
+            <div class="vocab-empty-view" id="vocab-empty-state" style="display: none;">
+                <div class="empty-emoji">🔍</div>
+                <h4>Không tìm thấy từ vựng nào</h4>
+                <p>Thử tìm với từ khóa khác hoặc chuyển sang bài học khác.</p>
             </div>
         </div>
     </div>

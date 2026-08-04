@@ -228,7 +228,21 @@ function showQuestion() {
 function speakJapanese(text) {
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
+
+        if (!text) return;
+
+        // Clean text so TTS reads ONCE (strips parens like "(にほん)" so it doesn't read Kanji AND Hiragana in parens)
+        let cleanText = text;
+        if (cleanText.includes('(') || cleanText.includes('（')) {
+            cleanText = cleanText.split(/[\(（]/)[0].trim();
+        } else if (cleanText.includes('【')) {
+            cleanText = cleanText.split('【')[0].trim();
+        }
+
+        if (!cleanText) cleanText = text;
+        cleanText = cleanText.replace(/[～~]/g, '').trim();
+
+        const utterance = new SpeechSynthesisUtterance(cleanText);
         utterance.lang = 'ja-JP'; 
         utterance.rate = 0.85; 
         window.speechSynthesis.speak(utterance);
@@ -343,6 +357,13 @@ function handleMainLogic() {
 }
 
 window.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('vocab-summary-modal');
+        if (modal && modal.style.display !== 'none') {
+            closeVocabSummaryModal();
+            return;
+        }
+    }
     if (document.getElementById('flashcard').style.display === 'block' && document.getElementById('end-screen').style.display === 'none') {
         if (event.key === 'Enter' || event.key === 'ArrowRight') {
             handleMainLogic();
@@ -355,3 +376,298 @@ window.addEventListener('keydown', function(event) {
 document.addEventListener('DOMContentLoaded', () => {
     updateSelectedCount();
 });
+
+// =========================================================================
+// PHẦN TỔNG HỢP, TRA CỨU TỪ VỰNG & XUẤT FILE MARKDOWN (.MD)
+// =========================================================================
+
+let allVocabList = [];
+let currentFilteredList = [];
+
+/**
+ * Gộp toàn bộ từ vựng từ tất cả các chương data vào 1 mảng danh sách chuẩn
+ */
+function getAggregateVocabData() {
+    let list = [];
+    
+    const chaptersConfig = [
+        { id: 'chuong1', label: 'Bài 01', title: 'Bài 01 - Chào hỏi & Nghề nghiệp', data: typeof vocabChuong1 !== 'undefined' ? vocabChuong1 : null },
+        { id: 'chuong2', label: 'Bài 02', title: 'Bài 02 - Đồ vật & Sở hữu', data: typeof vocabChuong2 !== 'undefined' ? vocabChuong2 : null },
+        { id: 'chuong3', label: 'Bài 03', title: 'Bài 03 - Nơi chốn & Phương hướng', data: typeof vocabChuong3 !== 'undefined' ? vocabChuong3 : null },
+        { id: 'chuong4', label: 'Bài 04', title: 'Bài 04 - Thời gian & Sự kiện', data: typeof vocabChuong4 !== 'undefined' ? vocabChuong4 : null },
+        { id: 'chuong5', label: 'Bài 05', title: 'Bài 05 - Các tính từ', data: typeof vocabChuong5 !== 'undefined' ? vocabChuong5 : null },
+        { id: 'chuong6', label: 'Bài 06', title: 'Bài 06 - Các động từ P1', data: typeof vocabChuong6 !== 'undefined' ? vocabChuong6 : null },
+        { id: 'chuong7', label: 'Bài 07', title: 'Bài 07 - Động từ P2 & Danh từ', data: typeof vocabChuong7 !== 'undefined' ? vocabChuong7 : null },
+        { id: 'chuong8', label: 'Bài 08', title: 'Bài 08 - Phương tiện & Đồ dùng', data: typeof vocabChuong8 !== 'undefined' ? vocabChuong8 : null },
+        { id: 'chuong9', label: 'Bài 09', title: 'Bài 09 - Thời tiết & Trạng thái', data: typeof vocabChuong9 !== 'undefined' ? vocabChuong9 : null },
+        { id: 'chuong10', label: 'Bài 10', title: 'Bài 10 - Tần suất & Gia đình', data: typeof vocabChuong10 !== 'undefined' ? vocabChuong10 : null },
+        { id: 'chuong11', label: 'Bài 11', title: 'Bài 11 - Động từ chuyển động', data: typeof vocabChuong11 !== 'undefined' ? vocabChuong11 : null },
+        { id: 'chuong12', label: 'Bài 12', title: 'Bài 12 - Tồn tại, Vị trí & Động thực vật', data: typeof vocabChuong12 !== 'undefined' ? vocabChuong12 : null }
+    ];
+
+    chaptersConfig.forEach(ch => {
+        if (ch.data) {
+            for (let vnKey in ch.data) {
+                list.push({
+                    chapterId: ch.id,
+                    chapterLabel: ch.label,
+                    chapterTitle: ch.title,
+                    vn: vnKey,
+                    jp: ch.data[vnKey]
+                });
+            }
+        }
+    });
+
+    // Kanji
+    if (typeof vocabKanjiCoBan !== 'undefined') {
+        for (let key in vocabKanjiCoBan) {
+            list.push({
+                chapterId: 'kanji',
+                chapterLabel: 'Kanji',
+                chapterTitle: 'Kanji cơ bản',
+                vn: key,
+                jp: vocabKanjiCoBan[key]
+            });
+        }
+    }
+
+    // Luyện đếm số
+    if (typeof generateMixedCounters === 'function') {
+        const counters = generateMixedCounters(10);
+        for (let vnKey in counters) {
+            list.push({
+                chapterId: 'dem',
+                chapterLabel: 'Đếm số',
+                chapterTitle: 'Luyện đếm số',
+                vn: vnKey,
+                jp: counters[vnKey]
+            });
+        }
+    }
+
+    return list;
+}
+
+function openVocabSummaryModal() {
+    if (allVocabList.length === 0) {
+        allVocabList = getAggregateVocabData();
+    }
+    const modal = document.getElementById('vocab-summary-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        filterVocabTable();
+        setTimeout(() => {
+            const searchInput = document.getElementById('vocab-search-input');
+            if (searchInput) searchInput.focus();
+        }, 100);
+    }
+}
+
+function closeVocabSummaryModal() {
+    const modal = document.getElementById('vocab-summary-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+function closeVocabSummaryOnOverlay(e) {
+    if (e.target && e.target.id === 'vocab-summary-modal') {
+        closeVocabSummaryModal();
+    }
+}
+
+function filterVocabTable() {
+    const query = document.getElementById('vocab-search-input').value.trim().toLowerCase();
+    const selectedChapter = document.getElementById('vocab-chapter-filter').value;
+    const clearBtn = document.getElementById('search-clear-btn');
+    if (clearBtn) clearBtn.style.display = query ? 'block' : 'none';
+
+    currentFilteredList = allVocabList.filter(item => {
+        const matchesChapter = (selectedChapter === 'all' || item.chapterId === selectedChapter);
+        const matchesSearch = !query || 
+            item.vn.toLowerCase().includes(query) || 
+            item.jp.toLowerCase().includes(query) ||
+            item.chapterLabel.toLowerCase().includes(query) ||
+            item.chapterTitle.toLowerCase().includes(query);
+        return matchesChapter && matchesSearch;
+    });
+
+    renderVocabTable(currentFilteredList);
+}
+
+function clearVocabSearch() {
+    const searchInput = document.getElementById('vocab-search-input');
+    if (searchInput) {
+        searchInput.value = '';
+        filterVocabTable();
+        searchInput.focus();
+    }
+}
+
+function renderVocabTable(list) {
+    const tbody = document.getElementById('vocab-table-body');
+    const emptyState = document.getElementById('vocab-empty-state');
+    const countInfo = document.getElementById('vocab-count-info');
+
+    if (countInfo) {
+        countInfo.innerText = `Hiển thị ${list.length} / ${allVocabList.length} từ vựng`;
+    }
+
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    if (list.length === 0) {
+        emptyState.style.display = 'flex';
+        return;
+    } else {
+        emptyState.style.display = 'none';
+    }
+
+    const fragment = document.createDocumentFragment();
+    list.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        
+        // STT
+        const tdIndex = document.createElement('td');
+        tdIndex.className = 'td-index';
+        tdIndex.textContent = index + 1;
+        tr.appendChild(tdIndex);
+
+        // Chapter Tag
+        const tdChapter = document.createElement('td');
+        const badge = document.createElement('span');
+        badge.className = `table-chapter-tag tag-${item.chapterId}`;
+        badge.textContent = item.chapterLabel;
+        tdChapter.appendChild(badge);
+        tr.appendChild(tdChapter);
+
+        // Japanese
+        const tdJp = document.createElement('td');
+        tdJp.className = 'td-jp';
+        tdJp.textContent = item.jp;
+        tr.appendChild(tdJp);
+
+        // Vietnamese
+        const tdVn = document.createElement('td');
+        tdVn.className = 'td-vn';
+        tdVn.textContent = item.vn;
+        tr.appendChild(tdVn);
+
+        // Speak button
+        const tdAudio = document.createElement('td');
+        tdAudio.className = 'td-audio';
+        const audioBtn = document.createElement('button');
+        audioBtn.className = 'table-speak-btn';
+        audioBtn.title = 'Nghe phát âm';
+        audioBtn.innerHTML = '🔊';
+        audioBtn.onclick = () => speakJapanese(item.jp);
+        tdAudio.appendChild(audioBtn);
+        tr.appendChild(tdAudio);
+
+        fragment.appendChild(tr);
+    });
+
+    tbody.appendChild(fragment);
+}
+
+/**
+ * Xuất file Markdown (.md)
+ */
+function generateMarkdownContent() {
+    const selectedFilter = document.getElementById('vocab-chapter-filter');
+    const filterText = selectedFilter ? selectedFilter.options[selectedFilter.selectedIndex].text : 'Tất cả các bài';
+    const query = document.getElementById('vocab-search-input') ? document.getElementById('vocab-search-input').value.trim() : '';
+
+    let mdText = `# 🇯🇵 BẢNG TỔNG HỢP TỪ VỰNG TIẾNG NHẬT N5\n\n`;
+    mdText += `> 📅 **Ngày xuất:** ${new Date().toLocaleDateString('vi-VN')}\n`;
+    mdText += `> 📂 **Bộ lọc bài học:** ${filterText}\n`;
+    if (query) {
+        mdText += `> 🔍 **Từ khóa tìm kiếm:** "${query}"\n`;
+    }
+    mdText += `> 🔢 **Tổng số từ:** ${currentFilteredList.length} từ\n\n`;
+
+    mdText += `| STT | Bài học | Tiếng Nhật | Nghĩa Tiếng Việt |\n`;
+    mdText += `| :---: | :--- | :--- | :--- |\n`;
+
+    currentFilteredList.forEach((item, idx) => {
+        const cleanJp = item.jp.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+        const cleanVn = item.vn.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+        const cleanChapter = item.chapterTitle.replace(/\|/g, '\\|');
+
+        mdText += `| ${idx + 1} | ${cleanChapter} | ${cleanJp} | ${cleanVn} |\n`;
+    });
+
+    mdText += `\n---\n*Tài liệu được xuất tự động từ website Japanese-Vocab*\n`;
+    return mdText;
+}
+
+function exportVocabToMarkdown() {
+    if (!currentFilteredList || currentFilteredList.length === 0) {
+        alert("Không có từ vựng nào để xuất file!");
+        return;
+    }
+
+    const mdContent = generateMarkdownContent();
+    const filterVal = document.getElementById('vocab-chapter-filter').value;
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const fileName = `Tu_Vung_Tieng_Nhat_${filterVal}_${dateStr}.md`;
+
+    const blob = new Blob([mdContent], { type: 'text/markdown;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    showToast(`✅ Đã xuất file Markdown ${fileName} thành công!`);
+}
+
+function copyVocabMarkdown() {
+    if (!currentFilteredList || currentFilteredList.length === 0) {
+        alert("Không có từ vựng nào để sao chép!");
+        return;
+    }
+
+    const mdContent = generateMarkdownContent();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(mdContent).then(() => {
+            showToast("📋 Đã sao chép nội dung Markdown vào bộ nhớ tạm!");
+        }).catch(err => {
+            fallbackCopy(mdContent);
+        });
+    } else {
+        fallbackCopy(mdContent);
+    }
+}
+
+function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showToast("📋 Đã sao chép nội dung Markdown!");
+}
+
+function showToast(message) {
+    let toast = document.getElementById('app-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'app-toast';
+        toast.className = 'app-toast';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
