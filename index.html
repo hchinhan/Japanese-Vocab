@@ -26,6 +26,7 @@
     
     <script src="dem.js"></script>
     <script src="kanji.js"></script>
+    <script src="kata.js"></script>
 </head>
 <body>
 
@@ -338,6 +339,20 @@
                         <div class="card-desc">Hán tự N5 cơ bản & Hiragana</div>
                     </div>
                 </label>
+
+                <!-- Katakana -->
+                <label class="product-card special-card">
+                    <input type="checkbox" id="chk-kata" onchange="updateSelectedCount()">
+                    <div class="card-content">
+                        <div class="card-header-row">
+                            <span class="chapter-tag tag-emerald">Đặc biệt</span>
+                            <span class="card-checkbox"></span>
+                        </div>
+                        <div class="card-icon">🅰️</div>
+                        <div class="card-title">Katakana tổng hợp</div>
+                        <div class="card-desc">Tất cả từ ngoại lai Katakana từ Bài 1~12</div>
+                    </div>
+                </label>
             </div>
         </div>
 
@@ -433,6 +448,7 @@
                     <option value="chuong12">Bài 12 - Tồn tại, Vị trí & Động thực vật</option>
                     <option value="kanji">🈁 Kanji cơ bản</option>
                     <option value="dem">🔢 Luyện đếm số</option>
+                    <option value="kata">🅰️ Katakana tổng hợp</option>
                 </select>
             </div>
 

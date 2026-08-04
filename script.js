@@ -115,6 +115,10 @@ function startReview() {
         Object.assign(currentVocab, reversedKanji);
         selectedNames.push("Kanji CB");
     }
+    if (document.getElementById('chk-kata').checked && typeof vocabKata !== 'undefined') {
+        Object.assign(currentVocab, vocabKata);
+        selectedNames.push("Katakana");
+    }
     
     if (selectedNames.length === 0) {
         alert("Vui lòng chọn ít nhất 1 bài học để ôn tập!");
@@ -442,6 +446,19 @@ function getAggregateVocabData() {
                 chapterTitle: 'Luyện đếm số',
                 vn: vnKey,
                 jp: counters[vnKey]
+            });
+        }
+    }
+
+    // Katakana tổng hợp
+    if (typeof vocabKata !== 'undefined') {
+        for (let vnKey in vocabKata) {
+            list.push({
+                chapterId: 'kata',
+                chapterLabel: 'Katakana',
+                chapterTitle: 'Katakana tổng hợp',
+                vn: vnKey,
+                jp: vocabKata[vnKey]
             });
         }
     }
