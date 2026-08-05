@@ -235,10 +235,12 @@ function speakJapanese(text) {
 
         if (!text) return;
 
-        // Clean text so TTS reads ONCE (strips parens like "(にほん)" so it doesn't read Kanji AND Hiragana in parens)
+        // Clean text so TTS reads ONCE using hiragana reading if available
         let cleanText = text;
-        if (cleanText.includes('(') || cleanText.includes('（')) {
-            cleanText = cleanText.split(/[\(（]/)[0].trim();
+        // If there's a hiragana reading in parentheses like "日本 (にほん)", extract and read the hiragana part
+        const parenMatch = cleanText.match(/[(\（]([^)\）]+)[)\）]/);
+        if (parenMatch) {
+            cleanText = parenMatch[1].trim();
         } else if (cleanText.includes('【')) {
             cleanText = cleanText.split('【')[0].trim();
         }
