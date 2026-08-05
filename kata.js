@@ -19,7 +19,7 @@ const vocabKata = {
     "Tivi": "テレビ",
     "Máy chụp hình": "カメラ",
     "Vở, quyển vở": "ノート",
-    "Máy lạnh": "エアコン",
+    "Máy lạnh": "クーラー",
     "Cái bút (pen)": "ペン",
     "Bút bi (borupen)": "ボールペン",
     "Bút chì bấm": "シャープペンシル",

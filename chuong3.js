@@ -6,7 +6,7 @@ const vocabChuong3 = {
     "Trường học": "学校 (がっこう)",
     "Quầy tiếp tân": "受付 (うけつけ)",
     "Cầu thang": "階段 (かいだん)",
-    "Văn phòng": "事務所 (じむしょ)",
+    "Văn phòng": "事務所 (じむしつ)",
     "Phòng tự học": "自習室 (じしゅうしつ)",
     "Phòng học": "教室 (きょうしつ)",
     "Phòng họp": "会議室 (かいぎしつ)",
