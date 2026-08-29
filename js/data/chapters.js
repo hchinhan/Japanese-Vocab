@@ -137,6 +137,39 @@ const CHAPTERS_CONFIG = [
         getData: () => (typeof vocabChuong12 !== 'undefined' ? vocabChuong12 : null)
     },
     {
+        id: 'chuong13',
+        label: 'Bài 13',
+        shortName: 'Ch.13',
+        title: 'Cơ thể, Sở thích & Đồ ăn',
+        desc: 'Bộ phận cơ thể, môn học, màu sắc & món ăn',
+        icon: '🍱',
+        tag: 'Bài 13',
+        tagClass: '',
+        getData: () => (typeof vocabChuong13 !== 'undefined' ? vocabChuong13 : null)
+    },
+    {
+        id: 'chuong15',
+        label: 'Bài 15',
+        shortName: 'Ch.15',
+        title: 'Đô thị, Xã hội & So sánh',
+        desc: 'Dân số, kinh tế, dinh dưỡng & nơi chốn',
+        icon: '🏙️',
+        tag: 'Bài 15',
+        tagClass: '',
+        getData: () => (typeof vocabChuong15 !== 'undefined' ? vocabChuong15 : null)
+    },
+    {
+        id: 'chuong16',
+        label: 'Bài 16',
+        shortName: 'Ch.16',
+        title: 'Thiên nhiên & Cách làm (~方)',
+        desc: 'Biến đổi trạng thái, thời tiết & cách thức',
+        icon: '🌦️',
+        tag: 'Bài 16',
+        tagClass: '',
+        getData: () => (typeof vocabChuong16 !== 'undefined' ? vocabChuong16 : null)
+    },
+    {
         id: 'dem',
         label: 'Đếm số',
         shortName: 'Đếm số',
@@ -173,7 +206,7 @@ const CHAPTERS_CONFIG = [
         label: 'Katakana',
         shortName: 'Katakana',
         title: 'Katakana tổng hợp',
-        desc: 'Tất cả từ ngoại lai Katakana từ Bài 1~12',
+        desc: 'Tất cả từ ngoại lai Katakana từ Bài 1~16',
         icon: '🅰️',
         tag: 'Đặc biệt',
         tagClass: 'tag-emerald',
