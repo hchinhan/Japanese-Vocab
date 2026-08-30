@@ -137,15 +137,26 @@ const CHAPTERS_CONFIG = [
         getData: () => (typeof vocabChuong12 !== 'undefined' ? vocabChuong12 : null)
     },
     {
-        id: 'chuong13',
-        label: 'Bài 13',
-        shortName: 'Ch.13',
-        title: 'Cơ thể, Sở thích & Đồ ăn',
-        desc: 'Bộ phận cơ thể, môn học, màu sắc & món ăn',
+        id: 'chuong13a',
+        label: 'Bài 13A',
+        shortName: 'Ch.13A',
+        title: 'Cơ thể, Môn học & Đồ ăn',
+        desc: 'Bộ phận cơ thể, thể thao, môn học, màu sắc & món ăn',
         icon: '🍱',
-        tag: 'Bài 13',
+        tag: 'Bài 13A',
         tagClass: '',
-        getData: () => (typeof vocabChuong13 !== 'undefined' ? vocabChuong13 : null)
+        getData: () => (typeof vocabChuong13a !== 'undefined' ? vocabChuong13a : null)
+    },
+    {
+        id: 'chuong13b',
+        label: 'Bài 13B',
+        shortName: 'Ch.13B',
+        title: 'Động từ, Tính từ & Mở rộng',
+        desc: 'Động từ, tính từ sở thích & từ vựng mở rộng',
+        icon: '🎨',
+        tag: 'Bài 13B',
+        tagClass: '',
+        getData: () => (typeof vocabChuong13b !== 'undefined' ? vocabChuong13b : null)
     },
     {
         id: 'chuong15',
