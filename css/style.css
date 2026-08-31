@@ -1247,6 +1247,19 @@ button, input, select, textarea, label {
     letter-spacing: 0.2px;
 }
 
+.td-jp-romaji {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--primary-light);
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: var(--radius-pill);
+    letter-spacing: 0.3px;
+    margin-top: 4px;
+    font-family: 'Outfit', sans-serif;
+}
+
 .td-vn {
     color: var(--text-body);
     font-weight: 500;
@@ -1280,9 +1293,19 @@ button, input, select, textarea, label {
 .table-chapter-tag.tag-chuong10 { background: #ede9fe; color: #6d28d9; }
 .table-chapter-tag.tag-chuong11 { background: #fff1f2; color: #e11d48; }
 .table-chapter-tag.tag-chuong12 { background: #ecfdf5; color: #059669; }
-.table-chapter-tag.tag-chuong13 { background: #fee2e2; color: #dc2626; }
+.table-chapter-tag.tag-chuong13a { background: #fee2e2; color: #dc2626; }
+.table-chapter-tag.tag-chuong13b { background: #fdf2f8; color: #db2777; }
 .table-chapter-tag.tag-chuong15 { background: #cffafe; color: #0891b2; }
 .table-chapter-tag.tag-chuong16 { background: #f3e8ff; color: #7c3aed; }
+.table-chapter-tag.tag-kanji0,
+.table-chapter-tag.tag-kanji1,
+.table-chapter-tag.tag-kanji2,
+.table-chapter-tag.tag-kanji3,
+.table-chapter-tag.tag-kanji4,
+.table-chapter-tag.tag-kanji5,
+.table-chapter-tag.tag-kanji6,
+.table-chapter-tag.tag-kanji7,
+.table-chapter-tag.tag-kanji8,
 .table-chapter-tag.tag-kanji    { background: #fef08a; color: #a16207; }
 .table-chapter-tag.tag-dem      { background: #f1f5f9; color: #475569; }
 .table-chapter-tag.tag-kata     { background: #e0e7ff; color: #4338ca; }
@@ -1417,4 +1440,413 @@ button, input, select, textarea, label {
     .modal-card { max-height: 90vh; border-radius: 20px; }
 
     .start-btn-main { padding: 15px 28px; font-size: 0.95rem; }
+}
+
+/* --------------------------------------------------------------------------
+   16. Kanji Group Card & Interactive Kanji Hub Modal
+   -------------------------------------------------------------------------- */
+.kanji-group-card {
+    border: 2px solid rgba(16, 185, 129, 0.35) !important;
+    background: linear-gradient(145deg, #ffffff, #f0fdf4) !important;
+    position: relative;
+    cursor: pointer;
+}
+
+.kanji-group-card:hover {
+    border-color: #10b981 !important;
+    box-shadow: 0 12px 28px rgba(16, 185, 129, 0.18) !important;
+}
+
+.kanji-group-card.active {
+    border-color: #059669 !important;
+    background: linear-gradient(145deg, #ecfdf5, #d1fae5) !important;
+}
+
+.kanji-action-row {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(16, 185, 129, 0.25);
+}
+
+.kanji-config-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px;
+    background: #ffffff;
+    border: 1px solid #10b981;
+    border-radius: var(--radius-pill);
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #047857;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.12);
+}
+
+.kanji-config-btn:hover {
+    background: #10b981;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.kanji-selected-badge {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 2px 7px;
+    border-radius: var(--radius-pill);
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.kanji-config-btn:hover .kanji-selected-badge {
+    background: #ffffff;
+    color: #047857;
+}
+
+/* ── Kanji Modal Card ── */
+.kanji-modal-card {
+    max-width: 960px !important;
+    background: #ffffff;
+}
+
+.kanji-header-icon {
+    background: linear-gradient(135deg, #059669, #10b981) !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+}
+
+/* ── Kanji Modal Toolbar ── */
+.kanji-modal-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 28px;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.kanji-modal-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-body);
+}
+
+.kanji-modal-stats b {
+    color: #047857;
+    font-weight: 700;
+}
+
+.kanji-modal-quick-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.km-btn {
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.km-btn-select-all {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.km-btn-select-all:hover {
+    background: #10b981;
+    color: #ffffff;
+}
+
+.km-btn-deselect {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+.km-btn-deselect:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+/* ── Kanji Modal Body & Grid ── */
+.kanji-modal-body {
+    padding: 24px 28px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.kanji-wheel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+/* ── Individual Kanji Page Card ── */
+.kanji-page-card {
+    background: #ffffff;
+    border: 2px solid var(--border-subtle);
+    border-radius: 18px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+
+.kanji-page-card:hover {
+    border-color: #10b981;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(16, 185, 129, 0.14);
+}
+
+.kanji-page-card.active {
+    border-color: #059669;
+    background: linear-gradient(165deg, #ffffff 40%, #ecfdf5 100%);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.16);
+}
+
+.kpc-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.kpc-badge {
+    padding: 4px 10px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 0.72rem;
+    font-weight: 800;
+    border-radius: var(--radius-pill);
+    letter-spacing: 0.3px;
+}
+
+.kanji-page-card.active .kpc-badge {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.kpc-checkbox-wrap {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.kpc-checkbox-wrap input {
+    display: none;
+}
+
+.kpc-custom-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--border-strong);
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.kpc-checkbox-wrap input:checked + .kpc-custom-check {
+    background: #10b981;
+    border-color: #10b981;
+}
+
+.kpc-checkbox-wrap input:checked + .kpc-custom-check::after {
+    content: "✓";
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 900;
+}
+
+/* ── Kanji Circular Samples Wheel ── */
+.kpc-circle-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+}
+
+.kanji-page-card.active .kpc-circle-preview {
+    background: linear-gradient(135deg, #f0fdf4, #e6fcf5);
+    border-color: #a7f3d0;
+}
+
+.kpc-char-tag {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 1.25rem;
+    font-weight: 700;
+    font-family: var(--font-japanese);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+.kanji-page-card:hover .kpc-char-tag {
+    transform: scale(1.08);
+    color: #047857;
+    border-color: #10b981;
+}
+
+/* ── Card Body & Range ── */
+.kpc-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.kpc-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin: 0;
+}
+
+.kpc-range {
+    font-size: 0.76rem;
+    color: #059669;
+}
+
+.kpc-range b {
+    color: #047857;
+}
+
+.kpc-desc {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.35;
+}
+
+/* ── Card Footer & Quick Button ── */
+.kpc-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-subtle);
+}
+
+.kpc-count-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.kpc-quick-study-btn {
+    padding: 5px 10px;
+    background: #f0fdf4;
+    border: 1px solid #10b981;
+    border-radius: var(--radius-pill);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #047857;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.kpc-quick-study-btn:hover {
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(16, 185, 129, 0.25);
+    transform: scale(1.03);
+}
+
+/* ── Kanji Modal Footer ── */
+.kanji-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 28px;
+    background: #f8fafc;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.km-footer-btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.km-btn-close {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.km-btn-close:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.km-btn-save {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.km-btn-save:hover {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.km-btn-start {
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+
+.km-btn-start:hover {
+    background: linear-gradient(135deg, #047857, #059669);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
+}
+
+@media (max-width: 640px) {
+    .kanji-wheel-grid {
+        grid-template-columns: 1fr;
+    }
+    .kanji-modal-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .kanji-modal-footer {
+        flex-direction: column;
+    }
+    .km-footer-btn {
+        width: 100%;
+        text-align: center;
+    }
 }

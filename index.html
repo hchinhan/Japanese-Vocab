@@ -31,9 +31,18 @@
     <script src="js/data/chuong15.js"></script>
     <script src="js/data/chuong16.js"></script>
     <script src="js/data/dem.js"></script>
-    <script src="js/data/kanji.js"></script>
+    <script src="js/data/kanji0.js"></script>
+    <script src="js/data/kanji1.js"></script>
+    <script src="js/data/kanji2.js"></script>
+    <script src="js/data/kanji3.js"></script>
+    <script src="js/data/kanji4.js"></script>
+    <script src="js/data/kanji5.js"></script>
+    <script src="js/data/kanji6.js"></script>
+    <script src="js/data/kanji7.js"></script>
+    <script src="js/data/kanji8.js"></script>
     <script src="js/data/kata.js"></script>
     <script src="js/data/chapters.js"></script>
+    <script src="js/kanji-hub.js"></script>
 </head>
 <body>
 
@@ -207,6 +216,49 @@
     </div>
 </div>
 
+<!-- Kanji Page Selector & Wheel Hub Modal -->
+<div class="modal-overlay" id="kanji-selector-modal" style="display: none;" onclick="closeKanjiModalOnOverlay(event)">
+    <div class="modal-card kanji-modal-card">
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <div class="modal-title-group">
+                <div class="modal-title-icon kanji-header-icon">🈁</div>
+                <div>
+                    <h2 class="modal-heading">Kho Hán Tự Kanji N5 & Đông Du</h2>
+                    <p class="modal-subheading">Chọn các trang bạn muốn ôn tập • 9 trang chuyên đề (504 chữ Hán)</p>
+                </div>
+            </div>
+            <button class="modal-close-btn" onclick="closeKanjiModal()" title="Đóng cửa sổ">✕</button>
+        </div>
+
+        <!-- Kanji Modal Toolbar -->
+        <div class="kanji-modal-toolbar">
+            <div class="kanji-modal-stats">
+                <span class="km-stat-icon">📌</span>
+                <span>Trạng thái: <b id="kanji-modal-selected-count">9 / 9 trang (504 chữ)</b></span>
+            </div>
+            <div class="kanji-modal-quick-actions">
+                <button type="button" class="km-btn km-btn-select-all" onclick="selectAllKanjiModalPages(true)">✨ Chọn tất cả 9 trang</button>
+                <button type="button" class="km-btn km-btn-deselect" onclick="selectAllKanjiModalPages(false)">🧹 Bỏ chọn tất cả</button>
+            </div>
+        </div>
+
+        <!-- Kanji Pages Wheel & Interactive Grid -->
+        <div class="kanji-modal-body">
+            <div class="kanji-wheel-grid" id="kanji-wheel-grid">
+                <!-- Rendered dynamically by js/kanji-hub.js -->
+            </div>
+        </div>
+
+        <!-- Kanji Modal Footer -->
+        <div class="kanji-modal-footer">
+            <button type="button" class="km-footer-btn km-btn-close" onclick="closeKanjiModal()">Đóng</button>
+            <button type="button" class="km-footer-btn km-btn-save" onclick="closeKanjiModal()">✅ Xác nhận lựa chọn</button>
+            <button type="button" class="km-footer-btn km-btn-start" onclick="startStudyFromKanjiModal()">🚀 Bắt đầu ôn tập ngay</button>
+        </div>
+    </div>
+</div>
+
 <!-- Vocabulary Summary & Search Modal -->
 <div class="modal-overlay" id="vocab-summary-modal" style="display: none;" onclick="closeVocabSummaryOnOverlay(event)">
     <div class="modal-card">
@@ -227,7 +279,7 @@
             <!-- Search Box -->
             <div class="search-input-box">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="vocab-search-input" placeholder="Tìm kiếm từ vựng (Tiếng Nhật, Tiếng Việt, Bài học...)" oninput="filterVocabTable()">
+                <input type="text" id="vocab-search-input" placeholder="Tìm kiếm từ vựng (sensei, watashi, thầy giáo, 先生, せんせい...)" oninput="filterVocabTable()">
                 <button class="search-clear-btn" id="search-clear-btn" onclick="clearVocabSearch()" style="display: none;" title="Xóa từ khóa">✕</button>
             </div>
 

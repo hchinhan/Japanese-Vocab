@@ -1,16 +1,154 @@
 /**
  * File: js/data/chapters.js
- * Danh sách cấu hình metadata cho tất cả các bài học & chuyên đề từ vựng.
- * Tự động đồng bộ với giao diện chọn bài và bộ lọc tra cứu từ vựng.
+ * Cấu hình danh mục tất cả bài học và các trang Kanji trong ứng dụng
  */
+
+// ==========================================================================
+// 1. CẤU HÌNH CHI TIẾT 9 TRANG KANJI (ĐÔNG DU HT400 & CƠ BẢN)
+// ==========================================================================
+
+const KANJI_PAGES_CONFIG = [
+    {
+        id: 'kanji0',
+        page: 0,
+        label: 'Trang 0',
+        shortName: 'Kanji T.0',
+        title: 'Kanji Cơ Bản N5',
+        desc: '104 chữ Hán cơ bản thường gặp nhất N5',
+        range: '十 (Thập) ➔ 羊 (Dương)',
+        samples: ['十', '土', '夫', '走'],
+        count: 104,
+        getData: () => (typeof vocabKanjiTrang0 !== 'undefined' ? vocabKanjiTrang0 : null)
+    },
+    {
+        id: 'kanji1',
+        page: 1,
+        label: 'Trang 1',
+        shortName: 'Kanji T.1',
+        title: 'Đông Du HT400 - Bài 1',
+        desc: '50 chữ Hán N5 & Bộ Nhân đứng',
+        range: '一 (Nhất) ➔ 円 (Viên)',
+        samples: ['一', '七', '下', '円'],
+        count: 50,
+        getData: () => (typeof vocabKanjiTrang1 !== 'undefined' ? vocabKanjiTrang1 : null)
+    },
+    {
+        id: 'kanji2',
+        page: 2,
+        label: 'Trang 2',
+        shortName: 'Kanji T.2',
+        title: 'Đông Du HT400 - Bài 2',
+        desc: '50 chữ Hán N5 & Bộ Đao, Chủy, Hựu',
+        range: '写 (Tả) ➔ 地 (Địa)',
+        samples: ['写', '冷', '出', '地'],
+        count: 50,
+        getData: () => (typeof vocabKanjiTrang2 !== 'undefined' ? vocabKanjiTrang2 : null)
+    },
+    {
+        id: 'kanji3',
+        page: 3,
+        label: 'Trang 3',
+        shortName: 'Kanji T.3',
+        title: 'Đông Du HT400 - Bài 3',
+        desc: '50 chữ Hán N5 & Bộ Truy, Miên, Thốn',
+        range: '堂 (Đường) ➔ 己 (Kỷ)',
+        samples: ['堂', '場', '冬', '己'],
+        count: 50,
+        getData: () => (typeof vocabKanjiTrang3 !== 'undefined' ? vocabKanjiTrang3 : null)
+    },
+    {
+        id: 'kanji4',
+        page: 4,
+        label: 'Trang 4',
+        shortName: 'Kanji T.4',
+        title: 'Đông Du HT400 - Bài 4',
+        desc: '50 chữ Hán N5 & Bộ Nghiễm, Dẫn, Cung, Thảo, Sước, Ấp',
+        range: '巾 (Cân) ➔ 阝 (Ấp)',
+        samples: ['巾', '市', '花', '阝'],
+        count: 50,
+        getData: () => (typeof vocabKanjiTrang4 !== 'undefined' ? vocabKanjiTrang4 : null)
+    },
+    {
+        id: 'kanji5',
+        page: 5,
+        label: 'Trang 5',
+        shortName: 'Kanji T.5',
+        title: 'Đông Du HT400 - Bài 5',
+        desc: '50 chữ Hán N5 & Bộ Phụ, Tâm, Hộ, Thủ, Phộc, Cân',
+        range: '部 (Bộ) ➔ 暗 (Ám)',
+        samples: ['部', '都', '新', '暗'],
+        count: 50,
+        getData: () => (typeof vocabKanjiTrang5 !== 'undefined' ? vocabKanjiTrang5 : null)
+    },
+    {
+        id: 'kanji6',
+        page: 6,
+        label: 'Trang 6',
+        shortName: 'Kanji T.6',
+        title: 'Đông Du HT400 - Bài 6',
+        desc: '50 chữ Hán N5 & Bộ Ngạt, 3 chấm Thủy',
+        range: '曜 (Diệu) ➔ 漢 (Hán)',
+        samples: ['曜', '書', '海', '漢'],
+        count: 50,
+        getData: () => (typeof vocabKanjiTrang6 !== 'undefined' ? vocabKanjiTrang6 : null)
+    },
+    {
+        id: 'kanji7',
+        page: 7,
+        label: 'Trang 7',
+        shortName: 'Kanji T.7',
+        title: 'Đông Du HT400 - Bài 7',
+        desc: '50 chữ Hán N5 & Bộ Ngưu, Nạch, Thỉ, Thị, Hòa, Trúc, Tỷ',
+        range: '火 (Hỏa) ➔ 約 (Ước)',
+        samples: ['火', '生', '町', '約'],
+        count: 50,
+        getData: () => (typeof vocabKanjiTrang7 !== 'undefined' ? vocabKanjiTrang7 : null)
+    },
+    {
+        id: 'kanji8',
+        page: 8,
+        label: 'Trang 8',
+        shortName: 'Kanji T.8',
+        title: 'Đông Du HT400 - Bài 8',
+        desc: '50 chữ Hán N5 & Bộ Lão, Dậu',
+        range: '紙 (Chỉ) ➔ 酉 (Dậu)',
+        samples: ['紙', '話', '車', '酉'],
+        count: 50,
+        getData: () => (typeof vocabKanjiTrang8 !== 'undefined' ? vocabKanjiTrang8 : null)
+    }
+];
+
+/**
+ * Trạng thái các trang Kanji đang được kích hoạt (mặc định chọn cả 9 trang)
+ */
+let selectedKanjiPages = new Set(['kanji0', 'kanji1', 'kanji2', 'kanji3', 'kanji4', 'kanji5', 'kanji6', 'kanji7', 'kanji8']);
+
+/**
+ * Lấy dữ liệu từ các trang Kanji đã chọn
+ */
+function getSelectedKanjiVocabData() {
+    const combined = {};
+    KANJI_PAGES_CONFIG.forEach(page => {
+        if (selectedKanjiPages.has(page.id)) {
+            const d = page.getData();
+            if (d) Object.assign(combined, d);
+        }
+    });
+    return combined;
+}
+
+// ==========================================================================
+// 2. CẤU HÌNH DANH MỤC CÁC BÀI HỌC TRÊN MENU CHÍNH
+// ==========================================================================
+
 const CHAPTERS_CONFIG = [
     {
         id: 'chuong1',
         label: 'Bài 01',
-        shortName: 'Ch.1',
+        shortName: 'Ch.01',
         title: 'Chào hỏi & Nghề nghiệp',
-        desc: 'Giao tiếp cơ bản, quốc tịch & xưng hô',
-        icon: '🙋‍♂️',
+        desc: 'Từ vựng giao tiếp cơ bản, tuổi tác, quốc gia & nghề nghiệp',
+        icon: '👋',
         tag: 'Bài 01',
         tagClass: '',
         getData: () => (typeof vocabChuong1 !== 'undefined' ? vocabChuong1 : null)
@@ -18,10 +156,10 @@ const CHAPTERS_CONFIG = [
     {
         id: 'chuong2',
         label: 'Bài 02',
-        shortName: 'Ch.2',
+        shortName: 'Ch.02',
         title: 'Đồ vật & Sở hữu',
-        desc: 'Vật dụng hàng ngày, đồ dùng cá nhân',
-        icon: '📦',
+        desc: 'Đồ dùng học tập, vật dụng văn phòng & đại từ chỉ định',
+        icon: '💼',
         tag: 'Bài 02',
         tagClass: '',
         getData: () => (typeof vocabChuong2 !== 'undefined' ? vocabChuong2 : null)
@@ -29,10 +167,10 @@ const CHAPTERS_CONFIG = [
     {
         id: 'chuong3',
         label: 'Bài 03',
-        shortName: 'Ch.3',
+        shortName: 'Ch.03',
         title: 'Nơi chốn & Phương hướng',
-        desc: 'Địa điểm, phòng học & vị trí xung quanh',
-        icon: '🗺️',
+        desc: 'Địa điểm, vị trí, giá tiền & phòng ban trong công ty',
+        icon: '🏢',
         tag: 'Bài 03',
         tagClass: '',
         getData: () => (typeof vocabChuong3 !== 'undefined' ? vocabChuong3 : null)
@@ -40,9 +178,9 @@ const CHAPTERS_CONFIG = [
     {
         id: 'chuong4',
         label: 'Bài 04',
-        shortName: 'Ch.4',
+        shortName: 'Ch.04',
         title: 'Thời gian & Sự kiện',
-        desc: 'Giờ giấc, ngày tháng, lịch làm việc',
+        desc: 'Giờ giấc, thứ trong tuần, ngày tháng & mốc thời gian',
         icon: '⏰',
         tag: 'Bài 04',
         tagClass: '',
@@ -51,10 +189,10 @@ const CHAPTERS_CONFIG = [
     {
         id: 'chuong5',
         label: 'Bài 05',
-        shortName: 'Ch.5',
+        shortName: 'Ch.05',
         title: 'Các tính từ',
-        desc: 'Tính từ đuôi い và đuôi な miêu tả',
-        icon: '🎨',
+        desc: 'Tính từ đuôi い và đuôi な thông dụng trong đời sống',
+        icon: '⭐',
         tag: 'Bài 05',
         tagClass: '',
         getData: () => (typeof vocabChuong5 !== 'undefined' ? vocabChuong5 : null)
@@ -62,9 +200,9 @@ const CHAPTERS_CONFIG = [
     {
         id: 'chuong6',
         label: 'Bài 06',
-        shortName: 'Ch.6',
+        shortName: 'Ch.06',
         title: 'Các động từ P1',
-        desc: 'Hành động sinh hoạt, ăn uống, di chuyển',
+        desc: 'Động từ hành động thường ngày, ăn uống, xem đọc & giải trí',
         icon: '🏃',
         tag: 'Bài 06',
         tagClass: '',
@@ -73,10 +211,10 @@ const CHAPTERS_CONFIG = [
     {
         id: 'chuong7',
         label: 'Bài 07',
-        shortName: 'Ch.7',
+        shortName: 'Ch.07',
         title: 'Động từ P2 & Danh từ',
-        desc: 'Công cụ, quà tặng & từ vựng đi kèm',
-        icon: '🍽️',
+        desc: 'Công cụ, phương tiện trao đổi, tặng nhận & gia đình',
+        icon: '🎁',
         tag: 'Bài 07',
         tagClass: '',
         getData: () => (typeof vocabChuong7 !== 'undefined' ? vocabChuong7 : null)
@@ -84,9 +222,9 @@ const CHAPTERS_CONFIG = [
     {
         id: 'chuong8',
         label: 'Bài 08',
-        shortName: 'Ch.8',
+        shortName: 'Ch.08',
         title: 'Phương tiện & Đồ dùng',
-        desc: 'Xe cộ, phương tiện giao thông & thiết bị',
+        desc: 'Phương tiện đi lại, bưu điện & dụng cụ thường nhật',
         icon: '🚗',
         tag: 'Bài 08',
         tagClass: '',
@@ -95,10 +233,10 @@ const CHAPTERS_CONFIG = [
     {
         id: 'chuong9',
         label: 'Bài 09',
-        shortName: 'Ch.9',
+        shortName: 'Ch.09',
         title: 'Thời tiết & Trạng thái',
-        desc: 'Nắng mưa, cảm xúc & khả năng sở thích',
-        icon: '🌤️',
+        desc: 'Khí hậu bốn mùa, trạng thái cơ thể & cảm xúc',
+        icon: '☀️',
         tag: 'Bài 09',
         tagClass: '',
         getData: () => (typeof vocabChuong9 !== 'undefined' ? vocabChuong9 : null)
@@ -108,8 +246,8 @@ const CHAPTERS_CONFIG = [
         label: 'Bài 10',
         shortName: 'Ch.10',
         title: 'Tần suất & Gia đình',
-        desc: 'Thời lượng, xưng hô gia đình & mức độ',
-        icon: '👨‍👩‍👧‍👦',
+        desc: 'Phó từ chỉ mức độ, tần suất & cách xưng hô gia đình',
+        icon: '👨‍👩‍👧',
         tag: 'Bài 10',
         tagClass: '',
         getData: () => (typeof vocabChuong10 !== 'undefined' ? vocabChuong10 : null)
@@ -119,8 +257,8 @@ const CHAPTERS_CONFIG = [
         label: 'Bài 11',
         shortName: 'Ch.11',
         title: 'Động từ chuyển động',
-        desc: 'Động từ di chuyển & từ vựng mở rộng',
-        icon: '🚀',
+        desc: 'Đi, đến, về, chuyển động không gian & phương hướng',
+        icon: '🚶',
         tag: 'Bài 11',
         tagClass: '',
         getData: () => (typeof vocabChuong11 !== 'undefined' ? vocabChuong11 : null)
@@ -130,8 +268,8 @@ const CHAPTERS_CONFIG = [
         label: 'Bài 12',
         shortName: 'Ch.12',
         title: 'Tồn tại, Vị trí & Động thực vật',
-        desc: 'Vị trí ở/có, động vật & trái cây',
-        icon: '🌸',
+        desc: 'Có ở đâu (います/あります), vị trí không gian & thế giới tự nhiên',
+        icon: '🌲',
         tag: 'Bài 12',
         tagClass: '',
         getData: () => (typeof vocabChuong12 !== 'undefined' ? vocabChuong12 : null)
@@ -195,22 +333,15 @@ const CHAPTERS_CONFIG = [
     {
         id: 'kanji',
         label: 'Kanji',
-        shortName: 'Kanji CB',
-        title: 'Kanji cơ bản',
-        desc: 'Hán tự N5 cơ bản & Hiragana',
+        shortName: 'Kanji',
+        title: 'Kanji Hán Tự (9 Trang)',
+        desc: '504 chữ Hán từ Trang 0 ➔ Trang 8 (Bấm để chọn trang)',
         icon: '🈁',
-        tag: 'Đặc biệt',
+        tag: '9 Trang (504 chữ)',
         tagClass: 'tag-emerald',
         isSpecial: true,
-        getData: () => {
-            if (typeof vocabKanjiCoBan === 'undefined') return null;
-            const reversed = {};
-            for (let key in vocabKanjiCoBan) {
-                reversed[vocabKanjiCoBan[key]] = key;
-            }
-            return reversed;
-        },
-        getRawData: () => (typeof vocabKanjiCoBan !== 'undefined' ? vocabKanjiCoBan : null)
+        isKanjiGroup: true,
+        getData: () => getSelectedKanjiVocabData()
     },
     {
         id: 'kata',

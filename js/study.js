@@ -40,7 +40,19 @@ function startReview() {
             const data = chapter.getData();
             if (data) {
                 Object.assign(currentVocab, data);
-                selectedNames.push(chapter.shortName);
+                if (chapter.isKanjiGroup && typeof selectedKanjiPages !== 'undefined') {
+                    if (selectedKanjiPages.size === KANJI_PAGES_CONFIG.length) {
+                        selectedNames.push(`Kanji (9 Trang)`);
+                    } else {
+                        const pageShorts = [];
+                        KANJI_PAGES_CONFIG.forEach(p => {
+                            if (selectedKanjiPages.has(p.id)) pageShorts.push(p.label);
+                        });
+                        selectedNames.push(`Kanji (${pageShorts.join(', ')})`);
+                    }
+                } else {
+                    selectedNames.push(chapter.shortName);
+                }
             }
         }
     });
