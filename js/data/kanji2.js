@@ -26,6 +26,7 @@ const vocabKanjiTrang2 = {
     "NGỌ (Giữa trưa)": "午",
     "BÁN (Một nửa)": "半",
     "TỐT (Tốt nghiệp)": "卒",
+    "NAM (Phía Nam)": "南",
     "KHỬ (Quá khứ)": "去",
     "BỘ HỰU": "又",
     "HỮU (Bạn bè)": "友",
@@ -50,6 +51,5 @@ const vocabKanjiTrang2 = {
     "QUỐC (Đất nước)": "国",
     "VIÊN (Công viên)": "園",
     "THỔ (Đất)": "土",
-    "ĐỊA (Địa lý)": "地",
-    "TIÊN (Trước)": "前"
+    "ĐỊA (Địa lý)": "地"
 };

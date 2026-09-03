@@ -86,6 +86,31 @@ function initRound() {
 }
 
 /**
+ * Kiểm tra xem một từ vựng có phải là Kanji hay không
+ */
+function isKanjiVocab(vn, jp) {
+    if (!jp) return false;
+
+    // 1. Kiểm tra nếu câu hỏi nằm trong cấu hình các trang Kanji
+    if (typeof KANJI_PAGES_CONFIG !== 'undefined') {
+        for (let i = 0; i < KANJI_PAGES_CONFIG.length; i++) {
+            const pageData = KANJI_PAGES_CONFIG[i].getData ? KANJI_PAGES_CONFIG[i].getData() : null;
+            if (pageData && (vn in pageData) && pageData[vn] === jp) {
+                return true;
+            }
+        }
+    }
+
+    // 2. Kiểm tra nếu ký tự tiếng Nhật là thuần chữ Hán (CJK Ideographs)
+    const pureKanjiRegex = /^[\u4e00-\u9faf\u3400-\u4dbf\uf900-\ufaff\s]+$/;
+    if (pureKanjiRegex.test(jp.trim())) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Hiển thị câu hỏi hiện tại theo chế độ học
  */
 function showQuestion() {
@@ -117,7 +142,6 @@ function showQuestion() {
         wordVnEl.innerText = correctJP;
         wordVnEl.style.display = 'flex';
         listenPromptEl.style.display = 'none';
-        playAudio(null);
     } else {
         // Chế độ Luyện Nghe
         wordVnEl.style.display = 'none';
@@ -157,7 +181,6 @@ function showAnswer() {
         vnElement.style.display = 'flex';
         answerElement.innerText = correctJP;
         answerElement.style.display = 'block';
-        playAudio(null);
     } else if (currentMode === 'jp_to_vn') {
         vnElement.innerText = correctJP;
         vnElement.style.display = 'flex';
