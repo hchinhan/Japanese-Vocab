@@ -532,10 +532,7 @@ const KANJI_LESSONS_CONFIG = [
 /**
  * Trạng thái các bài học Kanji đang được kích hoạt (mặc định chọn cả 11 bài)
  */
-let selectedKanjiLessons = new Set([
-    'kanji_bai1', 'kanji_bai2', 'kanji_bai3', 'kanji_bai4', 'kanji_bai5',
-    'kanji_bai6', 'kanji_bai7', 'kanji_bai8', 'kanji_bai9', 'kanji_bai10', 'kanji_bai11'
-]);
+let selectedKanjiLessons = new Set();
 
 /**
  * Lấy dữ liệu từ các bài học Kanji đã chọn

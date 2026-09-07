@@ -121,7 +121,7 @@ const KANJI_PAGES_CONFIG = [
 /**
  * Trạng thái các trang Kanji đang được kích hoạt (mặc định chọn cả 9 trang)
  */
-let selectedKanjiPages = new Set(['kanji0', 'kanji1', 'kanji2', 'kanji3', 'kanji4', 'kanji5', 'kanji6', 'kanji7', 'kanji8']);
+let selectedKanjiPages = new Set();
 
 /**
  * Lấy dữ liệu từ các trang Kanji đã chọn
