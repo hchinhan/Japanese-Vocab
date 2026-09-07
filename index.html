@@ -30,6 +30,7 @@
     <script src="js/data/chuong13b.js?v=20260903"></script>
     <script src="js/data/chuong15.js?v=20260903"></script>
     <script src="js/data/chuong16.js?v=20260903"></script>
+    <script src="js/data/chuong17.js?v=20260907"></script>
     <script src="js/data/dem.js?v=20260903"></script>
     <script src="js/data/kanji0.js?v=20260903"></script>
     <script src="js/data/kanji1.js?v=20260903"></script>
@@ -40,9 +41,11 @@
     <script src="js/data/kanji6.js?v=20260903"></script>
     <script src="js/data/kanji7.js?v=20260903"></script>
     <script src="js/data/kanji8.js?v=20260903"></script>
+    <script src="js/data/kanji_lessons.js?v=20260907"></script>
     <script src="js/data/kata.js?v=20260903"></script>
-    <script src="js/data/chapters.js?v=20260903"></script>
-    <script src="js/kanji-hub.js?v=20260903"></script>
+    <script src="js/data/chapters.js?v=20260907"></script>
+    <script src="js/kanji-hub.js?v=20260907"></script>
+    <script src="js/kanji-lesson-hub.js?v=20260907"></script>
 </head>
 <body>
 
@@ -159,8 +162,23 @@
                 </div>
             </div>
 
-            <!-- Dynamic Chapter Grid -->
+            <!-- Dynamic Chapter Grid (Từ vựng + Đếm số + Katakana) -->
             <div class="chapter-grid" id="chapter-options">
+                <!-- Được render tự động từ js/data/chapters.js -->
+            </div>
+        </div>
+
+        <!-- Section 3: Kanji -->
+        <div class="section-block">
+            <div class="section-title-wrap">
+                <div class="flex-align gap-8">
+                    <span class="section-badge">03</span>
+                    <h3 class="section-heading">Kanji 漢字</h3>
+                </div>
+            </div>
+
+            <!-- Dynamic Kanji Grid (Kanji Trang + Kanji Bài) -->
+            <div class="chapter-grid" id="kanji-section-options">
                 <!-- Được render tự động từ js/data/chapters.js -->
             </div>
         </div>
@@ -255,6 +273,49 @@
             <button type="button" class="km-footer-btn km-btn-close" onclick="closeKanjiModal()">Đóng</button>
             <button type="button" class="km-footer-btn km-btn-save" onclick="closeKanjiModal()">✅ Xác nhận lựa chọn</button>
             <button type="button" class="km-footer-btn km-btn-start" onclick="startStudyFromKanjiModal()">🚀 Bắt đầu ôn tập ngay</button>
+        </div>
+    </div>
+</div>
+
+<!-- Kanji Lesson Selector & Wheel Hub Modal -->
+<div class="modal-overlay" id="kanji-lesson-modal" style="display: none;" onclick="closeKanjiLessonModalOnOverlay(event)">
+    <div class="modal-card kanji-modal-card">
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <div class="modal-title-group">
+                <div class="modal-title-icon kanji-header-icon" style="background: linear-gradient(135deg, #0d9488, #14b8a6) !important;">🈴</div>
+                <div>
+                    <h2 class="modal-heading">Kho Từ Vựng Kanji Theo Bài (Đông Du)</h2>
+                    <p class="modal-subheading">Chọn các bài học bạn muốn ôn tập • 11 bài chuyên đề (352 từ vựng Hán tự)</p>
+                </div>
+            </div>
+            <button class="modal-close-btn" onclick="closeKanjiLessonModal()" title="Đóng cửa sổ">✕</button>
+        </div>
+
+        <!-- Kanji Modal Toolbar -->
+        <div class="kanji-modal-toolbar">
+            <div class="kanji-modal-stats">
+                <span class="km-stat-icon">📌</span>
+                <span>Trạng thái: <b id="kanji-lesson-modal-selected-count">11 / 11 bài (352 từ Hán tự)</b></span>
+            </div>
+            <div class="kanji-modal-quick-actions">
+                <button type="button" class="km-btn km-btn-select-all" onclick="selectAllKanjiLessonCards(true)">✨ Chọn tất cả 11 bài</button>
+                <button type="button" class="km-btn km-btn-deselect" onclick="selectAllKanjiLessonCards(false)">🧹 Bỏ chọn tất cả</button>
+            </div>
+        </div>
+
+        <!-- Kanji Lessons Interactive Grid -->
+        <div class="kanji-modal-body">
+            <div class="kanji-wheel-grid" id="kanji-lesson-wheel-grid">
+                <!-- Rendered dynamically by js/kanji-lesson-hub.js -->
+            </div>
+        </div>
+
+        <!-- Kanji Modal Footer -->
+        <div class="kanji-modal-footer">
+            <button type="button" class="km-footer-btn km-btn-close" onclick="closeKanjiLessonModal()">Đóng</button>
+            <button type="button" class="km-footer-btn km-btn-save" onclick="closeKanjiLessonModal()">✅ Xác nhận lựa chọn</button>
+            <button type="button" class="km-footer-btn km-btn-start" onclick="startStudyFromKanjiLessonModal()">🚀 Bắt đầu ôn tập ngay</button>
         </div>
     </div>
 </div>

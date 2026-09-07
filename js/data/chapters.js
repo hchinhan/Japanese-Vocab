@@ -319,6 +319,17 @@ const CHAPTERS_CONFIG = [
         getData: () => (typeof vocabChuong16 !== 'undefined' ? vocabChuong16 : null)
     },
     {
+        id: 'chuong17',
+        label: 'Bài 17',
+        shortName: 'Ch.17',
+        title: 'Hành động, Đời sống & Mở rộng (~始める, ~終わる, ~続ける)',
+        desc: 'Động từ sinh hoạt, du lịch, trải nghiệm & động từ ghép',
+        icon: '✈️',
+        tag: 'Bài 17',
+        tagClass: '',
+        getData: () => (typeof vocabChuong17 !== 'undefined' ? vocabChuong17 : null)
+    },
+    {
         id: 'dem',
         label: 'Đếm số',
         shortName: 'Đếm số',
@@ -332,8 +343,8 @@ const CHAPTERS_CONFIG = [
     },
     {
         id: 'kanji',
-        label: 'Kanji',
-        shortName: 'Kanji',
+        label: 'Kanji Trang',
+        shortName: 'Kanji Trang',
         title: 'Kanji Hán Tự (9 Trang)',
         desc: '504 chữ Hán từ Trang 0 ➔ Trang 8 (Bấm để chọn trang)',
         icon: '🈁',
@@ -341,14 +352,29 @@ const CHAPTERS_CONFIG = [
         tagClass: 'tag-emerald',
         isSpecial: true,
         isKanjiGroup: true,
+        isKanjiSection: true,
         getData: () => getSelectedKanjiVocabData()
+    },
+    {
+        id: 'kanji_lessons',
+        label: 'Kanji Bài',
+        shortName: 'Kanji Bài',
+        title: 'Từ Vựng Kanji Theo Bài',
+        desc: '352 từ vựng Hán tự từ Bài 1 ➔ Bài 11 (Bấm để chọn bài)',
+        icon: '🈴',
+        tag: '11 Bài (352 từ)',
+        tagClass: 'tag-emerald',
+        isSpecial: true,
+        isKanjiLessonGroup: true,
+        isKanjiSection: true,
+        getData: () => (typeof getSelectedKanjiLessonVocabData === 'function' ? getSelectedKanjiLessonVocabData() : null)
     },
     {
         id: 'kata',
         label: 'Katakana',
         shortName: 'Katakana',
         title: 'Katakana tổng hợp',
-        desc: 'Tất cả từ ngoại lai Katakana từ Bài 1~16',
+        desc: 'Tất cả từ ngoại lai Katakana từ Bài 1~17',
         icon: '🅰️',
         tag: 'Đặc biệt',
         tagClass: 'tag-emerald',

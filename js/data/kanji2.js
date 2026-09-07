@@ -28,7 +28,7 @@ const vocabKanjiTrang2 = {
     "TỐT (Tốt nghiệp)": "卒",
     "NAM (Phía Nam)": "南",
     "KHỬ (Quá khứ)": "去",
-    "BỘ HỰU": "又",
+    "BỘ HỮU": "又",
     "HỮU (Bạn bè)": "友",
     "THỦ (Lấy)": "取",
     "THỤ (Nhận)": "受",

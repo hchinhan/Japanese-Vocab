@@ -341,6 +341,32 @@ function getAggregateVocabData() {
                     }
                 }
             });
+        } else if (chapter.isKanjiLessonGroup && typeof KANJI_LESSONS_CONFIG !== 'undefined') {
+            // Nạp toàn bộ 11 bài Từ vựng Kanji vào bảng tra cứu
+            KANJI_LESSONS_CONFIG.forEach(l => {
+                const lData = l.getData();
+                if (lData) {
+                    for (let vnKey in lData) {
+                        const jpVal = lData[vnKey];
+                        const romaji = getDisplayRomaji(jpVal);
+                        const jpRomaji = kanaToRomaji(jpVal);
+                        list.push({
+                            chapterId: l.id,
+                            chapterLabel: l.shortName,
+                            chapterTitle: `${l.shortName} - ${l.title}`,
+                            isKanjiLesson: true,
+                            vn: vnKey,
+                            jp: jpVal,
+                            romaji: romaji,
+                            jpRomaji: jpRomaji,
+                            vnNorm: removeVietnameseTones(vnKey),
+                            romajiNorm: normalizeFuzzyRomaji(romaji),
+                            jpRomajiNorm: normalizeFuzzyRomaji(jpRomaji),
+                            jpNorm: normalizeFuzzyRomaji(jpVal)
+                        });
+                    }
+                }
+            });
         } else {
             const data = chapter.getData();
             if (data) {
@@ -427,7 +453,10 @@ function filterVocabTable() {
 
     if (!query) {
         currentFilteredList = allVocabList.filter(item => {
-            return selectedChapter === 'all' || item.chapterId === selectedChapter || (selectedChapter === 'kanji' && item.isKanji);
+            return selectedChapter === 'all' || 
+                   item.chapterId === selectedChapter || 
+                   (selectedChapter === 'kanji' && item.isKanji) ||
+                   (selectedChapter === 'kanji_lessons' && item.isKanjiLesson);
         });
     } else {
         const qClean = query.toLowerCase();
@@ -448,7 +477,8 @@ function filterVocabTable() {
             const matchesChapter = (
                 selectedChapter === 'all' ||
                 item.chapterId === selectedChapter ||
-                (selectedChapter === 'kanji' && item.isKanji)
+                (selectedChapter === 'kanji' && item.isKanji) ||
+                (selectedChapter === 'kanji_lessons' && item.isKanjiLesson)
             );
             if (!matchesChapter) return false;
 
@@ -527,16 +557,16 @@ function renderVocabTable(list) {
         tdChapter.appendChild(badge);
         tr.appendChild(tdChapter);
 
-        // Tiếng Nhật
+        // Tiếng Nhật (Kanji Lesson: key=Kanji, value=Hiragana → hiển thị Kanji ở cột JP)
         const tdJp = document.createElement('td');
         tdJp.className = 'td-jp';
-        tdJp.textContent = item.jp;
+        tdJp.textContent = item.isKanjiLesson ? item.vn : item.jp;
         tr.appendChild(tdJp);
 
-        // Nghĩa Tiếng Việt
+        // Nghĩa Tiếng Việt (Kanji Lesson: hiển thị Hiragana reading ở cột nghĩa)
         const tdVn = document.createElement('td');
         tdVn.className = 'td-vn';
-        tdVn.textContent = item.vn;
+        tdVn.textContent = item.isKanjiLesson ? item.jp : item.vn;
         tr.appendChild(tdVn);
 
         // Nút phát âm
@@ -546,7 +576,7 @@ function renderVocabTable(list) {
         audioBtn.className = 'table-speak-btn';
         audioBtn.title = 'Nghe phát âm';
         audioBtn.innerHTML = '🔊';
-        audioBtn.onclick = () => speakJapanese(item.jp);
+        audioBtn.onclick = () => speakJapanese(item.isKanjiLesson ? item.vn : item.jp);
         tdAudio.appendChild(audioBtn);
         tr.appendChild(tdAudio);
 
@@ -580,8 +610,11 @@ function generateMarkdownContent() {
     mdText += `| :---: | :--- | :--- | :--- |\n`;
 
     currentFilteredList.forEach((item, idx) => {
-        const cleanJp = item.jp.replace(/\|/g, '\\|').replace(/\n/g, ' ');
-        const cleanVn = item.vn.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+        // Kanji Lesson: key=Kanji(vn), value=Hiragana(jp) → hiển thị Kanji ở cột JP
+        const displayJp = item.isKanjiLesson ? item.vn : item.jp;
+        const displayVn = item.isKanjiLesson ? item.jp : item.vn;
+        const cleanJp = displayJp.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+        const cleanVn = displayVn.replace(/\|/g, '\\|').replace(/\n/g, ' ');
         const cleanChapter = item.chapterTitle.replace(/\|/g, '\\|');
 
         mdText += `| ${idx + 1} | ${cleanChapter} | ${cleanJp} | ${cleanVn} |\n`;

@@ -42,13 +42,23 @@ function startReview() {
                 Object.assign(currentVocab, data);
                 if (chapter.isKanjiGroup && typeof selectedKanjiPages !== 'undefined') {
                     if (selectedKanjiPages.size === KANJI_PAGES_CONFIG.length) {
-                        selectedNames.push(`Kanji (9 Trang)`);
+                        selectedNames.push(`Kanji Trang (9 Trang)`);
                     } else {
                         const pageShorts = [];
                         KANJI_PAGES_CONFIG.forEach(p => {
                             if (selectedKanjiPages.has(p.id)) pageShorts.push(p.label);
                         });
-                        selectedNames.push(`Kanji (${pageShorts.join(', ')})`);
+                        selectedNames.push(`Kanji Trang (${pageShorts.join(', ')})`);
+                    }
+                } else if (chapter.isKanjiLessonGroup && typeof selectedKanjiLessons !== 'undefined') {
+                    if (selectedKanjiLessons.size === KANJI_LESSONS_CONFIG.length) {
+                        selectedNames.push(`Kanji Bài (11 Bài)`);
+                    } else {
+                        const lessonShorts = [];
+                        KANJI_LESSONS_CONFIG.forEach(l => {
+                            if (selectedKanjiLessons.has(l.id)) lessonShorts.push(l.label);
+                        });
+                        selectedNames.push(`Kanji Bài (${lessonShorts.join(', ')})`);
                     }
                 } else {
                     selectedNames.push(chapter.shortName);
@@ -101,7 +111,17 @@ function isKanjiVocab(vn, jp) {
         }
     }
 
-    // 2. Kiểm tra nếu ký tự tiếng Nhật là thuần chữ Hán (CJK Ideographs)
+    // 2. Kiểm tra nếu câu hỏi nằm trong cấu hình các bài Kanji
+    if (typeof KANJI_LESSONS_CONFIG !== 'undefined') {
+        for (let i = 0; i < KANJI_LESSONS_CONFIG.length; i++) {
+            const lessonData = KANJI_LESSONS_CONFIG[i].getData ? KANJI_LESSONS_CONFIG[i].getData() : null;
+            if (lessonData && (vn in lessonData) && lessonData[vn] === jp) {
+                return true;
+            }
+        }
+    }
+
+    // 3. Kiểm tra nếu ký tự tiếng Nhật là thuần chữ Hán (CJK Ideographs)
     const pureKanjiRegex = /^[\u4e00-\u9faf\u3400-\u4dbf\uf900-\ufaff\s]+$/;
     if (pureKanjiRegex.test(jp.trim())) {
         return true;
