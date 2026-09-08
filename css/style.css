@@ -728,6 +728,9 @@ button, input, select, textarea, label {
     display: none;
     animation: card-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1);
     position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
 }
 
 .card::before {
@@ -1297,6 +1300,8 @@ button, input, select, textarea, label {
 .table-chapter-tag.tag-chuong13b { background: #fdf2f8; color: #db2777; }
 .table-chapter-tag.tag-chuong15 { background: #cffafe; color: #0891b2; }
 .table-chapter-tag.tag-chuong16 { background: #f3e8ff; color: #7c3aed; }
+.table-chapter-tag.tag-chuong17 { background: #e0f2fe; color: #0284c7; }
+.table-chapter-tag.tag-chuong18 { background: #dbeafe; color: #2563eb; }
 .table-chapter-tag.tag-kanji0,
 .table-chapter-tag.tag-kanji1,
 .table-chapter-tag.tag-kanji2,

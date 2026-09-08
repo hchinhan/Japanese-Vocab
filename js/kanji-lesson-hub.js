@@ -1,8 +1,23 @@
-﻿/**
+/**
  * File: js/kanji-lesson-hub.js
  * Quản lý giao diện Modal chọn bài học Từ vựng Kanji (単語＆漢字 N5 Đông Du),
  * hiệu ứng lưới chọn bài học và kết nối với phiên học Flashcard ôn tập.
  */
+
+let isKanjiLessonOverlayGesture = false;
+
+function initKanjiLessonModalOverlay() {
+    const modal = document.getElementById('kanji-lesson-modal');
+    if (!modal || modal._hasOverlayBound) return;
+    modal._hasOverlayBound = true;
+
+    modal.addEventListener('mousedown', (e) => {
+        isKanjiLessonOverlayGesture = (e.target === modal);
+    });
+    modal.addEventListener('touchstart', (e) => {
+        isKanjiLessonOverlayGesture = (e.target === modal);
+    }, { passive: true });
+}
 
 /**
  * Mở modal chọn bài học Kanji
@@ -15,6 +30,7 @@ function openKanjiLessonModal(event) {
     const modal = document.getElementById('kanji-lesson-modal');
     if (!modal) return;
 
+    initKanjiLessonModalOverlay();
     renderKanjiLessonModalCards();
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -36,9 +52,10 @@ function closeKanjiLessonModal() {
  * Đóng modal khi click vào nền overlay
  */
 function closeKanjiLessonModalOnOverlay(event) {
-    if (event && event.target && event.target.id === 'kanji-lesson-modal') {
+    if (isKanjiLessonOverlayGesture && event && event.target && event.target.id === 'kanji-lesson-modal') {
         closeKanjiLessonModal();
     }
+    isKanjiLessonOverlayGesture = false;
 }
 
 /**

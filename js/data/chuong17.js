@@ -1,4 +1,4 @@
-﻿// File: js/data/chuong17.js
+// File: js/data/chuong17.js
 // Bài 17: Hành động hằng ngày, Đời sống & Mở rộng ngữ pháp (~始める, ~終わる, ~続ける)
 
 const vocabChuong17 = {

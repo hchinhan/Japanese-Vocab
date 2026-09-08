@@ -11,14 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=20260908">
 
     <!-- Vocabulary Data Files -->
     <script src="js/data/chuong1.js?v=20260903"></script>
     <script src="js/data/chuong2.js?v=20260903"></script>
     <script src="js/data/chuong3.js?v=20260903"></script>
-    <script src="js/data/chuong4.js?v=20260903"></script>
-    <script src="js/data/chuong5.js?v=20260903"></script>
+    <script src="js/data/chuong4.js?v=20260908"></script>
+    <script src="js/data/chuong5.js?v=20260908"></script>
     <script src="js/data/chuong6.js?v=20260903"></script>
     <script src="js/data/chuong7.js?v=20260903"></script>
     <script src="js/data/chuong8.js?v=20260903"></script>
@@ -30,7 +30,8 @@
     <script src="js/data/chuong13b.js?v=20260903"></script>
     <script src="js/data/chuong15.js?v=20260903"></script>
     <script src="js/data/chuong16.js?v=20260903"></script>
-    <script src="js/data/chuong17.js?v=20260907"></script>
+    <script src="js/data/chuong17.js?v=20260908"></script>
+    <script src="js/data/chuong18.js?v=20260908"></script>
     <script src="js/data/dem.js?v=20260903"></script>
     <script src="js/data/kanji0.js?v=20260903"></script>
     <script src="js/data/kanji1.js?v=20260903"></script>
@@ -41,11 +42,11 @@
     <script src="js/data/kanji6.js?v=20260903"></script>
     <script src="js/data/kanji7.js?v=20260903"></script>
     <script src="js/data/kanji8.js?v=20260903"></script>
-    <script src="js/data/kanji_lessons.js?v=20260907"></script>
+    <script src="js/data/kanji_lessons.js?v=20260908"></script>
     <script src="js/data/kata.js?v=20260903"></script>
-    <script src="js/data/chapters.js?v=20260907"></script>
-    <script src="js/kanji-hub.js?v=20260907"></script>
-    <script src="js/kanji-lesson-hub.js?v=20260907"></script>
+    <script src="js/data/chapters.js?v=20260908"></script>
+    <script src="js/kanji-hub.js?v=20260908"></script>
+    <script src="js/kanji-lesson-hub.js?v=20260908"></script>
 </head>
 <body>
 
@@ -57,7 +58,7 @@
             <h1 class="brand-name">Japanese-Vocab</h1>
         </div>
         <div class="header-right">
-            <button class="nav-vocab-btn" onclick="openVocabSummaryModal()" title="Tra cứu từ vựng & Xuất MD">
+            <button type="button" class="nav-vocab-btn" onclick="openVocabSummaryModal()" title="Tra cứu từ vựng & Xuất MD">
                 📖 Tổng hợp từ vựng
             </button>
             <div class="header-status" id="selected-count-badge">
@@ -83,7 +84,7 @@
                 <h3 class="banner-title">Tổng Hợp & Tra Cứu Từ Vựng Tiếng Nhật N5</h3>
                 <p class="banner-desc">Xem toàn bộ từ vựng, tìm kiếm từ thông minh và xuất danh sách ra file Markdown (.md)</p>
             </div>
-            <button class="banner-action-btn">🔍 Mở bảng từ vựng & Xuất MD</button>
+            <button type="button" class="banner-action-btn">🔍 Mở bảng từ vựng & Xuất MD</button>
         </div>
 
         <!-- Section 1: Mode Selection -->
@@ -185,7 +186,7 @@
 
         <!-- Floating Start Action Bar -->
         <div class="action-footer">
-            <button class="start-btn-main" onclick="startReview()">
+            <button type="button" class="start-btn-main" onclick="startReview()">
                 <span class="btn-text">✨ Bắt đầu ôn tập ngay</span>
                 <span class="btn-badge" id="start-count-badge">0 bài được chọn</span>
             </button>
@@ -195,9 +196,9 @@
     <!-- Flashcard Interface -->
     <div class="card" id="flashcard" onclick="handleCardClick(event)">
         <div class="header-bar" id="flashcard-header">
-            <button class="back-menu-btn" onclick="returnToMenu(event)">⬅ Menu chọn bài</button>
+            <button type="button" class="back-menu-btn" onclick="returnToMenu(event)">⬅ Menu chọn bài</button>
             <div class="progress" id="progress">Câu 0/0</div>
-            <button id="star-btn" class="star-btn" onclick="toggleMark(event)" title="Đánh dấu câu này">☆</button>
+            <button type="button" id="star-btn" class="star-btn" onclick="toggleMark(event)" title="Đánh dấu câu này">☆</button>
         </div>
         
         <div id="flashcard-content">
@@ -210,12 +211,12 @@
             
             <div class="answer-box">
                 <div class="word-jp" id="word-jp" style="display: none;"></div>
-                <button class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)" title="Nghe phát âm">🔊 Phát âm</button>
+                <button type="button" class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)" title="Nghe phát âm">🔊 Phát âm</button>
             </div>
             
             <div class="button-group">
-                <button class="btn btn-prev" id="prev-btn" onclick="prevQuestion(event)">Quay lại</button>
-                <button class="btn btn-main" id="action-btn" onclick="handleActionClick(event)">Xem đáp án</button>
+                <button type="button" class="btn btn-prev" id="prev-btn" onclick="prevQuestion(event)">Quay lại</button>
+                <button type="button" class="btn btn-main" id="action-btn" onclick="handleActionClick(event)">Xem đáp án</button>
             </div>
             
             <div class="hint">💡 Phím tắt: Bấm <b>Enter / Mũi tên phải</b> để đi tiếp. Bấm <b>Mũi tên trái</b> để quay lại.</div>
@@ -226,9 +227,9 @@
             <h2>🎉 Hoàn thành xuất sắc!</h2>
             <p>Bạn đã hoàn thành xong bộ từ vựng đã chọn.</p>
             <div class="end-actions">
-                <button class="start-btn-main" onclick="restartAll(event)">🔄 Ôn lại bộ này từ đầu</button>
-                <button class="start-btn-main btn-star-marked" id="btn-review-marked" onclick="reviewMarked(event)" style="display: none;">⭐ Ôn lại câu đã đánh dấu (0)</button>
-                <button class="start-btn-main btn-secondary" onclick="returnToMenu(event)">🏠 Trở về Menu chọn bài</button>
+                <button type="button" class="start-btn-main" onclick="restartAll(event)">🔄 Ôn lại bộ này từ đầu</button>
+                <button type="button" class="start-btn-main btn-star-marked" id="btn-review-marked" onclick="reviewMarked(event)" style="display: none;">⭐ Ôn lại câu đã đánh dấu (0)</button>
+                <button type="button" class="start-btn-main btn-secondary" onclick="returnToMenu(event)">🏠 Trở về Menu chọn bài</button>
             </div>
         </div>
     </div>
@@ -236,7 +237,7 @@
 
 <!-- Kanji Page Selector & Wheel Hub Modal -->
 <div class="modal-overlay" id="kanji-selector-modal" style="display: none;" onclick="closeKanjiModalOnOverlay(event)">
-    <div class="modal-card kanji-modal-card">
+    <div class="modal-card kanji-modal-card" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
         <!-- Modal Header -->
         <div class="modal-header">
             <div class="modal-title-group">
@@ -246,7 +247,7 @@
                     <p class="modal-subheading">Chọn các trang bạn muốn ôn tập • 9 trang chuyên đề (504 chữ Hán)</p>
                 </div>
             </div>
-            <button class="modal-close-btn" onclick="closeKanjiModal()" title="Đóng cửa sổ">✕</button>
+            <button type="button" class="modal-close-btn" onclick="closeKanjiModal()" title="Đóng cửa sổ">✕</button>
         </div>
 
         <!-- Kanji Modal Toolbar -->
@@ -279,7 +280,7 @@
 
 <!-- Kanji Lesson Selector & Wheel Hub Modal -->
 <div class="modal-overlay" id="kanji-lesson-modal" style="display: none;" onclick="closeKanjiLessonModalOnOverlay(event)">
-    <div class="modal-card kanji-modal-card">
+    <div class="modal-card kanji-modal-card" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
         <!-- Modal Header -->
         <div class="modal-header">
             <div class="modal-title-group">
@@ -289,7 +290,7 @@
                     <p class="modal-subheading">Chọn các bài học bạn muốn ôn tập • 11 bài chuyên đề (352 từ vựng Hán tự)</p>
                 </div>
             </div>
-            <button class="modal-close-btn" onclick="closeKanjiLessonModal()" title="Đóng cửa sổ">✕</button>
+            <button type="button" class="modal-close-btn" onclick="closeKanjiLessonModal()" title="Đóng cửa sổ">✕</button>
         </div>
 
         <!-- Kanji Modal Toolbar -->
@@ -322,7 +323,7 @@
 
 <!-- Vocabulary Summary & Search Modal -->
 <div class="modal-overlay" id="vocab-summary-modal" style="display: none;" onclick="closeVocabSummaryOnOverlay(event)">
-    <div class="modal-card">
+    <div class="modal-card" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
         <!-- Modal Header -->
         <div class="modal-header">
             <div class="modal-title-group">
@@ -332,31 +333,31 @@
                     <p class="modal-subheading">Tìm kiếm từ vựng tiếng Nhật, nghe phát âm & xuất file Markdown (.md)</p>
                 </div>
             </div>
-            <button class="modal-close-btn" onclick="closeVocabSummaryModal()" title="Đóng cửa sổ">✕</button>
+            <button type="button" class="modal-close-btn" onclick="closeVocabSummaryModal()" title="Đóng cửa sổ">✕</button>
         </div>
 
         <!-- Modal Toolbar -->
         <div class="modal-toolbar">
             <!-- Search Box -->
-            <div class="search-input-box">
+            <div class="search-input-box" onclick="document.getElementById('vocab-search-input').focus()">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="vocab-search-input" placeholder="Tìm kiếm từ vựng (sensei, watashi, thầy giáo, 先生, せんせい...)" oninput="filterVocabTable()">
-                <button class="search-clear-btn" id="search-clear-btn" onclick="clearVocabSearch()" style="display: none;" title="Xóa từ khóa">✕</button>
+                <input type="text" id="vocab-search-input" placeholder="Tìm kiếm từ vựng (sensei, watashi, thầy giáo, 先生, せんせい...)" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="handleVocabSearchInput()">
+                <button type="button" class="search-clear-btn" id="search-clear-btn" onclick="clearVocabSearch(event)" style="display: none;" title="Xóa từ khóa">✕</button>
             </div>
 
             <!-- Filter Chapter Select -->
             <div class="filter-select-box">
-                <select id="vocab-chapter-filter" onchange="filterVocabTable()">
+                <select id="vocab-chapter-filter" onchange="filterVocabTable(true)">
                     <!-- Được render tự động từ js/data/chapters.js -->
                 </select>
             </div>
 
             <!-- Action Buttons -->
             <div class="toolbar-actions">
-                <button class="btn-md-export" onclick="exportVocabToMarkdown()">
+                <button type="button" class="btn-md-export" onclick="exportVocabToMarkdown()">
                     <span>📥</span> Xuất File .MD
                 </button>
-                <button class="btn-md-copy" onclick="copyVocabMarkdown()">
+                <button type="button" class="btn-md-copy" onclick="copyVocabMarkdown()">
                     <span>📋</span> Copy MD
                 </button>
             </div>
@@ -396,10 +397,10 @@
 </div>
 
 <!-- Application Core Scripts -->
-<script src="js/audio.js?v=20260903"></script>
-<script src="js/study.js?v=20260903"></script>
-<script src="js/summary.js?v=20260903"></script>
-<script src="js/app.js?v=20260903"></script>
+<script src="js/audio.js?v=20260908"></script>
+<script src="js/study.js?v=20260908"></script>
+<script src="js/summary.js?v=20260908"></script>
+<script src="js/app.js?v=20260908"></script>
 
 </body>
 </html>

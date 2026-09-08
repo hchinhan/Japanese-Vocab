@@ -4,6 +4,21 @@
  * và kết nối với phiên học ôn tập.
  */
 
+let isKanjiOverlayGesture = false;
+
+function initKanjiModalOverlay() {
+    const modal = document.getElementById('kanji-selector-modal');
+    if (!modal || modal._hasOverlayBound) return;
+    modal._hasOverlayBound = true;
+
+    modal.addEventListener('mousedown', (e) => {
+        isKanjiOverlayGesture = (e.target === modal);
+    });
+    modal.addEventListener('touchstart', (e) => {
+        isKanjiOverlayGesture = (e.target === modal);
+    }, { passive: true });
+}
+
 /**
  * Mở modal chọn trang Kanji
  */
@@ -15,6 +30,7 @@ function openKanjiModal(event) {
     const modal = document.getElementById('kanji-selector-modal');
     if (!modal) return;
 
+    initKanjiModalOverlay();
     renderKanjiModalPages();
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -33,12 +49,13 @@ function closeKanjiModal() {
 }
 
 /**
- * Đóng modal khi click vào nền overlay
+ * Đóng modal khi click vào nền overlay an toàn
  */
 function closeKanjiModalOnOverlay(event) {
-    if (event && event.target && event.target.id === 'kanji-selector-modal') {
+    if (isKanjiOverlayGesture && event && event.target && event.target.id === 'kanji-selector-modal') {
         closeKanjiModal();
     }
+    isKanjiOverlayGesture = false;
 }
 
 /**

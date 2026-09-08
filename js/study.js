@@ -96,41 +96,6 @@ function initRound() {
 }
 
 /**
- * Kiểm tra xem một từ vựng có phải là Kanji hay không
- */
-function isKanjiVocab(vn, jp) {
-    if (!jp) return false;
-
-    // 1. Kiểm tra nếu câu hỏi nằm trong cấu hình các trang Kanji
-    if (typeof KANJI_PAGES_CONFIG !== 'undefined') {
-        for (let i = 0; i < KANJI_PAGES_CONFIG.length; i++) {
-            const pageData = KANJI_PAGES_CONFIG[i].getData ? KANJI_PAGES_CONFIG[i].getData() : null;
-            if (pageData && (vn in pageData) && pageData[vn] === jp) {
-                return true;
-            }
-        }
-    }
-
-    // 2. Kiểm tra nếu câu hỏi nằm trong cấu hình các bài Kanji
-    if (typeof KANJI_LESSONS_CONFIG !== 'undefined') {
-        for (let i = 0; i < KANJI_LESSONS_CONFIG.length; i++) {
-            const lessonData = KANJI_LESSONS_CONFIG[i].getData ? KANJI_LESSONS_CONFIG[i].getData() : null;
-            if (lessonData && (vn in lessonData) && lessonData[vn] === jp) {
-                return true;
-            }
-        }
-    }
-
-    // 3. Kiểm tra nếu ký tự tiếng Nhật là thuần chữ Hán (CJK Ideographs)
-    const pureKanjiRegex = /^[\u4e00-\u9faf\u3400-\u4dbf\uf900-\ufaff\s]+$/;
-    if (pureKanjiRegex.test(jp.trim())) {
-        return true;
-    }
-
-    return false;
-}
-
-/**
  * Hiển thị câu hỏi hiện tại theo chế độ học
  */
 function showQuestion() {

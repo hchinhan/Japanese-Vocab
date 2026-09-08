@@ -262,6 +262,24 @@ window.addEventListener('keydown', function(event) {
         }
     }
 
+    // Không xử lý phím tắt Flashcard khi đang gõ ô nhập liệu hoặc khi bất kỳ modal nào đang mở
+    const targetTag = event.target ? event.target.tagName : '';
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(targetTag)) {
+        return;
+    }
+    const summaryModal = document.getElementById('vocab-summary-modal');
+    if (summaryModal && summaryModal.style.display !== 'none') {
+        return;
+    }
+    const kanjiModal = document.getElementById('kanji-selector-modal');
+    if (kanjiModal && kanjiModal.style.display !== 'none') {
+        return;
+    }
+    const kanjiLessonModal = document.getElementById('kanji-lesson-modal');
+    if (kanjiLessonModal && kanjiLessonModal.style.display !== 'none') {
+        return;
+    }
+
     // Enter / Mũi tên phải / Mũi tên trái: Điều hướng Flashcard
     const flashcard = document.getElementById('flashcard');
     const endScreen = document.getElementById('end-screen');

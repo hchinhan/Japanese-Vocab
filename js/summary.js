@@ -282,9 +282,61 @@ function getDisplayRomaji(jp) {
     return kanaToRomaji(kana).trim();
 }
 
-// ==========================================================================
+// ==========================================
 // 2. TỔNG HỢP DỮ LIỆU TỪ VỰNG TỪ CÁC BÀI HỌC
-// ==========================================================================
+// ==========================================
+
+let renderedVocabCount = 0;
+const VOCAB_PAGE_SIZE = 60;
+let searchDebounceTimer = null;
+let isOverlayGesture = false;
+
+/**
+ * Tránh mã độc và lỗi hiển thị ký tự đặc biệt trong HTML
+ */
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+/**
+ * Tạo một đối tượng từ vựng đã index sẵn các biến thể tìm kiếm để truy vấn siêu tốc
+ */
+function createVocabItem(chapterId, chapterLabel, chapterTitle, vnKey, jpVal, options = {}) {
+    const romaji = getDisplayRomaji(jpVal);
+    const jpRomaji = kanaToRomaji(jpVal);
+    const vnNorm = removeVietnameseTones(vnKey);
+    const romajiLower = romaji.toLowerCase();
+    const jpLower = jpVal.toLowerCase();
+    const vnLower = vnKey.toLowerCase();
+
+    return {
+        chapterId,
+        chapterLabel,
+        chapterTitle,
+        isKanji: !!options.isKanji,
+        isKanjiLesson: !!options.isKanjiLesson,
+        vn: vnKey,
+        jp: jpVal,
+        romaji: romaji,
+        jpRomaji: jpRomaji,
+        vnNorm: vnNorm,
+        vnNormNoSpaces: vnNorm.replace(/\s+/g, ''),
+        vnLower: vnLower,
+        jpLower: jpLower,
+        romajiLower: romajiLower,
+        romajiNoSpaces: romajiLower.replace(/\s+/g, ''),
+        romajiNorm: normalizeFuzzyRomaji(romaji),
+        jpRomajiNorm: normalizeFuzzyRomaji(jpRomaji),
+        jpNorm: normalizeFuzzyRomaji(jpVal),
+        chapterLabelLower: chapterLabel.toLowerCase(),
+        chapterTitleLower: chapterTitle.toLowerCase()
+    };
+}
 
 /**
  * Gộp toàn bộ từ vựng từ các bài học vào một danh sách phẳng kèm Romaji đã index ngầm
@@ -297,96 +349,34 @@ function getAggregateVocabData() {
             if (typeof generateMixedCounters === 'function') {
                 const counters = generateMixedCounters(10);
                 for (let vnKey in counters) {
-                    const jpVal = counters[vnKey];
-                    const romaji = getDisplayRomaji(jpVal);
-                    const jpRomaji = kanaToRomaji(jpVal);
-                    list.push({
-                        chapterId: 'dem',
-                        chapterLabel: 'Đếm số',
-                        chapterTitle: 'Luyện đếm số',
-                        vn: vnKey,
-                        jp: jpVal,
-                        romaji: romaji,
-                        jpRomaji: jpRomaji,
-                        vnNorm: removeVietnameseTones(vnKey),
-                        romajiNorm: normalizeFuzzyRomaji(romaji),
-                        jpRomajiNorm: normalizeFuzzyRomaji(jpRomaji),
-                        jpNorm: normalizeFuzzyRomaji(jpVal)
-                    });
+                    list.push(createVocabItem('dem', 'Đếm số', 'Luyện đếm số', vnKey, counters[vnKey]));
                 }
             }
         } else if (chapter.isKanjiGroup && typeof KANJI_PAGES_CONFIG !== 'undefined') {
             // Nạp toàn bộ 9 trang Kanji vào bảng tra cứu
             KANJI_PAGES_CONFIG.forEach(p => {
-                const pData = p.getData();
+                const pData = p.getData ? p.getData() : null;
                 if (pData) {
                     for (let vnKey in pData) {
-                        const jpVal = pData[vnKey];
-                        const romaji = getDisplayRomaji(jpVal);
-                        const jpRomaji = kanaToRomaji(jpVal);
-                        list.push({
-                            chapterId: p.id,
-                            chapterLabel: p.shortName,
-                            chapterTitle: `${p.shortName} - ${p.title}`,
-                            isKanji: true,
-                            vn: vnKey,
-                            jp: jpVal,
-                            romaji: romaji,
-                            jpRomaji: jpRomaji,
-                            vnNorm: removeVietnameseTones(vnKey),
-                            romajiNorm: normalizeFuzzyRomaji(romaji),
-                            jpRomajiNorm: normalizeFuzzyRomaji(jpRomaji),
-                            jpNorm: normalizeFuzzyRomaji(jpVal)
-                        });
+                        list.push(createVocabItem(p.id, p.shortName, `${p.shortName} - ${p.title}`, vnKey, pData[vnKey], { isKanji: true }));
                     }
                 }
             });
         } else if (chapter.isKanjiLessonGroup && typeof KANJI_LESSONS_CONFIG !== 'undefined') {
             // Nạp toàn bộ 11 bài Từ vựng Kanji vào bảng tra cứu
             KANJI_LESSONS_CONFIG.forEach(l => {
-                const lData = l.getData();
+                const lData = l.getData ? l.getData() : null;
                 if (lData) {
                     for (let vnKey in lData) {
-                        const jpVal = lData[vnKey];
-                        const romaji = getDisplayRomaji(jpVal);
-                        const jpRomaji = kanaToRomaji(jpVal);
-                        list.push({
-                            chapterId: l.id,
-                            chapterLabel: l.shortName,
-                            chapterTitle: `${l.shortName} - ${l.title}`,
-                            isKanjiLesson: true,
-                            vn: vnKey,
-                            jp: jpVal,
-                            romaji: romaji,
-                            jpRomaji: jpRomaji,
-                            vnNorm: removeVietnameseTones(vnKey),
-                            romajiNorm: normalizeFuzzyRomaji(romaji),
-                            jpRomajiNorm: normalizeFuzzyRomaji(jpRomaji),
-                            jpNorm: normalizeFuzzyRomaji(jpVal)
-                        });
+                        list.push(createVocabItem(l.id, l.shortName, `${l.shortName} - ${l.title}`, vnKey, lData[vnKey], { isKanjiLesson: true }));
                     }
                 }
             });
         } else {
-            const data = chapter.getData();
+            const data = chapter.getData ? chapter.getData() : null;
             if (data) {
                 for (let vnKey in data) {
-                    const jpVal = data[vnKey];
-                    const romaji = getDisplayRomaji(jpVal);
-                    const jpRomaji = kanaToRomaji(jpVal);
-                    list.push({
-                        chapterId: chapter.id,
-                        chapterLabel: chapter.label,
-                        chapterTitle: `${chapter.label} - ${chapter.title}`,
-                        vn: vnKey,
-                        jp: jpVal,
-                        romaji: romaji,
-                        jpRomaji: jpRomaji,
-                        vnNorm: removeVietnameseTones(vnKey),
-                        romajiNorm: normalizeFuzzyRomaji(romaji),
-                        jpRomajiNorm: normalizeFuzzyRomaji(jpRomaji),
-                        jpNorm: normalizeFuzzyRomaji(jpVal)
-                    });
+                    list.push(createVocabItem(chapter.id, chapter.label, `${chapter.label} - ${chapter.title}`, vnKey, data[vnKey]));
                 }
             }
         }
@@ -400,6 +390,30 @@ function getAggregateVocabData() {
 // ==========================================================================
 
 /**
+ * Gắn sự kiện chống đóng nhầm modal khi bấm/kéo trong khung tìm kiếm
+ */
+function initSummaryModalOverlay() {
+    const modal = document.getElementById('vocab-summary-modal');
+    if (!modal || modal._hasOverlayBound) return;
+    modal._hasOverlayBound = true;
+
+    modal.addEventListener('mousedown', (e) => {
+        isOverlayGesture = (e.target === modal);
+    });
+
+    modal.addEventListener('touchstart', (e) => {
+        isOverlayGesture = (e.target === modal);
+    }, { passive: true });
+
+    modal.addEventListener('click', (e) => {
+        if (isOverlayGesture && e.target === modal) {
+            closeVocabSummaryModal();
+        }
+        isOverlayGesture = false;
+    });
+}
+
+/**
  * Mở modal tra cứu từ vựng
  */
 function openVocabSummaryModal() {
@@ -410,11 +424,15 @@ function openVocabSummaryModal() {
     if (modal) {
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
-        filterVocabTable();
+        initSummaryModalOverlay();
+        initVocabTableListeners();
+        filterVocabTable(true);
         setTimeout(() => {
             const searchInput = document.getElementById('vocab-search-input');
-            if (searchInput) searchInput.focus();
-        }, 100);
+            if (searchInput) {
+                searchInput.focus();
+            }
+        }, 50);
     }
 }
 
@@ -430,18 +448,56 @@ function closeVocabSummaryModal() {
 }
 
 /**
- * Đóng modal khi click ra ngoài overlay
+ * Đóng modal khi click ra ngoài overlay (có kiểm tra gesture an toàn)
  */
 function closeVocabSummaryOnOverlay(e) {
-    if (e.target && e.target.id === 'vocab-summary-modal') {
+    if (isOverlayGesture && e && e.target && e.target.id === 'vocab-summary-modal') {
         closeVocabSummaryModal();
+    }
+    isOverlayGesture = false;
+}
+
+/**
+ * Debounce xử lý nhập liệu tìm kiếm (120ms) giúp gõ phím cực mượt, không giật lag
+ */
+function handleVocabSearchInput() {
+    if (searchDebounceTimer) {
+        clearTimeout(searchDebounceTimer);
+    }
+    searchDebounceTimer = setTimeout(() => {
+        filterVocabTable(false);
+    }, 120);
+}
+
+/**
+ * Xóa nội dung tìm kiếm
+ */
+function clearVocabSearch(e) {
+    if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
+    const searchInput = document.getElementById('vocab-search-input');
+    if (searchInput) {
+        searchInput.value = '';
+        filterVocabTable(true);
+        searchInput.focus();
     }
 }
 
 /**
  * Lọc bảng từ vựng thông minh (hỗ trợ Tiếng Việt có dấu/không dấu, Tiếng Nhật, Romaji viết liền/cách)
  */
-function filterVocabTable() {
+function filterVocabTable(immediate = false) {
+    if (!immediate && searchDebounceTimer) {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = null;
+    }
+
+    if (allVocabList.length === 0) {
+        allVocabList = getAggregateVocabData();
+    }
+
     const searchInput = document.getElementById('vocab-search-input');
     const chapterFilter = document.getElementById('vocab-chapter-filter');
     const clearBtn = document.getElementById('search-clear-btn');
@@ -464,14 +520,14 @@ function filterVocabTable() {
         const qNoTone = removeVietnameseTones(qClean);
         const qNoToneNoSpaces = removeVietnameseTones(qNoSpaces);
 
-        // Chuyển query sang Hiragana & Katakana (cả khi người dùng gõ có dấu cách hoặc viết liền)
+        // Chuyển query sang Hiragana & Katakana
         const qHiragana = romajiToHiragana(qClean);
-        const qHiraganaNoSpaces = romajiToHiragana(qNoSpaces);
+        const qHiraganaNoSpaces = qNoSpaces !== qClean ? romajiToHiragana(qNoSpaces) : qHiragana;
         const qKatakana = hiraganaToKatakana(qHiragana);
-        const qKatakanaNoSpaces = hiraganaToKatakana(qHiraganaNoSpaces);
+        const qKatakanaNoSpaces = qHiraganaNoSpaces ? hiraganaToKatakana(qHiraganaNoSpaces) : qKatakana;
 
         const qRomajiNorm = normalizeFuzzyRomaji(qClean);
-        const qHiraNorm = normalizeFuzzyRomaji(qHiragana);
+        const qHiraNorm = qHiragana ? normalizeFuzzyRomaji(qHiragana) : '';
 
         currentFilteredList = allVocabList.filter(item => {
             const matchesChapter = (
@@ -482,108 +538,124 @@ function filterVocabTable() {
             );
             if (!matchesChapter) return false;
 
-            const matchesSearch =
-                item.vn.toLowerCase().includes(qClean) ||
-                (item.vnNorm && (item.vnNorm.includes(qNoTone) || item.vnNorm.replace(/\s+/g, '').includes(qNoToneNoSpaces))) ||
-                item.jp.toLowerCase().includes(qClean) ||
-                item.jp.includes(qHiragana) ||
-                item.jp.includes(qHiraganaNoSpaces) ||
-                item.jp.includes(qKatakana) ||
-                item.jp.includes(qKatakanaNoSpaces) ||
-                (item.romaji && (item.romaji.toLowerCase().includes(qClean) || item.romaji.toLowerCase().replace(/\s+/g, '').includes(qNoSpaces))) ||
-                (item.jpRomaji && (item.jpRomaji.toLowerCase().includes(qClean) || item.jpRomaji.toLowerCase().replace(/\s+/g, '').includes(qNoSpaces))) ||
-                (item.romajiNorm && item.romajiNorm.includes(qRomajiNorm)) ||
-                (item.jpRomajiNorm && item.jpRomajiNorm.includes(qRomajiNorm)) ||
-                (item.jpNorm && item.jpNorm.includes(qHiraNorm)) ||
-                item.chapterLabel.toLowerCase().includes(qClean) ||
-                item.chapterTitle.toLowerCase().includes(qClean);
-
-            return matchesSearch;
+            return (
+                item.vnLower.includes(qClean) ||
+                item.vnNorm.includes(qNoTone) ||
+                (qNoToneNoSpaces && item.vnNormNoSpaces.includes(qNoToneNoSpaces)) ||
+                item.jpLower.includes(qClean) ||
+                (qHiragana && item.jp.includes(qHiragana)) ||
+                (qHiraganaNoSpaces && item.jp.includes(qHiraganaNoSpaces)) ||
+                (qKatakana && item.jp.includes(qKatakana)) ||
+                (qKatakanaNoSpaces && item.jp.includes(qKatakanaNoSpaces)) ||
+                item.romajiLower.includes(qClean) ||
+                (qNoSpaces && item.romajiNoSpaces.includes(qNoSpaces)) ||
+                (qRomajiNorm && item.romajiNorm.includes(qRomajiNorm)) ||
+                (qRomajiNorm && item.jpRomajiNorm.includes(qRomajiNorm)) ||
+                (qHiraNorm && item.jpNorm.includes(qHiraNorm)) ||
+                item.chapterLabelLower.includes(qClean) ||
+                item.chapterTitleLower.includes(qClean)
+            );
         });
     }
 
-    renderVocabTable(currentFilteredList);
+    renderVocabTable(currentFilteredList, false);
 }
 
 /**
- * Xóa nội dung tìm kiếm
+ * Render dữ liệu ra bảng HTML dạng lũy tiến (Infinite Scroll / Batching 60 dòng) siêu mượt
  */
-function clearVocabSearch() {
-    const searchInput = document.getElementById('vocab-search-input');
-    if (searchInput) {
-        searchInput.value = '';
-        filterVocabTable();
-        searchInput.focus();
-    }
-}
-
-/**
- * Render dữ liệu ra bảng HTML sạch đẹp, gọn gàng (chỉ hiển thị Tiếng Nhật & Tiếng Việt)
- */
-function renderVocabTable(list) {
+function renderVocabTable(list, append = false) {
     const tbody = document.getElementById('vocab-table-body');
     const emptyState = document.getElementById('vocab-empty-state');
     const countInfo = document.getElementById('vocab-count-info');
-
-    if (countInfo) {
-        countInfo.innerText = `Hiển thị ${list.length} / ${allVocabList.length} từ vựng`;
-    }
+    const tableWrapper = document.querySelector('.vocab-table-wrapper');
 
     if (!tbody) return;
-    tbody.innerHTML = '';
 
-    if (list.length === 0) {
-        if (emptyState) emptyState.style.display = 'flex';
-        return;
-    } else {
-        if (emptyState) emptyState.style.display = 'none';
+    if (!append) {
+        renderedVocabCount = 0;
+        tbody.innerHTML = '';
+        if (tableWrapper) tableWrapper.scrollTop = 0;
+
+        if (list.length === 0) {
+            if (emptyState) emptyState.style.display = 'flex';
+            if (countInfo) countInfo.innerText = 'Không tìm thấy từ vựng nào';
+            return;
+        } else {
+            if (emptyState) emptyState.style.display = 'none';
+        }
     }
 
-    const fragment = document.createDocumentFragment();
-    list.forEach((item, index) => {
-        const tr = document.createElement('tr');
+    if (countInfo) {
+        countInfo.innerText = list.length === allVocabList.length
+            ? `Tổng cộng ${allVocabList.length} từ vựng`
+            : `Tìm thấy ${list.length} / ${allVocabList.length} từ vựng`;
+    }
 
-        // STT
-        const tdIndex = document.createElement('td');
-        tdIndex.className = 'td-index';
-        tdIndex.textContent = index + 1;
-        tr.appendChild(tdIndex);
+    const startIdx = renderedVocabCount;
+    const endIdx = Math.min(startIdx + VOCAB_PAGE_SIZE, list.length);
+    if (startIdx >= endIdx) return;
 
-        // Chapter Tag
-        const tdChapter = document.createElement('td');
-        const badge = document.createElement('span');
-        badge.className = `table-chapter-tag tag-${item.chapterId}`;
-        badge.textContent = item.chapterLabel;
-        tdChapter.appendChild(badge);
-        tr.appendChild(tdChapter);
+    const slice = list.slice(startIdx, endIdx);
+    let rowsHtml = '';
 
-        // Tiếng Nhật (Kanji Lesson: key=Kanji, value=Hiragana → hiển thị Kanji ở cột JP)
-        const tdJp = document.createElement('td');
-        tdJp.className = 'td-jp';
-        tdJp.textContent = item.isKanjiLesson ? item.vn : item.jp;
-        tr.appendChild(tdJp);
+    for (let i = 0; i < slice.length; i++) {
+        const item = slice[i];
+        const index = startIdx + i + 1;
+        const jpDisplay = item.isKanjiLesson ? item.vn : item.jp;
+        const vnDisplay = item.isKanjiLesson ? item.jp : item.vn;
+        const rawSpeak = item.isKanjiLesson ? item.vn : item.jp;
+        const speakText = rawSpeak
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;');
 
-        // Nghĩa Tiếng Việt (Kanji Lesson: hiển thị Hiragana reading ở cột nghĩa)
-        const tdVn = document.createElement('td');
-        tdVn.className = 'td-vn';
-        tdVn.textContent = item.isKanjiLesson ? item.jp : item.vn;
-        tr.appendChild(tdVn);
+        rowsHtml += `<tr>
+            <td class="td-index">${index}</td>
+            <td><span class="table-chapter-tag tag-${item.chapterId}">${escapeHtml(item.chapterLabel)}</span></td>
+            <td class="td-jp">${escapeHtml(jpDisplay)}</td>
+            <td class="td-vn">${escapeHtml(vnDisplay)}</td>
+            <td class="td-audio">
+                <button type="button" class="table-speak-btn" title="Nghe phát âm" data-speak="${speakText}">🔊</button>
+            </td>
+        </tr>`;
+    }
 
-        // Nút phát âm
-        const tdAudio = document.createElement('td');
-        tdAudio.className = 'td-audio';
-        const audioBtn = document.createElement('button');
-        audioBtn.className = 'table-speak-btn';
-        audioBtn.title = 'Nghe phát âm';
-        audioBtn.innerHTML = '🔊';
-        audioBtn.onclick = () => speakJapanese(item.isKanjiLesson ? item.vn : item.jp);
-        tdAudio.appendChild(audioBtn);
-        tr.appendChild(tdAudio);
+    tbody.insertAdjacentHTML('beforeend', rowsHtml);
+    renderedVocabCount = endIdx;
 
-        fragment.appendChild(tr);
-    });
+    initVocabTableListeners();
+}
 
-    tbody.appendChild(fragment);
+/**
+ * Đảm bảo các listener (phát âm & cuộn tải thêm) được khởi tạo duy nhất 1 lần
+ */
+function initVocabTableListeners() {
+    const tbody = document.getElementById('vocab-table-body');
+    if (tbody && !tbody._hasAudioDelegation) {
+        tbody._hasAudioDelegation = true;
+        tbody.addEventListener('click', (e) => {
+            const btn = e.target.closest('.table-speak-btn');
+            if (btn) {
+                e.stopPropagation();
+                const text = btn.getAttribute('data-speak');
+                if (text && typeof speakJapanese === 'function') {
+                    speakJapanese(text);
+                }
+            }
+        });
+    }
+
+    const wrapper = document.querySelector('.vocab-table-wrapper');
+    if (wrapper && !wrapper._hasScrollListener) {
+        wrapper._hasScrollListener = true;
+        wrapper.addEventListener('scroll', () => {
+            if (wrapper.scrollTop + wrapper.clientHeight >= wrapper.scrollHeight - 300) {
+                if (renderedVocabCount < currentFilteredList.length) {
+                    renderVocabTable(currentFilteredList, true);
+                }
+            }
+        }, { passive: true });
+    }
 }
 
 // ==========================================================================

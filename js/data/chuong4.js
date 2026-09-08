@@ -6,10 +6,10 @@ const vocabChuong4 = {
     "Trước (kém) ~": "～前 (～まえ)",
     "Buổi sáng (trước 12 giờ trưa)": "午前 (ごぜん)",
     "Buổi chiều (sau 12 giờ trưa)": "午後 (ごご)",
-    "Sáng": "朝 (あさ)",
+    "Buổi sáng": "朝 (あさ)",
     "Trưa": "昼 (ひる)",
     "Chiều": "夕方 (ゆうがた)",
-    "Tối": "夜 / 晩 (よる / ばん)",
+    "Buổi tối": "夜 / 晩 (よる / ばん)",
     
     // Thứ trong tuần
     "Thứ mấy?": "何曜日 (なんようび)",

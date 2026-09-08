@@ -330,6 +330,17 @@ const CHAPTERS_CONFIG = [
         getData: () => (typeof vocabChuong17 !== 'undefined' ? vocabChuong17 : null)
     },
     {
+        id: 'chuong18',
+        label: 'Bài 18',
+        shortName: 'Ch.18',
+        title: 'Trạng thái tiếp diễn & Hiện tượng tự nhiên',
+        desc: 'Hiện tượng tự nhiên & trạng thái tiếp diễn (~ています)',
+        icon: '🌧️',
+        tag: 'Bài 18',
+        tagClass: '',
+        getData: () => (typeof vocabChuong18 !== 'undefined' ? vocabChuong18 : null)
+    },
+    {
         id: 'dem',
         label: 'Đếm số',
         shortName: 'Đếm số',
@@ -374,7 +385,7 @@ const CHAPTERS_CONFIG = [
         label: 'Katakana',
         shortName: 'Katakana',
         title: 'Katakana tổng hợp',
-        desc: 'Tất cả từ ngoại lai Katakana từ Bài 1~17',
+        desc: 'Tất cả từ ngoại lai Katakana từ Bài 1~18',
         icon: '🅰️',
         tag: 'Đặc biệt',
         tagClass: 'tag-emerald',
