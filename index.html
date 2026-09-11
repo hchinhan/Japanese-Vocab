@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="css/style.css?v=20260908">
+    <link rel="stylesheet" href="css/style.css?v=20260911">
 
     <!-- Vocabulary Data Files -->
     <script src="js/data/chuong1.js?v=20260903"></script>
@@ -25,9 +25,9 @@
     <script src="js/data/chuong9.js?v=20260903"></script>
     <script src="js/data/chuong10.js?v=20260903"></script>
     <script src="js/data/chuong11.js?v=20260903"></script>
-    <script src="js/data/chuong12.js?v=20260903"></script>
+    <script src="js/data/chuong12.js?v=20260909"></script>
     <script src="js/data/chuong13a.js?v=20260903"></script>
-    <script src="js/data/chuong13b.js?v=20260903"></script>
+    <script src="js/data/chuong13b.js?v=20260909"></script>
     <script src="js/data/chuong15.js?v=20260903"></script>
     <script src="js/data/chuong16.js?v=20260903"></script>
     <script src="js/data/chuong17.js?v=20260908"></script>
@@ -194,11 +194,11 @@
     </div>
 
     <!-- Flashcard Interface -->
-    <div class="card" id="flashcard" onclick="handleCardClick(event)">
+    <div class="card" id="flashcard" onmousedown="handleCardMouseDown(event)" ontouchstart="handleCardTouchStart(event)" onclick="handleCardClick(event)">
         <div class="header-bar" id="flashcard-header">
             <button type="button" class="back-menu-btn" onclick="returnToMenu(event)">⬅ Menu chọn bài</button>
             <div class="progress" id="progress">Câu 0/0</div>
-            <button type="button" id="star-btn" class="star-btn" onclick="toggleMark(event)" title="Đánh dấu câu này">☆</button>
+            <button type="button" id="star-btn" class="star-btn" onclick="toggleMark(event)" title="Đánh dấu câu này (Phím M)">☆</button>
         </div>
         
         <div id="flashcard-content">
@@ -219,7 +219,7 @@
                 <button type="button" class="btn btn-main" id="action-btn" onclick="handleActionClick(event)">Xem đáp án</button>
             </div>
             
-            <div class="hint">💡 Phím tắt: Bấm <b>Enter / Mũi tên phải</b> để đi tiếp. Bấm <b>Mũi tên trái</b> để quay lại.</div>
+            <div class="hint">💡 Phím tắt: Bấm <b>Enter / Mũi tên phải</b> để đi tiếp. Bấm <b>Mũi tên trái</b> để quay lại. Bấm <b>M</b> để đánh dấu sao (★).</div>
         </div>
 
         <!-- End Screen -->
@@ -398,9 +398,9 @@
 
 <!-- Application Core Scripts -->
 <script src="js/audio.js?v=20260908"></script>
-<script src="js/study.js?v=20260908"></script>
+<script src="js/study.js?v=20260911"></script>
 <script src="js/summary.js?v=20260908"></script>
-<script src="js/app.js?v=20260908"></script>
+<script src="js/app.js?v=20260909"></script>
 
 </body>
 </html>

@@ -16,7 +16,7 @@ Object.assign(vocabChuong12, {
     "Tủ quần áo": "箪笥 (たんす)",
     "Nhà vệ sinh": "トイレ",
     "Áo sơ mi": "シャツ",
-    "Nhiều": "沢山 (たくさん)",
+    "Nhiều (phó từ/danh từ)": "沢山 (たくさん)",
     "Nhiều người": "大勢 (おおぜい)",
     "Ai đó": "誰か (だれか)",
     "Cái gì đó": "何か (なにか)",

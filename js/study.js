@@ -10,6 +10,9 @@ let isShowingAnswer = false;
 let currentChapterName = "";
 let currentMode = "flashcard";
 const markedQuestions = new Set();
+let cardMouseDownPos = null;
+let hadSelectionOnMouseDown = false;
+let wordClickTimeout = null;
 
 /**
  * Trộn ngẫu nhiên danh sách câu hỏi
@@ -86,6 +89,10 @@ function startReview() {
  * Khởi tạo vòng học mới
  */
 function initRound() {
+    if (wordClickTimeout) {
+        clearTimeout(wordClickTimeout);
+        wordClickTimeout = null;
+    }
     document.getElementById('flashcard-content').style.display = 'block';
     document.getElementById('flashcard-header').style.display = 'flex';
     document.getElementById('end-screen').style.display = 'none';
@@ -100,6 +107,9 @@ function initRound() {
  */
 function showQuestion() {
     isShowingAnswer = false;
+    if (window.getSelection) {
+        window.getSelection().removeAllRanges();
+    }
 
     document.getElementById('progress').innerText = `${currentChapterName} | Câu ${currentIndex + 1}/${questions.length}`;
     updateStarUI();
@@ -207,6 +217,10 @@ function nextQuestion() {
  */
 function prevQuestion(event) {
     if (event) event.stopPropagation();
+    if (wordClickTimeout) {
+        clearTimeout(wordClickTimeout);
+        wordClickTimeout = null;
+    }
     if (currentIndex > 0) {
         currentIndex--;
         showQuestion();
@@ -283,10 +297,34 @@ function reviewMarked(event) {
 }
 
 /**
+ * Xử lý mousedown trên thẻ flashcard để ghi nhận tọa độ và trạng thái bôi đen
+ */
+function handleCardMouseDown(event) {
+    cardMouseDownPos = { x: event.clientX, y: event.clientY };
+    const sel = window.getSelection();
+    hadSelectionOnMouseDown = !!(sel && sel.toString().trim().length > 0);
+}
+
+/**
+ * Xử lý touchstart trên mobile
+ */
+function handleCardTouchStart(event) {
+    if (event.touches && event.touches.length > 0) {
+        cardMouseDownPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+        const sel = window.getSelection();
+        hadSelectionOnMouseDown = !!(sel && sel.toString().trim().length > 0);
+    }
+}
+
+/**
  * Quay về Menu chính
  */
 function returnToMenu(event) {
     if (event) event.stopPropagation();
+    if (wordClickTimeout) {
+        clearTimeout(wordClickTimeout);
+        wordClickTimeout = null;
+    }
     document.getElementById('flashcard').style.display = 'none';
     document.getElementById('menu').style.display = 'block';
     stopAudio();
@@ -297,15 +335,88 @@ function returnToMenu(event) {
  */
 function handleActionClick(event) {
     if (event) event.stopPropagation();
+    if (wordClickTimeout) {
+        clearTimeout(wordClickTimeout);
+        wordClickTimeout = null;
+    }
     handleMainLogic();
 }
 
 /**
- * Xử lý click trên thẻ flashcard
+ * Xử lý click trên thẻ flashcard (cho phép bôi đen từ mà không vô tình lật thẻ)
  */
 function handleCardClick(event) {
     if (document.getElementById('end-screen').style.display === 'block') return;
     if (event.target.closest('button') || event.target.closest('input') || event.target.closest('.listen-prompt')) return;
+
+    // 1. Nếu lúc bấm chuột xuống đang có đoạn text được bôi đen -> click này là để giải phóng vùng chọn, không lật thẻ
+    if (hadSelectionOnMouseDown) {
+        hadSelectionOnMouseDown = false;
+        cardMouseDownPos = null;
+        if (wordClickTimeout) {
+            clearTimeout(wordClickTimeout);
+            wordClickTimeout = null;
+        }
+        return;
+    }
+
+    // 2. Nếu thao tác là kéo chuột (drag) để bôi đen chữ -> không lật thẻ
+    if (cardMouseDownPos && event.clientX !== undefined && event.clientX !== 0) {
+        const dx = Math.abs(event.clientX - cardMouseDownPos.x);
+        const dy = Math.abs(event.clientY - cardMouseDownPos.y);
+        cardMouseDownPos = null;
+        if (dx > 6 || dy > 6) {
+            if (wordClickTimeout) {
+                clearTimeout(wordClickTimeout);
+                wordClickTimeout = null;
+            }
+            return;
+        }
+    }
+    cardMouseDownPos = null;
+
+    // 3. Nếu hiện tại đang có đoạn chữ được bôi đen/chọn -> không lật thẻ
+    const currentSel = window.getSelection();
+    if (currentSel && currentSel.toString().trim().length > 0) {
+        if (wordClickTimeout) {
+            clearTimeout(wordClickTimeout);
+            wordClickTimeout = null;
+        }
+        return;
+    }
+
+    // 4. Nếu click trúng vùng hiển thị từ vựng (#word-vn hoặc #word-jp)
+    const isWordTarget = event.target.closest('#word-vn, #word-jp, .word-vn, .word-jp');
+    if (isWordTarget) {
+        // Double-click / triple-click để bôi đen từ nhanh
+        if (event.detail > 1) {
+            if (wordClickTimeout) {
+                clearTimeout(wordClickTimeout);
+                wordClickTimeout = null;
+            }
+            return;
+        }
+
+        // Chờ khoảng thời gian ngắn để phân biệt click lật thẻ hay double-click bôi đen
+        if (wordClickTimeout) {
+            clearTimeout(wordClickTimeout);
+        }
+        wordClickTimeout = setTimeout(() => {
+            wordClickTimeout = null;
+            const selAfter = window.getSelection();
+            if (selAfter && selAfter.toString().trim().length > 0) {
+                return;
+            }
+            handleMainLogic();
+        }, 220);
+        return;
+    }
+
+    // 5. Click vào nền thẻ hoặc khoảng trống -> lật thẻ ngay lập tức
+    if (wordClickTimeout) {
+        clearTimeout(wordClickTimeout);
+        wordClickTimeout = null;
+    }
     handleMainLogic();
 }
 
@@ -313,6 +424,10 @@ function handleCardClick(event) {
  * Luồng logic chính: Chưa hiện đáp án -> Hiện đáp án; Đã hiện đáp án -> Câu tiếp theo
  */
 function handleMainLogic() {
+    if (wordClickTimeout) {
+        clearTimeout(wordClickTimeout);
+        wordClickTimeout = null;
+    }
     if (!isShowingAnswer) {
         showAnswer();
     } else {

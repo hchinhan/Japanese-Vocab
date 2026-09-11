@@ -280,7 +280,7 @@ window.addEventListener('keydown', function(event) {
         return;
     }
 
-    // Enter / Mũi tên phải / Mũi tên trái: Điều hướng Flashcard
+    // Enter / Mũi tên phải / Mũi tên trái / Phím M: Điều hướng và đánh dấu Flashcard
     const flashcard = document.getElementById('flashcard');
     const endScreen = document.getElementById('end-screen');
     if (flashcard && flashcard.style.display === 'block' && (!endScreen || endScreen.style.display === 'none')) {
@@ -288,6 +288,11 @@ window.addEventListener('keydown', function(event) {
             handleMainLogic();
         } else if (event.key === 'ArrowLeft') {
             prevQuestion(null);
+        } else if (event.key === 'm' || event.key === 'M') {
+            event.preventDefault();
+            if (typeof toggleMark === 'function') {
+                toggleMark(null);
+            }
         }
     }
 });
