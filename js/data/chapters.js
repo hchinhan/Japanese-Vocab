@@ -341,6 +341,17 @@ const CHAPTERS_CONFIG = [
         getData: () => (typeof vocabChuong18 !== 'undefined' ? vocabChuong18 : null)
     },
     {
+        id: 'chuong19',
+        label: 'Bài 19',
+        shortName: 'Ch.19',
+        title: 'Hành động, Sức khỏe & Mở rộng',
+        desc: 'Động từ sinh hoạt, sức khỏe, Katakana & mở rộng',
+        icon: '💼',
+        tag: 'Bài 19',
+        tagClass: '',
+        getData: () => (typeof vocabChuong19 !== 'undefined' ? vocabChuong19 : null)
+    },
+    {
         id: 'dem',
         label: 'Đếm số',
         shortName: 'Đếm số',
