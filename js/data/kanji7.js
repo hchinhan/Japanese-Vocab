@@ -50,6 +50,6 @@ const vocabKanjiTrang7 = {
     "TIẾU (Cười)": "笑",
     "ĐÁP (Trả lời)": "答",
     "TƯƠNG (Cái hộp)": "箱",
-    "BỘ TỶ": "糸",
+    "BỘ TY (sợi tơ)": "糸",
     "ƯỚC (Giao ước)": "約"
 };

@@ -4,7 +4,7 @@
 const vocabKanjiTrang5 = {
     "BỘ (Bộ phận)": "部",
     "ĐÔ (Đô thị)": "都",
-    "BỘ PHỤ": "阝",
+    "BỘ PHỤ": "阝~",
     "VIỆN (Bệnh viện)": "院",
     "BỘ TÂM ĐỨNG": "忄",
     "TÂM (Tâm hồn)": "心",
@@ -45,7 +45,7 @@ const vocabKanjiTrang5 = {
     "DỊCH (Dễ)": "易",
     "MINH (Sáng)": "明",
     "ẢNH (Ánh họa / Phim)": "映",
-    "TÁC (Đã qua / Hôm qua)": "昨",
+    "TẠC (Đã qua / Hôm qua)": "昨",
     "XUÂN (Mùa xuân)": "春",
     "TRÚ (Buổi trưa)": "昼",
     "THỜI (Thời gian)": "時",

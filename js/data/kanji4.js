@@ -51,5 +51,5 @@ const vocabKanjiTrang4 = {
     "VẬN (Vận chuyển)": "運",
     "ĐẠO (Con đường)": "道",
     "TRÌ (Chậm, trễ)": "遅",
-    "BỘ ẤP": "阝"
+    "BỘ ẤP": "~阝"
 };

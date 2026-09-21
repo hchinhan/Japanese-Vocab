@@ -12,6 +12,9 @@ function speakJapanese(text) {
     // Làm sạch chuỗi văn bản để phát âm chuẩn xác
     let cleanText = text;
     
+    // Loại bỏ các thẻ chú thích trong ngoặc vuông hoặc ngoặc góc nếu có
+    cleanText = cleanText.replace(/\[[^\]]*\]/g, '').replace(/【[^】]*】/g, '').trim();
+
     // Nếu trong ngoặc chứa chữ Kana (Hiragana/Katakana), đó là furigana phát âm
     const parenMatch = cleanText.match(/[(\（]([^)\）]+)[)\）]/);
     if (parenMatch && /[\u3040-\u30ff]/.test(parenMatch[1])) {

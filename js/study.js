@@ -127,6 +127,15 @@ function showQuestion() {
     wordJpEl.style.display = 'none';
     speakBtnEl.style.display = 'none';
 
+    const flashcardEl = document.getElementById('flashcard');
+    if (flashcardEl) {
+        if (currentMode === 'jp_to_vn') {
+            flashcardEl.classList.add('card-mode-jp-to-vn');
+        } else {
+            flashcardEl.classList.remove('card-mode-jp-to-vn');
+        }
+    }
+
     if (currentMode === 'flashcard') {
         // Chế độ Việt -> Nhật
         wordVnEl.innerText = currentVN;

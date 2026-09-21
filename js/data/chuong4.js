@@ -12,7 +12,7 @@ const vocabChuong4 = {
     "Buổi tối": "夜 / 晩 (よる / ばん)",
     
     // Thứ trong tuần
-    "Thứ mấy?": "何曜日 (なんようび)",
+    "Thứ mấy? (nghi vấn từ hỏi thứ - ví dụ: 今日は何曜日ですか)": "何曜日 (なんようび)",
     "Chủ nhật": "日曜日 (にちようび)",
     "Thứ hai": "月曜日 (げつようび)",
     "Thứ ba": "火曜日 (かようび)",
@@ -29,7 +29,7 @@ const vocabChuong4 = {
     "Hôm kia": "一昨日 (おととい)",
     
     // Ngày trong tháng
-    "Ngày mấy?": "何日 (なんにち)",
+    "Ngày mấy? / Mấy ngày? (nghi vấn từ - ví dụ: 今日は何日ですか)": "何日 (なんにち)",
     "Ngày 1": "1日 / 初日 (ついたち)",
     "Ngày 2": "2日 (ふつか)",
     "Ngày 3": "3日 (みっか)",
@@ -63,7 +63,7 @@ const vocabChuong4 = {
     "Ngày 31": "31日 (さんじゅういちにち)",
 
     // Tháng
-    "Tháng mấy?": "何月 (なんがつ)",
+    "Tháng mấy? (nghi vấn từ - ví dụ: 今は何月ですか)": "何月 (なんがつ)",
     "Tháng 1": "1月 (いちがつ)",
     "Tháng 2": "2月 (にがつ)",
     "Tháng 3": "3月 (さんがつ)",
@@ -84,10 +84,10 @@ const vocabChuong4 = {
     "Cuối tháng": "月末 (げつまつ)",
     "Ngày sinh nhật": "誕生日 (たんじょうび)",
     "Ngày sinh nhật (lịch sự)": "お誕生日 (おたんじょうび)",
-    "Khi nào, lúc nào?": "いつ",
+    "Khi nào, lúc nào? (nghi vấn từ thời điểm - ví dụ: 誕生日はいつですか / いつ日本へ行きますか)": "いつ",
 
     // Năm
-    "Năm mấy?": "何年 (なんねん)",
+    "Năm mấy? / Mấy năm? (nghi vấn từ - ví dụ: 今は何年ですか)": "何年 (なんねん)",
     "Năm (2025)": "2025年 (2025ねん)",
     "Năm nay": "今年 (ことし)",
     "Năm tới": "来年 (らいねん)",

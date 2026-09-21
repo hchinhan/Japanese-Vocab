@@ -1,11 +1,13 @@
 // File: chuong10.js
 const vocabChuong10 = {
     // --- PHẦN CHÍNH ---
-    "Tốn (thời gian, tiền)": "かかる",
-    "(giờ học) Bắt đầu": "始まる (はじまる)",
-    "(giờ học) Kết thúc": "終わる (おわる)",
-    "Đánh (răng)": "歯を磨く (はをみがく)",
-    "Kiểm tra sức khỏe": "受ける (うける)",
+    "Tốn / Mất (thời gian, tiền bạc) [Nhóm 1]": "かかる",
+    "Bắt đầu (tự động từ: cái gì bắt đầu) [Nhóm 1]": "始まる (はじまる)",
+    "Kết thúc (tự động từ: cái gì kết thúc) [Nhóm 1]": "終わる (おわる)",
+    "Đánh, chải, mài [Nhóm 1]": "磨く (みがく)",
+    "Đánh răng (cụm từ)": "歯を磨く (はをみがく)",
+    "Nhận, dự (thi), trải qua [Nhóm 2]": "受ける (うける)",
+    "Kiểm tra sức khỏe (cụm từ)": "健康診断を受ける (けんこうしんだんをうける)",
     "Mỗi sáng": "毎朝 (まいあさ)",
     "Mỗi tối": "毎晩 (まいばん)",
     "Mỗi ngày": "毎日 (まいにち)",
@@ -18,7 +20,7 @@ const vocabChuong10 = {
     "Nghỉ đông": "冬休み (ふゆやすみ)",
     "Tàu cánh ngầm cao tốc": "高速船 (こうそくせん)",
     "~ Lần": "～回 (～かい)",
-    "Bao nhiêu lần ?": "何回 (なんかい)",
+    "Bao nhiêu lần? (nghi vấn từ - ví dụ: 何回行きましたか)": "何回 (なんかい)",
     "Bố mẹ": "両親 (りょうしん)",
     "Bố": "父 (ちち)",
     "Mẹ": "母 (はは)",
@@ -32,7 +34,7 @@ const vocabChuong10 = {
     "Chị ấy / Bạn gái": "彼女 (かのじょ)",
 
     // --- PHẦN MỞ RỘNG & THỜI LƯỢNG ---
-    "Mệt": "疲れる (つかれる)",
+    "Mệt mỏi [Nhóm 2]": "疲れる (つかれる)",
     "Lễ hội": "お祭り (おまつり)",
     "Xe Grab": "グラブ",
     "Việc làm thêm": "アルバイト",
@@ -82,8 +84,6 @@ const vocabChuong10 = {
     "Chín tháng": "9か月 (きゅうかげつ)",
     "Mười tháng": "10か月 (じゅっかげつ)",
     "Mấy tháng": "何か月 (なんかげつ)",
-    "Khoảng chừng (thời gian/số lượng)": "どのくらい",
-    "Tốn / Mất (thời gian, tiền bạc)": "かかる",
-    "Chỉ (đi với khẳng định)": "だけ",
-    "Mấy lần / Bao nhiêu lần?": "何回 (なんかい)"
+    "Khoảng chừng (hỏi thời gian/số lượng - ví dụ: どのくらいかかりますか)": "どのくらい",
+    "Chỉ (đi với khẳng định - ví dụ: 1つだけ: chỉ 1 cái)": "だけ"
 };
