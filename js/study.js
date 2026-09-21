@@ -45,7 +45,7 @@ function startReview() {
                 Object.assign(currentVocab, data);
                 if (chapter.isKanjiGroup && typeof selectedKanjiPages !== 'undefined') {
                     if (selectedKanjiPages.size === KANJI_PAGES_CONFIG.length) {
-                        selectedNames.push(`Kanji Trang (9 Trang)`);
+                        selectedNames.push(`Kanji Trang (${KANJI_PAGES_CONFIG.length} Trang)`);
                     } else {
                         const pageShorts = [];
                         KANJI_PAGES_CONFIG.forEach(p => {

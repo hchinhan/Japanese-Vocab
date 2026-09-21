@@ -33,7 +33,7 @@ function renderChapterCards() {
                         <div class="kanji-action-row">
                             <button type="button" class="kanji-config-btn" onclick="openKanjiModal(event)" title="Mở bảng chọn chi tiết từng trang Kanji">
                                 <span>⚙️ Chọn trang học</span>
-                                <span class="kanji-selected-badge" id="kanji-badge-count">9/9</span>
+                                <span class="kanji-selected-badge" id="kanji-badge-count">10/10</span>
                             </button>
                         </div>
                     </div>
@@ -138,8 +138,8 @@ function renderChapterSelectOptions() {
     let optionsHtml = '<option value="all">📚 Tất cả các bài (Toàn bộ từ vựng)</option>';
     CHAPTERS_CONFIG.forEach(chapter => {
         if (chapter.isKanjiGroup) {
-            optionsHtml += `<optgroup label="🈁 Kanji Hán Tự Trang (504 chữ)">`;
-            optionsHtml += `<option value="${chapter.id}">🈁 Tất cả 9 trang Kanji (504 chữ)</option>`;
+            optionsHtml += `<optgroup label="🈁 Kanji Hán Tự Trang (789 chữ)">`;
+            optionsHtml += `<option value="${chapter.id}">🈁 Tất cả 10 trang Kanji (789 chữ)</option>`;
             if (typeof KANJI_PAGES_CONFIG !== 'undefined') {
                 KANJI_PAGES_CONFIG.forEach(p => {
                     optionsHtml += `<option value="${p.id}">&nbsp;&nbsp;&nbsp;↳ ${p.shortName}: ${p.title} (${p.count} chữ)</option>`;

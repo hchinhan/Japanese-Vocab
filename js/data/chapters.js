@@ -115,11 +115,23 @@ const KANJI_PAGES_CONFIG = [
         samples: ['紙', '話', '車', '酉'],
         count: 50,
         getData: () => (typeof vocabKanjiTrang8 !== 'undefined' ? vocabKanjiTrang8 : null)
+    },
+    {
+        id: 'kanji_bosung',
+        page: 9,
+        label: 'Bổ sung',
+        shortName: 'Kanji B.Sung',
+        title: 'Kanji Bổ Sung Tạm Thời',
+        desc: '285 chữ Hán xuất hiện trong các bài học từ vựng (chưa có trong Trang 0~8)',
+        range: '初 (Sơ) ➔ 酒 (Tửu)',
+        samples: ['電', '駅', '銀', '開'],
+        count: 285,
+        getData: () => (typeof vocabKanjiBoSung !== 'undefined' ? vocabKanjiBoSung : null)
     }
 ];
 
 /**
- * Trạng thái các trang Kanji đang được kích hoạt (mặc định chọn cả 9 trang)
+ * Trạng thái các trang Kanji đang được kích hoạt (mặc định chọn cả 10 trang)
  */
 let selectedKanjiPages = new Set();
 
@@ -367,10 +379,10 @@ const CHAPTERS_CONFIG = [
         id: 'kanji',
         label: 'Kanji Trang',
         shortName: 'Kanji Trang',
-        title: 'Kanji Hán Tự (9 Trang)',
-        desc: '504 chữ Hán từ Trang 0 ➔ Trang 8 (Bấm để chọn trang)',
+        title: 'Kanji Hán Tự (10 Trang)',
+        desc: '789 chữ Hán từ Trang 0 ➔ Trang 8 & Bổ Sung (Bấm để chọn trang)',
         icon: '🈁',
-        tag: '9 Trang (504 chữ)',
+        tag: '10 Trang (789 chữ)',
         tagClass: 'tag-emerald',
         isSpecial: true,
         isKanjiGroup: true,

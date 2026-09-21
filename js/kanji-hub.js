@@ -220,7 +220,7 @@ function updateKanjiBadgeOnMenu() {
 
     if (descEl) {
         if (selectedSize === totalPages) {
-            descEl.innerText = `Đang chọn toàn bộ 9 trang (${totalChars} chữ Hán N5)`;
+            descEl.innerText = `Đang chọn toàn bộ ${totalPages} trang (${totalChars} chữ Hán N5 & Bổ sung)`;
         } else if (selectedSize === 0) {
             descEl.innerText = `Chưa chọn trang nào (Bấm để chọn trang ôn tập)`;
         } else {

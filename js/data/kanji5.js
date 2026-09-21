@@ -31,7 +31,7 @@ const vocabKanjiTrang5 = {
     "BỘ PHỘC": "攵",
     "CỐ (Sự cố)": "故",
     "GIÁO (Giáo dục)": "教",
-    "TÁN (Tản bộ)": "散",
+    "TẢN (Tản bộ)": "散",
     "SỐ (Số)": "数",
     "VĂN (Văn học)": "文",
     "LIỆU (Vật liệu)": "料",
