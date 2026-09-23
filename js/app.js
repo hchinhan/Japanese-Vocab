@@ -138,8 +138,8 @@ function renderChapterSelectOptions() {
     let optionsHtml = '<option value="all">📚 Tất cả các bài (Toàn bộ từ vựng)</option>';
     CHAPTERS_CONFIG.forEach(chapter => {
         if (chapter.isKanjiGroup) {
-            optionsHtml += `<optgroup label="🈁 Kanji Hán Tự Trang (789 chữ)">`;
-            optionsHtml += `<option value="${chapter.id}">🈁 Tất cả 10 trang Kanji (789 chữ)</option>`;
+            optionsHtml += `<optgroup label="🈁 Kanji Hán Tự Trang (541 chữ)">`;
+            optionsHtml += `<option value="${chapter.id}">🈁 Tất cả 10 trang Kanji (541 chữ)</option>`;
             if (typeof KANJI_PAGES_CONFIG !== 'undefined') {
                 KANJI_PAGES_CONFIG.forEach(p => {
                     optionsHtml += `<option value="${p.id}">&nbsp;&nbsp;&nbsp;↳ ${p.shortName}: ${p.title} (${p.count} chữ)</option>`;
