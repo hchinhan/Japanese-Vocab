@@ -22,7 +22,7 @@ const vocabChuong17 = {
     "Làm việc cho công ty (cụm từ)": "会社に勤める (かいしゃにつとめる)",
     "Cứu giúp, giúp đỡ (người gặp khó) [Nhóm 2]": "助ける (たすける)",
     "Giúp đỡ người khác (cụm từ)": "人を助ける (ひとをたすける)",
-    "Giúp đỡ, phụ giúp [Nhóm 1]": "手伝う (てつだう)",
+    "Giúp đỡ, phụ giúp [Nhóm 2]": "助ける (たすける)",
     "Tắm, dội (nước lên người) [Nhóm 2]": "浴びる (あびる)",
     "Tắm vòi sen (cụm từ)": "シャワーを浴びる (シャワーをあびる)",
     "Đóng (cửa, nắp) [Nhóm 2]": "閉める (しめる)",
