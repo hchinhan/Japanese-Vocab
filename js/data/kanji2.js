@@ -27,7 +27,7 @@ const vocabKanjiTrang2 = {
     "BÁN (Một nửa)": "半",
     "TỐT (Tốt nghiệp)": "卒",
     "NAM (Phía Nam)": "南",
-    "KHỬ (Quá khứ)": "去",
+    "KHỨ (Quá khứ)": "去",
     "BỘ HỰU": "又",
     "HỮU (Bạn bè)": "友",
     "THỦ (Lấy)": "取",

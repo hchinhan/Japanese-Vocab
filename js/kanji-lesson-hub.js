@@ -220,7 +220,7 @@ function updateKanjiLessonBadgeOnMenu() {
 
     if (descEl) {
         if (selectedSize === totalLessons) {
-            descEl.innerText = `Đang chọn toàn bộ 11 bài (${totalWords} từ vựng Hán tự N5)`;
+            descEl.innerText = `Đang chọn toàn bộ ${totalLessons} bài (${totalWords} từ vựng Hán tự N5)`;
         } else if (selectedSize === 0) {
             descEl.innerText = `Chưa chọn bài nào (Bấm để chọn bài ôn tập)`;
         } else {

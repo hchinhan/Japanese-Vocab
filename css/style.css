@@ -1300,6 +1300,30 @@ button, input, select, textarea, label {
     font-family: 'Outfit', sans-serif;
 }
 
+.td-jp-sub {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-family: var(--font-japanese);
+    font-weight: 500;
+    margin-top: 3px;
+    letter-spacing: 0.2px;
+}
+
+.td-han-viet-tag {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--primary-light);
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: var(--radius-pill);
+    letter-spacing: 0.4px;
+    margin-right: 6px;
+    font-family: 'Outfit', sans-serif;
+    vertical-align: middle;
+}
+
 .td-vn {
     font-family: var(--font-vietnamese);
     font-size: 0.98rem;

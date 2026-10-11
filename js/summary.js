@@ -307,25 +307,32 @@ function escapeHtml(str) {
  * Tạo một đối tượng từ vựng đã index sẵn các biến thể tìm kiếm để truy vấn siêu tốc
  */
 function createVocabItem(chapterId, chapterLabel, chapterTitle, vnKey, jpVal, options = {}) {
+    const isKanjiLesson = !!options.isKanjiLesson;
+    const meta = (isKanjiLesson && typeof KANJI_LESSON_META !== 'undefined') ? KANJI_LESSON_META[vnKey] : null;
+
     const romaji = getDisplayRomaji(jpVal);
     const jpRomaji = kanaToRomaji(jpVal);
-    const vnNorm = removeVietnameseTones(vnKey);
+
+    // Chuẩn bị chuỗi tìm kiếm tiếng Việt: Với Kanji lesson, bổ sung thêm Âm Hán Việt & Nghĩa tiếng Việt
+    const searchVnText = meta ? `${vnKey} ${meta.hanViet} ${meta.nghia}` : vnKey;
+    const vnNorm = removeVietnameseTones(searchVnText);
     const romajiLower = romaji.toLowerCase();
     const jpLower = jpVal.toLowerCase();
-    const vnLower = vnKey.toLowerCase();
+    const vnLower = searchVnText.toLowerCase();
 
     return {
         chapterId,
         chapterLabel,
         chapterTitle,
         isKanji: !!options.isKanji,
-        isKanjiLesson: !!options.isKanjiLesson,
+        isKanjiLesson: isKanjiLesson,
+        meta: meta,
         vn: vnKey,
         jp: jpVal,
         romaji: romaji,
         jpRomaji: jpRomaji,
         vnNorm: vnNorm,
-        vnNormNoSpaces: vnNorm.replace(/\s+/g, ''),
+        vnNormNoSpaces: vnNorm.replace(/[\s\,\.\;\:\-\(\)\[\]\~～\?\!]/g, ''),
         vnLower: vnLower,
         jpLower: jpLower,
         romajiLower: romajiLower,
@@ -363,7 +370,7 @@ function getAggregateVocabData() {
                 }
             });
         } else if (chapter.isKanjiLessonGroup && typeof KANJI_LESSONS_CONFIG !== 'undefined') {
-            // Nạp toàn bộ 11 bài Từ vựng Kanji vào bảng tra cứu
+            // Nạp toàn bộ các bài Từ vựng Kanji (16 bài - 547 từ) vào bảng tra cứu
             KANJI_LESSONS_CONFIG.forEach(l => {
                 const lData = l.getData ? l.getData() : null;
                 if (lData) {
@@ -518,7 +525,7 @@ function filterVocabTable(immediate = false) {
         const qClean = query.toLowerCase();
         const qNoSpaces = qClean.replace(/\s+/g, '');
         const qNoTone = removeVietnameseTones(qClean);
-        const qNoToneNoSpaces = removeVietnameseTones(qNoSpaces);
+        const qNoToneNoSpaces = removeVietnameseTones(qNoSpaces).replace(/[\s\,\.\;\:\-\(\)\[\]\~～\?\!]/g, '');
 
         // Chuyển query sang Hiragana & Katakana
         const qHiragana = romajiToHiragana(qClean);
@@ -602,9 +609,24 @@ function renderVocabTable(list, append = false) {
     for (let i = 0; i < slice.length; i++) {
         const item = slice[i];
         const index = startIdx + i + 1;
-        const jpDisplay = item.isKanjiLesson ? item.vn : item.jp;
-        const vnDisplay = item.isKanjiLesson ? item.jp : item.vn;
-        const rawSpeak = item.isKanjiLesson ? item.vn : item.jp;
+        let jpCellHtml = '';
+        let vnCellHtml = '';
+        let rawSpeak = item.jp;
+
+        if (item.isKanjiLesson) {
+            jpCellHtml = `${escapeHtml(item.vn)}<span class="td-jp-sub">【${escapeHtml(item.jp)}】</span>`;
+            if (item.meta) {
+                vnCellHtml = `<span class="td-han-viet-tag">${escapeHtml(item.meta.hanViet)}</span>${escapeHtml(item.meta.nghia)}`;
+            } else {
+                vnCellHtml = escapeHtml(item.jp);
+            }
+            rawSpeak = item.jp;
+        } else {
+            jpCellHtml = escapeHtml(item.jp);
+            vnCellHtml = escapeHtml(item.vn);
+            rawSpeak = item.jp;
+        }
+
         const speakText = rawSpeak
             .replace(/&/g, '&amp;')
             .replace(/"/g, '&quot;');
@@ -612,8 +634,8 @@ function renderVocabTable(list, append = false) {
         rowsHtml += `<tr>
             <td class="td-index">${index}</td>
             <td><span class="table-chapter-tag tag-${item.chapterId}">${escapeHtml(item.chapterLabel)}</span></td>
-            <td class="td-jp">${escapeHtml(jpDisplay)}</td>
-            <td class="td-vn">${escapeHtml(vnDisplay)}</td>
+            <td class="td-jp">${jpCellHtml}</td>
+            <td class="td-vn">${vnCellHtml}</td>
             <td class="td-audio">
                 <button type="button" class="table-speak-btn" title="Nghe phát âm" data-speak="${speakText}">🔊</button>
             </td>
@@ -682,9 +704,18 @@ function generateMarkdownContent() {
     mdText += `| :---: | :--- | :--- | :--- |\n`;
 
     currentFilteredList.forEach((item, idx) => {
-        // Kanji Lesson: key=Kanji(vn), value=Hiragana(jp) → hiển thị Kanji ở cột JP
-        const displayJp = item.isKanjiLesson ? item.vn : item.jp;
-        const displayVn = item.isKanjiLesson ? item.jp : item.vn;
+        let displayJp = item.jp;
+        let displayVn = item.vn;
+
+        if (item.isKanjiLesson) {
+            displayJp = `${item.vn} (${item.jp})`;
+            if (item.meta) {
+                displayVn = `[${item.meta.hanViet}] ${item.meta.nghia}`;
+            } else {
+                displayVn = item.jp;
+            }
+        }
+
         const cleanJp = displayJp.replace(/\|/g, '\\|').replace(/\n/g, ' ');
         const cleanVn = displayVn.replace(/\|/g, '\\|').replace(/\n/g, ' ');
         const cleanChapter = item.chapterTitle.replace(/\|/g, '\\|');

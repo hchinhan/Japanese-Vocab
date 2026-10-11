@@ -55,7 +55,7 @@ function startReview() {
                     }
                 } else if (chapter.isKanjiLessonGroup && typeof selectedKanjiLessons !== 'undefined') {
                     if (selectedKanjiLessons.size === KANJI_LESSONS_CONFIG.length) {
-                        selectedNames.push(`Kanji Bài (11 Bài)`);
+                        selectedNames.push(`Kanji Bài (${KANJI_LESSONS_CONFIG.length} Bài)`);
                     } else {
                         const lessonShorts = [];
                         KANJI_LESSONS_CONFIG.forEach(l => {

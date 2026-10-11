@@ -147,8 +147,14 @@ function renderChapterSelectOptions() {
             }
             optionsHtml += `</optgroup>`;
         } else if (chapter.isKanjiLessonGroup) {
-            optionsHtml += `<optgroup label="🈴 Từ Vựng Kanji Theo Bài (352 từ)">`;
-            optionsHtml += `<option value="${chapter.id}">🈴 Tất cả 11 bài Kanji (352 từ)</option>`;
+            const totalLessonWords = typeof KANJI_LESSONS_CONFIG !== 'undefined'
+                ? KANJI_LESSONS_CONFIG.reduce((acc, l) => acc + l.count, 0)
+                : 547;
+            const totalLessonCount = typeof KANJI_LESSONS_CONFIG !== 'undefined'
+                ? KANJI_LESSONS_CONFIG.length
+                : 16;
+            optionsHtml += `<optgroup label="🈴 Từ Vựng Kanji Theo Bài (${totalLessonWords} từ)">`;
+            optionsHtml += `<option value="${chapter.id}">🈴 Tất cả ${totalLessonCount} bài Kanji (${totalLessonWords} từ)</option>`;
             if (typeof KANJI_LESSONS_CONFIG !== 'undefined') {
                 KANJI_LESSONS_CONFIG.forEach(l => {
                     optionsHtml += `<option value="${l.id}">&nbsp;&nbsp;&nbsp;↳ ${l.shortName}: ${l.title} (${l.count} từ)</option>`;
