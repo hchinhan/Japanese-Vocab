@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="css/style.css?v=20261011">
+    <link rel="stylesheet" href="css/style.css?v=20261011b">
 
     <!-- Vocabulary Data Files -->
     <script src="js/data/chuong1.js?v=20260903"></script>
@@ -340,28 +340,29 @@
 
         <!-- Modal Toolbar -->
         <div class="modal-toolbar">
-            <!-- Search Box -->
+            <!-- Search Box (Full Width) -->
             <div class="search-input-box" onclick="document.getElementById('vocab-search-input').focus()">
                 <span class="search-icon">🔍</span>
                 <input type="text" id="vocab-search-input" placeholder="Tìm kiếm từ vựng (sensei, watashi, thầy giáo, 先生, せんせい...)" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="handleVocabSearchInput()">
                 <button type="button" class="search-clear-btn" id="search-clear-btn" onclick="clearVocabSearch(event)" style="display: none;" title="Xóa từ khóa">✕</button>
             </div>
 
-            <!-- Filter Chapter Select -->
-            <div class="filter-select-box">
-                <select id="vocab-chapter-filter" onchange="filterVocabTable(true)">
-                    <!-- Được render tự động từ js/data/chapters.js -->
-                </select>
-            </div>
+            <!-- Bottom Row: Filter & Export Actions -->
+            <div class="modal-toolbar-bottom">
+                <div class="filter-select-box">
+                    <select id="vocab-chapter-filter" onchange="filterVocabTable(true)">
+                        <!-- Được render tự động từ js/data/chapters.js -->
+                    </select>
+                </div>
 
-            <!-- Action Buttons -->
-            <div class="toolbar-actions">
-                <button type="button" class="btn-md-export" onclick="exportVocabToMarkdown()">
-                    <span>📥</span> Xuất File .MD
-                </button>
-                <button type="button" class="btn-md-copy" onclick="copyVocabMarkdown()">
-                    <span>📋</span> Copy MD
-                </button>
+                <div class="toolbar-actions">
+                    <button type="button" class="btn-md-export" onclick="exportVocabToMarkdown()">
+                        <span>📥</span> Xuất File .MD
+                    </button>
+                    <button type="button" class="btn-md-copy" onclick="copyVocabMarkdown()">
+                        <span>📋</span> Copy MD
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -401,7 +402,7 @@
 <!-- Application Core Scripts -->
 <script src="js/audio.js?v=20260908"></script>
 <script src="js/study.js?v=20261011"></script>
-<script src="js/summary.js?v=20261011"></script>
+<script src="js/summary.js?v=20261011b"></script>
 <script src="js/app.js?v=20261011"></script>
 
 </body>

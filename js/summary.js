@@ -512,7 +512,7 @@ function filterVocabTable(immediate = false) {
     const query = searchInput ? searchInput.value.trim() : '';
     const selectedChapter = chapterFilter ? chapterFilter.value : 'all';
 
-    if (clearBtn) clearBtn.style.display = query ? 'block' : 'none';
+    if (clearBtn) clearBtn.style.display = query ? 'inline-flex' : 'none';
 
     if (!query) {
         currentFilteredList = allVocabList.filter(item => {
