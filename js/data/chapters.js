@@ -364,6 +364,50 @@ const CHAPTERS_CONFIG = [
         getData: () => (typeof vocabChuong19 !== 'undefined' ? vocabChuong19 : null)
     },
     {
+        id: 'chuong21',
+        label: 'Bài 21',
+        shortName: 'Ch.21',
+        title: 'Đời sống, Trải nghiệm & Quy cách',
+        desc: 'Động từ trải nghiệm, đo lường, quy cách, trà đạo & đời sống',
+        icon: '🗻',
+        tag: 'Bài 21',
+        tagClass: '',
+        getData: () => (typeof vocabChuong21 !== 'undefined' ? vocabChuong21 : null)
+    },
+    {
+        id: 'chuong22',
+        label: 'Bài 22',
+        shortName: 'Ch.22',
+        title: 'Hành động, Công sở & Đời sống hàng ngày',
+        desc: 'Tự/tha động từ, công sở, liên lạc, du học & gia đình',
+        icon: '🏢',
+        tag: 'Bài 22',
+        tagClass: '',
+        getData: () => (typeof vocabChuong22 !== 'undefined' ? vocabChuong22 : null)
+    },
+    {
+        id: 'chuong23',
+        label: 'Bài 23',
+        shortName: 'Ch.23',
+        title: 'Quà tặng, Đồ vật & Hành động cho nhận',
+        desc: 'Quà tặng, kỷ niệm, đồ dùng, trang phục & phụ kiện',
+        icon: '🎁',
+        tag: 'Bài 23',
+        tagClass: '',
+        getData: () => (typeof vocabChuong23 !== 'undefined' ? vocabChuong23 : null)
+    },
+    {
+        id: 'chuong24',
+        label: 'Bài 24',
+        shortName: 'Ch.24',
+        title: 'Mời mọc, Trang phục & Giao tiếp xã hội',
+        desc: 'Động từ mời rủ, mặc trang phục, tương lai & phó từ',
+        icon: '🤝',
+        tag: 'Bài 24',
+        tagClass: '',
+        getData: () => (typeof vocabChuong24 !== 'undefined' ? vocabChuong24 : null)
+    },
+    {
         id: 'dem',
         label: 'Đếm số',
         shortName: 'Đếm số',
@@ -408,7 +452,7 @@ const CHAPTERS_CONFIG = [
         label: 'Katakana',
         shortName: 'Katakana',
         title: 'Katakana tổng hợp',
-        desc: 'Tất cả từ ngoại lai Katakana từ Bài 1~18',
+        desc: 'Tất cả từ ngoại lai Katakana từ Bài 1~24',
         icon: '🅰️',
         tag: 'Đặc biệt',
         tagClass: 'tag-emerald',

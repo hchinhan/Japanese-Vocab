@@ -1,5 +1,5 @@
 // File: js/data/kata.js
-// Tổng hợp tất cả từ viết bằng Katakana (カタカナ) từ Chương 1 ~ 16
+// Tổng hợp tất cả từ viết bằng Katakana (カタカナ) từ Chương 1 ~ 24
 const vocabKata = {
     // --- Quốc gia (Bài 1) ---
     "Việt Nam": "ベトナム",
@@ -130,5 +130,28 @@ const vocabKata = {
     "Sầu riêng": "ドリアン",
     "Dừa": "ココナッツ",
     "Dứa, thơm": "パイナップル",
-    "Đu đủ": "パパイヤ"
+    "Đu đủ": "パパイヤ",
+
+    // --- Từ Katakana bổ sung (Bài 21 ~ 24) ---
+    "Kilôgam (kg)": "キログラム",
+    "Nước Indonesia": "インドネシア",
+    "Quà tặng": "プレゼント",
+    "Lễ Giáng sinh (Noel)": "クリスマス",
+    "Hộ chiếu (Passport)": "パスポート",
+    "Trò chơi (Game)": "ゲーム",
+    "Nước Úc (Australia)": "オーストラリア",
+    "Đức Mẹ Teresa": "マザーテレサ",
+    "Ngày lễ tình nhân (Valentine)": "バレンタインデー",
+    "Bánh kem, bánh ngọt": "ケーキ",
+    "Kẹo sô-cô-la": "チョコレート",
+    "Áo len": "セーター",
+    "Khăn tay": "ハンカチ",
+    "Khăn quàng cổ, khăn choàng": "マフラー・スカーフ",
+    "Chân váy (Skirt)": "スカート",
+    "Trang sức, nữ trang": "ジュエリー",
+    "Khuyên tai, bông tai": "ピアス",
+    "Giày cao gót": "ハイヒール",
+    "Phở ăn liền": "インスタントフォー",
+    "Bánh mì (Việt Nam)": "バインミー",
+    "Phần trăm (%)": "パーセント"
 };
