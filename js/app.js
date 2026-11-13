@@ -5,63 +5,82 @@
  */
 
 /**
+ * Render thẻ nhóm Kanji thống nhất (dùng cho mọi Part Kanji và Từ vựng Kanji theo bài)
+ */
+function renderKanjiGroupCardHtml(chapter, opts) {
+    const partBadgeHtml = chapter.partBadge
+        ? `<span class="chapter-tag tag-part">${chapter.partBadge}</span>`
+        : '';
+
+    return `
+        <div class="product-card special-card kanji-group-card" id="card-${chapter.id}" onclick="${opts.clickHandler}">
+            <input type="checkbox" id="chk-${chapter.id}" onchange="${opts.changeHandler}">
+            <div class="card-content">
+                <div class="card-header-row">
+                    <div class="card-tag-group">
+                        ${partBadgeHtml}
+                        <span class="chapter-tag ${chapter.tagClass || ''}" id="${opts.tagId}">${opts.initialTag}</span>
+                    </div>
+                    <span class="card-checkbox"></span>
+                </div>
+                <div class="card-icon">${chapter.icon}</div>
+                <div class="card-title">${chapter.title}</div>
+                <div class="card-desc" id="${opts.descId}">${chapter.desc}</div>
+                <div class="kanji-action-row">
+                    <button type="button" class="kanji-config-btn" onclick="${opts.modalFn}" title="${opts.btnTitle}">
+                        <span>${opts.btnLabel}</span>
+                        <span class="kanji-selected-badge" id="${opts.badgeId}">${opts.initialBadge}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/**
  * Render danh sách thẻ bài học lên giao diện Menu
  */
 function renderChapterCards() {
     const container = document.getElementById('chapter-options');
-    const kanjiContainer = document.getElementById('kanji-section-options');
+    const kanjiPartsContainer = document.getElementById('kanji-parts-options');
+    const kanjiLessonsContainer = document.getElementById('kanji-lessons-options');
     if (!container) return;
 
     let mainHtml = '';
-    let kanjiHtml = '';
+    let kanjiPartsHtml = '';
+    let kanjiLessonsHtml = '';
 
     CHAPTERS_CONFIG.forEach(chapter => {
-        let cardHtml = '';
-
-        if (chapter.isKanjiGroup) {
-            cardHtml = `
-                <div class="product-card special-card kanji-group-card" id="card-${chapter.id}" onclick="handleKanjiCardClick(event)">
-                    <input type="checkbox" id="chk-${chapter.id}" onchange="onKanjiCardCheckboxChange(this.checked)">
-                    <div class="card-content">
-                        <div class="card-header-row">
-                            <span class="chapter-tag ${chapter.tagClass || ''}" id="kanji-card-tag">${chapter.tag}</span>
-                            <span class="card-checkbox"></span>
-                        </div>
-                        <div class="card-icon">${chapter.icon}</div>
-                        <div class="card-title">${chapter.title}</div>
-                        <div class="card-desc" id="kanji-card-desc">${chapter.desc}</div>
-                        <div class="kanji-action-row">
-                            <button type="button" class="kanji-config-btn" onclick="openKanjiModal(event)" title="Mở bảng chọn chi tiết từng trang Kanji">
-                                <span>⚙️ Chọn trang học</span>
-                                <span class="kanji-selected-badge" id="kanji-badge-count">10/10</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
+        if (chapter.isKanjiPageGroup) {
+            const totalPages = chapter.pagesConfig ? chapter.pagesConfig.length : 0;
+            kanjiPartsHtml += renderKanjiGroupCardHtml(chapter, {
+                clickHandler: `handleKanjiPartCardClick(event, '${chapter.id}')`,
+                changeHandler: `onKanjiPartCheckboxChange('${chapter.id}', this.checked)`,
+                tagId: `kanji-card-tag-${chapter.id}`,
+                initialTag: `0 Trang (0 chữ)`,
+                descId: `kanji-card-desc-${chapter.id}`,
+                modalFn: `openKanjiPartModal('${chapter.id}', event)`,
+                btnTitle: `Mở bảng chọn chi tiết từng trang của ${chapter.title}`,
+                btnLabel: '⚙️ Chọn trang học',
+                badgeId: `kanji-badge-count-${chapter.id}`,
+                initialBadge: `0/${totalPages}`
+            });
         } else if (chapter.isKanjiLessonGroup) {
-            cardHtml = `
-                <div class="product-card special-card kanji-group-card" id="card-${chapter.id}" onclick="handleKanjiLessonCardClick(event)">
-                    <input type="checkbox" id="chk-${chapter.id}" onchange="onKanjiLessonCardCheckboxChange(this.checked)">
-                    <div class="card-content">
-                        <div class="card-header-row">
-                            <span class="chapter-tag ${chapter.tagClass || ''}" id="kanji-lesson-card-tag">${chapter.tag}</span>
-                            <span class="card-checkbox"></span>
-                        </div>
-                        <div class="card-icon">${chapter.icon}</div>
-                        <div class="card-title">${chapter.title}</div>
-                        <div class="card-desc" id="kanji-lesson-card-desc">${chapter.desc}</div>
-                        <div class="kanji-action-row">
-                            <button type="button" class="kanji-config-btn" onclick="openKanjiLessonModal(event)" title="Mở bảng chọn chi tiết từng bài học Kanji">
-                                <span>⚙️ Chọn bài Kanji</span>
-                                <span class="kanji-selected-badge" id="kanji-lesson-badge-count">11/11</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
+            const totalLessons = typeof KANJI_LESSONS_CONFIG !== 'undefined' ? KANJI_LESSONS_CONFIG.length : 16;
+            kanjiLessonsHtml += renderKanjiGroupCardHtml(chapter, {
+                clickHandler: 'handleKanjiLessonCardClick(event)',
+                changeHandler: 'onKanjiLessonCardCheckboxChange(this.checked)',
+                tagId: 'kanji-lesson-card-tag',
+                initialTag: chapter.tag,
+                descId: 'kanji-lesson-card-desc',
+                modalFn: 'openKanjiLessonModal(event)',
+                btnTitle: 'Mở bảng chọn chi tiết từng bài học Kanji',
+                btnLabel: '⚙️ Chọn bài Kanji',
+                badgeId: 'kanji-lesson-badge-count',
+                initialBadge: `0/${totalLessons}`
+            });
         } else {
-            cardHtml = `
+            mainHtml += `
                 <label class="product-card ${chapter.isSpecial ? 'special-card' : ''}" id="card-${chapter.id}">
                     <input type="checkbox" id="chk-${chapter.id}" onchange="updateSelectedCount()">
                     <div class="card-content">
@@ -76,60 +95,55 @@ function renderChapterCards() {
                 </label>
             `;
         }
-
-        // Phân loại card vào container phù hợp
-        if (chapter.isKanjiSection) {
-            kanjiHtml += cardHtml;
-        } else {
-            mainHtml += cardHtml;
-        }
     });
 
     container.innerHTML = mainHtml;
-    if (kanjiContainer) kanjiContainer.innerHTML = kanjiHtml;
+    if (kanjiPartsContainer) kanjiPartsContainer.innerHTML = kanjiPartsHtml;
+    if (kanjiLessonsContainer) kanjiLessonsContainer.innerHTML = kanjiLessonsHtml;
 
-    if (typeof updateKanjiBadgeOnMenu === 'function') {
-        updateKanjiBadgeOnMenu();
+    if (typeof updateAllKanjiPartBadges === 'function') {
+        updateAllKanjiPartBadges();
     }
     if (typeof updateKanjiLessonBadgeOnMenu === 'function') {
         updateKanjiLessonBadgeOnMenu();
     }
 }
 
-/**
- * Xử lý click vào thẻ Kanji trên Menu
- */
-function handleKanjiCardClick(event) {
+function toggleKanjiGroupCardByClick(event, chkId, changeFn) {
     if (event.target.closest('.kanji-config-btn')) {
-        return; // Nút chọn trang đã tự xử lý
+        return; // Nút chọn chi tiết đã tự xử lý
     }
-    const chk = document.getElementById('chk-kanji');
+    const chk = document.getElementById(chkId);
     if (chk && event.target !== chk) {
         chk.checked = !chk.checked;
-        if (typeof onKanjiCardCheckboxChange === 'function') {
-            onKanjiCardCheckboxChange(chk.checked);
+        if (typeof changeFn === 'function') {
+            changeFn(chk.checked);
         }
     }
 }
 
-/**
- * Xử lý click vào thẻ Kanji Bài trên Menu
- */
+function handleKanjiPartCardClick(event, partId) {
+    toggleKanjiGroupCardByClick(
+        event,
+        `chk-${partId}`,
+        (checked) => {
+            if (typeof onKanjiPartCheckboxChange === 'function') {
+                onKanjiPartCheckboxChange(partId, checked);
+            }
+        }
+    );
+}
+
 function handleKanjiLessonCardClick(event) {
-    if (event.target.closest('.kanji-config-btn')) {
-        return; // Nút chọn bài đã tự xử lý
-    }
-    const chk = document.getElementById('chk-kanji_lessons');
-    if (chk && event.target !== chk) {
-        chk.checked = !chk.checked;
-        if (typeof onKanjiLessonCardCheckboxChange === 'function') {
-            onKanjiLessonCardCheckboxChange(chk.checked);
-        }
-    }
+    toggleKanjiGroupCardByClick(
+        event,
+        'chk-kanji_lessons',
+        typeof onKanjiLessonCardCheckboxChange === 'function' ? onKanjiLessonCardCheckboxChange : null
+    );
 }
 
 /**
- * Render danh sách tùy chọn bài học vào thẻ select của Modal tra cứu (bao gồm cả các trang Kanji con & bài Kanji)
+ * Render danh sách tùy chọn bài học vào thẻ select của Modal tra cứu
  */
 function renderChapterSelectOptions() {
     const select = document.getElementById('vocab-chapter-filter');
@@ -137,14 +151,14 @@ function renderChapterSelectOptions() {
 
     let optionsHtml = '<option value="all">📚 Tất cả các bài (Toàn bộ từ vựng)</option>';
     CHAPTERS_CONFIG.forEach(chapter => {
-        if (chapter.isKanjiGroup) {
-            optionsHtml += `<optgroup label="🈁 Kanji Hán Tự Trang (541 chữ)">`;
-            optionsHtml += `<option value="${chapter.id}">🈁 Tất cả 10 trang Kanji (541 chữ)</option>`;
-            if (typeof KANJI_PAGES_CONFIG !== 'undefined') {
-                KANJI_PAGES_CONFIG.forEach(p => {
-                    optionsHtml += `<option value="${p.id}">&nbsp;&nbsp;&nbsp;↳ ${p.shortName}: ${p.title} (${p.count} chữ)</option>`;
-                });
-            }
+        if (chapter.isKanjiPageGroup && Array.isArray(chapter.pagesConfig)) {
+            const totalChars = chapter.pagesConfig.reduce((acc, p) => acc + p.count, 0);
+            const totalPages = chapter.pagesConfig.length;
+            optionsHtml += `<optgroup label="${chapter.icon} ${chapter.title} (${totalChars} chữ)">`;
+            optionsHtml += `<option value="${chapter.id}">${chapter.icon} Tất cả ${totalPages} trang ${chapter.shortName} (${totalChars} chữ)</option>`;
+            chapter.pagesConfig.forEach(p => {
+                optionsHtml += `<option value="${p.id}">&nbsp;&nbsp;&nbsp;↳ ${p.shortName}: ${p.title} (${p.count} chữ)</option>`;
+            });
             optionsHtml += `</optgroup>`;
         } else if (chapter.isKanjiLessonGroup) {
             const totalLessonWords = typeof KANJI_LESSONS_CONFIG !== 'undefined'
@@ -177,14 +191,12 @@ function updateSelectedCount() {
     const modeCards = document.querySelectorAll('.mode-card');
     modeCards.forEach(card => {
         const input = card.querySelector('input[type="radio"]');
-        if (input && input.checked) {
-            card.classList.add('active');
-        } else {
-            card.classList.remove('active');
-        }
+        card.classList.toggle('active', !!(input && input.checked));
     });
 
-    const productCards = document.querySelectorAll('#chapter-options .product-card, #kanji-section-options .product-card');
+    const productCards = document.querySelectorAll(
+        '#chapter-options .product-card, #kanji-parts-options .product-card, #kanji-lessons-options .product-card'
+    );
     let count = 0;
     productCards.forEach(card => {
         const input = card.querySelector('input[type="checkbox"]');
@@ -207,17 +219,17 @@ function updateSelectedCount() {
  * Chọn tất cả hoặc bỏ chọn tất cả bài học
  */
 function toggleSelectAll(selectAll) {
-    const containers = ['chapter-options', 'kanji-section-options'];
+    const containers = ['chapter-options', 'kanji-parts-options', 'kanji-lessons-options'];
     containers.forEach(containerId => {
         const container = document.getElementById(containerId);
         if (!container) return;
         const checkboxes = container.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(chk => {
             chk.checked = selectAll;
-            if (chk.id === 'chk-kanji' && typeof onKanjiCardCheckboxChange === 'function') {
-                onKanjiCardCheckboxChange(selectAll);
-            }
-            if (chk.id === 'chk-kanji_lessons' && typeof onKanjiLessonCardCheckboxChange === 'function') {
+            const partId = chk.id.replace(/^chk-/, '');
+            if (typeof getKanjiPartById === 'function' && getKanjiPartById(partId)) {
+                onKanjiPartCheckboxChange(partId, selectAll);
+            } else if (chk.id === 'chk-kanji_lessons' && typeof onKanjiLessonCardCheckboxChange === 'function') {
                 onKanjiLessonCardCheckboxChange(selectAll);
             }
         });
@@ -247,7 +259,6 @@ function showToast(message) {
  * Lắng nghe phím tắt toàn cục
  */
 window.addEventListener('keydown', function(event) {
-    // ESC: Đóng modal
     if (event.key === 'Escape') {
         const kanjiModal = document.getElementById('kanji-selector-modal');
         if (kanjiModal && kanjiModal.style.display !== 'none') {
@@ -268,7 +279,6 @@ window.addEventListener('keydown', function(event) {
         }
     }
 
-    // Không xử lý phím tắt Flashcard khi đang gõ ô nhập liệu hoặc khi bất kỳ modal nào đang mở
     const targetTag = event.target ? event.target.tagName : '';
     if (['INPUT', 'TEXTAREA', 'SELECT'].includes(targetTag)) {
         return;
@@ -286,7 +296,6 @@ window.addEventListener('keydown', function(event) {
         return;
     }
 
-    // Enter / Mũi tên phải / Mũi tên trái / Phím M: Điều hướng và đánh dấu Flashcard
     const flashcard = document.getElementById('flashcard');
     const endScreen = document.getElementById('end-screen');
     if (flashcard && flashcard.style.display === 'block' && (!endScreen || endScreen.style.display === 'none')) {

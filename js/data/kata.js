@@ -1,5 +1,5 @@
 // File: js/data/kata.js
-// Tổng hợp tất cả từ viết bằng Katakana (カタカナ) từ Chương 1 ~ 24
+// Tổng hợp tất cả từ viết bằng Katakana (カタカナ) từ Chương 1 ~ 26
 const vocabKata = {
     // --- Quốc gia (Bài 1) ---
     "Việt Nam": "ベトナム",
@@ -153,5 +153,10 @@ const vocabKata = {
     "Giày cao gót": "ハイヒール",
     "Phở ăn liền": "インスタントフォー",
     "Bánh mì (Việt Nam)": "バインミー",
-    "Phần trăm (%)": "パーセント"
+    "Phần trăm (%)": "パーセント",
+
+    // --- Từ Katakana bổ sung (Bài 26) ---
+    "Cắm trại (Camp)": "キャンプ",
+    "Sự kiện (Event)": "イベント",
+    "Dấu tròn, ○ (đúng)": "マル"
 };

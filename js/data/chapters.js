@@ -131,22 +131,112 @@ const KANJI_PAGES_CONFIG = [
 ];
 
 /**
- * Trạng thái các trang Kanji đang được kích hoạt (mặc định chọn cả 10 trang)
+ * Gộp dữ liệu từ các trang Kanji đang chọn của một Part bất kỳ
  */
-let selectedKanjiPages = new Set();
-
-/**
- * Lấy dữ liệu từ các trang Kanji đã chọn
- */
-function getSelectedKanjiVocabData() {
+function getSelectedKanjiPartData(pagesConfig, selectedSet) {
     const combined = {};
-    KANJI_PAGES_CONFIG.forEach(page => {
-        if (selectedKanjiPages.has(page.id)) {
+    pagesConfig.forEach(page => {
+        if (selectedSet.has(page.id)) {
             const d = page.getData();
             if (d) Object.assign(combined, d);
         }
     });
     return combined;
+}
+
+// ==========================================================================
+// 1B. CẤU HÌNH CHI TIẾT KANJI PART 2 - N4 (ĐÔNG DU HT800 - TÁCH RIÊNG HT400)
+// ==========================================================================
+
+const KANJI_800_PAGES_CONFIG = [
+    {
+        id: 'kanji800_1',
+        page: 1,
+        label: 'Trang 1',
+        shortName: 'K800 T.1',
+        title: 'Đông Du HT800 - Trang 1',
+        desc: '41 chữ & bộ mới ngoài HT400 (Nhân đứng, Đao, Băng)',
+        range: '万 (Vạn) ➔ 加 (Gia)',
+        samples: ['万', '代', '優', '加'],
+        count: 41,
+        getData: () => (typeof vocabKanji800Trang1 !== 'undefined' ? vocabKanji800Trang1 : null)
+    },
+    {
+        id: 'kanji800_2',
+        page: 2,
+        label: 'Trang 2',
+        shortName: 'K800 T.2',
+        title: 'Đông Du HT800 - Trang 2',
+        desc: '48 chữ & bộ mới ngoài HT400 (Lực, Khẩu, Vi, Thổ)',
+        range: '助 (Trợ) ➔ 壁 (Bích)',
+        samples: ['助', '団', '和', '壁'],
+        count: 48,
+        getData: () => (typeof vocabKanji800Trang2 !== 'undefined' ? vocabKanji800Trang2 : null)
+    }
+];
+
+// ==========================================================================
+// 1C. DANH SÁCH CÁC SESSION / PART KANJI (MỞ RỘNG PART 1, PART 2, PART 3...)
+//     Để thêm Part mới (VD: Part 3 - N3), chỉ cần thêm 1 object vào mảng này.
+// ==========================================================================
+
+const KANJI_PARTS_CONFIG = [
+    {
+        id: 'kanji',
+        partNumber: 1,
+        partBadge: 'PART 1 • N5',
+        label: 'Kanji P1 (N5)',
+        shortName: 'Kanji P1',
+        title: 'Kanji Part 1 — N5 (HT400)',
+        modalTitle: 'Kanji Part 1 — N5 (Cơ Bản & Đông Du HT400)',
+        desc: '541 chữ Hán N5 & Cơ bản (Trang 0 ➔ 9)',
+        allSelectedLabel: '541 chữ Hán N5 & Cơ bản',
+        icon: '🈁',
+        tagClass: 'tag-emerald',
+        isSpecial: true,
+        isKanjiPageGroup: true,
+        isKanjiSection: true,
+        pagesConfig: KANJI_PAGES_CONFIG,
+        selectedPages: new Set(),
+        getData() {
+            return getSelectedKanjiPartData(this.pagesConfig, this.selectedPages);
+        }
+    },
+    {
+        id: 'kanji800',
+        partNumber: 2,
+        partBadge: 'PART 2 • N4',
+        label: 'Kanji P2 (N4)',
+        shortName: 'Kanji P2',
+        title: 'Kanji Part 2 — N4 (HT800)',
+        modalTitle: 'Kanji Part 2 — N4 (Đông Du HT800)',
+        desc: '89 chữ & bộ mới ngoài HT400 (Trang 1 ➔ 2)',
+        allSelectedLabel: '89 chữ & bộ mới N4 (HT800)',
+        icon: '🈯',
+        tagClass: 'tag-emerald',
+        isSpecial: true,
+        isKanjiPageGroup: true,
+        isKanjiSection: true,
+        pagesConfig: KANJI_800_PAGES_CONFIG,
+        selectedPages: new Set(),
+        getData() {
+            return getSelectedKanjiPartData(this.pagesConfig, this.selectedPages);
+        }
+    }
+];
+
+/**
+ * Tham chiếu nhanh cho các module cũ nếu cần đọc tập trang đang chọn
+ */
+const selectedKanjiPages = KANJI_PARTS_CONFIG[0].selectedPages;
+const selectedKanji800Pages = KANJI_PARTS_CONFIG[1].selectedPages;
+
+function getSelectedKanjiVocabData() {
+    return KANJI_PARTS_CONFIG[0].getData();
+}
+
+function getSelectedKanji800VocabData() {
+    return KANJI_PARTS_CONFIG[1].getData();
 }
 
 // ==========================================================================
@@ -408,6 +498,28 @@ const CHAPTERS_CONFIG = [
         getData: () => (typeof vocabChuong24 !== 'undefined' ? vocabChuong24 : null)
     },
     {
+        id: 'chuong25',
+        label: 'Bài 25',
+        shortName: 'Ch.25',
+        title: 'Thử thách, Sức khỏe & Đời sống',
+        desc: 'Động từ cố gắng, thi cử, bỏ/chuyển đổi, cảm giác & sức khỏe',
+        icon: '💪',
+        tag: 'Bài 25',
+        tagClass: '',
+        getData: () => (typeof vocabChuong25 !== 'undefined' ? vocabChuong25 : null)
+    },
+    {
+        id: 'chuong26',
+        label: 'Bài 26',
+        shortName: 'Ch.26',
+        title: 'Di chuyển, Thắng thua & Hoạt động',
+        desc: 'Động từ đi lại, kịp giờ, thắng thua, tính từ cảm xúc & sự kiện',
+        icon: '🏕️',
+        tag: 'Bài 26',
+        tagClass: '',
+        getData: () => (typeof vocabChuong26 !== 'undefined' ? vocabChuong26 : null)
+    },
+    {
         id: 'dem',
         label: 'Đếm số',
         shortName: 'Đếm số',
@@ -419,22 +531,10 @@ const CHAPTERS_CONFIG = [
         isSpecial: true,
         getData: (count = 5) => (typeof generateMixedCounters === 'function' ? generateMixedCounters(count) : null)
     },
-    {
-        id: 'kanji',
-        label: 'Kanji Trang',
-        shortName: 'Kanji Trang',
-        title: 'Kanji Hán Tự (10 Trang)',
-        desc: '541 chữ Hán từ Trang 0 ➔ Trang 9 (Bấm để chọn trang)',
-        icon: '🈁',
-        tag: '10 Trang (541 chữ)',
-        tagClass: 'tag-emerald',
-        isSpecial: true,
-        isKanjiGroup: true,
-        isKanjiSection: true,
-        getData: () => getSelectedKanjiVocabData()
-    },
+    ...KANJI_PARTS_CONFIG,
     {
         id: 'kanji_lessons',
+        partBadge: 'TỪ VỰNG • BÀI 1–24',
         label: 'Kanji Bài',
         shortName: 'Kanji Bài',
         title: 'Từ Vựng Kanji Theo Bài',
@@ -452,7 +552,7 @@ const CHAPTERS_CONFIG = [
         label: 'Katakana',
         shortName: 'Katakana',
         title: 'Katakana tổng hợp',
-        desc: 'Tất cả từ ngoại lai Katakana từ Bài 1~24',
+        desc: 'Tất cả từ ngoại lai Katakana từ Bài 1~26',
         icon: '🅰️',
         tag: 'Đặc biệt',
         tagClass: 'tag-emerald',

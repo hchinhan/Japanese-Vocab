@@ -19,9 +19,11 @@ Japanese-Vocab/
     ├── summary.js              # Quản lý tra cứu từ vựng, tìm kiếm & xuất Markdown (.md)
     └── data/
         ├── chapters.js         # Danh mục metadata cấu hình bài học (tự động đồng bộ UI)
-        ├── chuong1.js -> chuong12.js  # Dữ liệu từ vựng theo từng bài học
+        ├── chuong1.js -> chuong26.js  # Dữ liệu từ vựng theo từng bài học
         ├── dem.js              # Logic & dữ liệu đếm số tiếng Nhật
-        ├── kanji.js            # Dữ liệu Hán tự N5 cơ bản
+        ├── kanji0.js -> kanji9.js     # Kanji Trang (Đông Du HT400 & cơ bản N5)
+        ├── kanji_lessons.js    # Từ vựng Kanji theo bài
+        ├── kanji800_1.js, kanji800_2.js  # Mục riêng "Kanji 800" (Đông Du HT800 - chỉ chữ mới)
         └── kata.js             # Dữ liệu từ ngoại lai Katakana tổng hợp
 ```
 
@@ -63,3 +65,12 @@ Mở `js/data/chapters.js` và thêm cấu hình bài học vào mảng `CHAPTER
 ```
 
 🎉 **Xong!** Giao diện thẻ bài học ở Menu, danh sách lọc trong bảng Tra cứu, logic trộn đề và chức năng xuất file Markdown sẽ **tự động cập nhật** mà không cần viết thêm HTML hay code logic!
+
+---
+
+## 🈁 Hướng dẫn thêm trang hoặc Part Kanji mới (Part 3, Part 4...)
+
+Nhờ `KANJI_PARTS_CONFIG` trong `js/data/chapters.js`, toàn bộ UI thẻ, Modal chọn trang, Chọn tất cả, Flashcard và Bảng tra cứu đều dùng chung 1 cơ chế thống nhất:
+
+1. **Thêm trang mới vào Part 2 (N4 - HT800):** tạo `js/data/kanji800_3.js`, nhúng vào `index.html`, rồi thêm 1 object vào `KANJI_800_PAGES_CONFIG` trong `js/data/chapters.js`.
+2. **Thêm Part mới (VD: `Part 3 • N3`):** tạo mảng trang `KANJI_PART3_PAGES_CONFIG` và thêm 1 object có `isKanjiPageGroup: true` vào `KANJI_PARTS_CONFIG` trong `js/data/chapters.js` (kèm `selectedPages: new Set()`). Thẻ mới sẽ tự xếp ngay sau Part 2 trong mục `03 Kanji 漢字`.

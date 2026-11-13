@@ -582,6 +582,25 @@ button, input, select, textarea, label {
     background: #d1fae5;
 }
 
+.card-tag-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.tag-part {
+    color: #0f766e;
+    background: #ccfbf1;
+    border: 1px solid rgba(15, 118, 110, 0.22);
+}
+
+/* Kanji 800 — màu bút dạ quang xanh lá */
+.tag-lime {
+    color: #3f6212;
+    background: #d9f99d;
+}
+
 .card-checkbox {
     width: 22px;
     height: 22px;
@@ -1419,6 +1438,10 @@ button, input, select, textarea, label {
 .table-chapter-tag.tag-chuong22 { background: #d1fae5; color: #047857; }
 .table-chapter-tag.tag-chuong23 { background: #fce7f3; color: #be185d; }
 .table-chapter-tag.tag-chuong24 { background: #e0e7ff; color: #4338ca; }
+.table-chapter-tag.tag-chuong25 { background: #ccfbf1; color: #0f766e; }
+.table-chapter-tag.tag-chuong26 { background: #ffedd5; color: #c2410c; }
+.table-chapter-tag.tag-kanji800_1,
+.table-chapter-tag.tag-kanji800_2 { background: #d9f99d; color: #3f6212; }
 .table-chapter-tag.tag-kanji0,
 .table-chapter-tag.tag-kanji1,
 .table-chapter-tag.tag-kanji2,
@@ -1580,11 +1603,36 @@ button, input, select, textarea, label {
 /* --------------------------------------------------------------------------
    16. Kanji Group Card & Interactive Kanji Hub Modal
    -------------------------------------------------------------------------- */
+.kanji-subsection + .kanji-subsection {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed rgba(16, 185, 129, 0.22);
+}
+
+.kanji-subsection-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: #047857;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .kanji-group-card {
     border: 2px solid rgba(16, 185, 129, 0.35) !important;
     background: linear-gradient(145deg, #ffffff, #f0fdf4) !important;
     position: relative;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.kanji-group-card .card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .kanji-group-card:hover {
@@ -1598,8 +1646,8 @@ button, input, select, textarea, label {
 }
 
 .kanji-action-row {
-    margin-top: 10px;
-    padding-top: 8px;
+    margin-top: auto;
+    padding-top: 10px;
     border-top: 1px dashed rgba(16, 185, 129, 0.25);
 }
 

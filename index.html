@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="css/style.css?v=20261011b">
+    <link rel="stylesheet" href="css/style.css?v=20261113d">
 
     <!-- Vocabulary Data Files -->
     <script src="js/data/chuong1.js?v=20260903"></script>
@@ -37,6 +37,8 @@
     <script src="js/data/chuong22.js?v=20261023"></script>
     <script src="js/data/chuong23.js?v=20261023"></script>
     <script src="js/data/chuong24.js?v=20261023"></script>
+    <script src="js/data/chuong25.js?v=20261113"></script>
+    <script src="js/data/chuong26.js?v=20261113"></script>
     <script src="js/data/dem.js?v=20260903"></script>
     <script src="js/data/kanji0.js?v=20260903"></script>
     <script src="js/data/kanji1.js?v=20260903"></script>
@@ -49,9 +51,11 @@
     <script src="js/data/kanji8.js?v=20260903"></script>
     <script src="js/data/kanji9.js?v=20260923"></script>
     <script src="js/data/kanji_lessons.js?v=20261011"></script>
-    <script src="js/data/kata.js?v=20260903"></script>
-    <script src="js/data/chapters.js?v=20261011"></script>
-    <script src="js/kanji-hub.js?v=20260908"></script>
+    <script src="js/data/kanji800_1.js?v=20261113b"></script>
+    <script src="js/data/kanji800_2.js?v=20261113b"></script>
+    <script src="js/data/kata.js?v=20261113"></script>
+    <script src="js/data/chapters.js?v=20261113d"></script>
+    <script src="js/kanji-hub.js?v=20261113d"></script>
     <script src="js/kanji-lesson-hub.js?v=20261011"></script>
 </head>
 <body>
@@ -184,9 +188,20 @@
                 </div>
             </div>
 
-            <!-- Dynamic Kanji Grid (Kanji Trang + Kanji Bài) -->
-            <div class="chapter-grid" id="kanji-section-options">
-                <!-- Được render tự động từ js/data/chapters.js -->
+            <!-- Subsection 3A: Kanji theo Part (Part 1 N5, Part 2 N4, ...) -->
+            <div class="kanji-subsection">
+                <div class="kanji-subsection-label">📘 Chữ Hán Theo Cấp Độ (Part 1 ➔ Part 2...)</div>
+                <div class="chapter-grid" id="kanji-parts-options">
+                    <!-- Được render tự động từ KANJI_PARTS_CONFIG -->
+                </div>
+            </div>
+
+            <!-- Subsection 3B: Từ vựng Kanji theo bài -->
+            <div class="kanji-subsection">
+                <div class="kanji-subsection-label">📗 Từ Vựng Hán Tự Theo Bài</div>
+                <div class="chapter-grid" id="kanji-lessons-options">
+                    <!-- Được render tự động từ js/data/chapters.js -->
+                </div>
             </div>
         </div>
 
@@ -241,16 +256,16 @@
     </div>
 </div>
 
-<!-- Kanji Page Selector & Wheel Hub Modal -->
+<!-- Kanji Page Selector & Wheel Hub Modal (dùng chung cho mọi Part Kanji) -->
 <div class="modal-overlay" id="kanji-selector-modal" style="display: none;" onclick="closeKanjiModalOnOverlay(event)">
     <div class="modal-card kanji-modal-card" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
         <!-- Modal Header -->
         <div class="modal-header">
             <div class="modal-title-group">
-                <div class="modal-title-icon kanji-header-icon">🈁</div>
+                <div class="modal-title-icon kanji-header-icon" id="kanji-modal-icon">🈁</div>
                 <div>
-                    <h2 class="modal-heading">Kho Hán Tự Kanji N5 & Đông Du</h2>
-                    <p class="modal-subheading">Chọn các trang bạn muốn ôn tập • 10 trang chuyên đề (541 chữ Hán)</p>
+                    <h2 class="modal-heading" id="kanji-modal-heading">Kho Hán Tự Kanji</h2>
+                    <p class="modal-subheading" id="kanji-modal-subheading">Chọn các trang bạn muốn ôn tập</p>
                 </div>
             </div>
             <button type="button" class="modal-close-btn" onclick="closeKanjiModal()" title="Đóng cửa sổ">✕</button>
@@ -260,10 +275,10 @@
         <div class="kanji-modal-toolbar">
             <div class="kanji-modal-stats">
                 <span class="km-stat-icon">📌</span>
-                <span>Trạng thái: <b id="kanji-modal-selected-count">10 / 10 trang (541 chữ)</b></span>
+                <span>Trạng thái: <b id="kanji-modal-selected-count">0 / 0 trang (0 chữ Hán)</b></span>
             </div>
             <div class="kanji-modal-quick-actions">
-                <button type="button" class="km-btn km-btn-select-all" onclick="selectAllKanjiModalPages(true)">✨ Chọn tất cả 10 trang</button>
+                <button type="button" class="km-btn km-btn-select-all" id="kanji-modal-select-all-btn" onclick="selectAllKanjiModalPages(true)">✨ Chọn tất cả</button>
                 <button type="button" class="km-btn km-btn-deselect" onclick="selectAllKanjiModalPages(false)">🧹 Bỏ chọn tất cả</button>
             </div>
         </div>
@@ -405,9 +420,9 @@
 
 <!-- Application Core Scripts -->
 <script src="js/audio.js?v=20260908"></script>
-<script src="js/study.js?v=20261011"></script>
-<script src="js/summary.js?v=20261011b"></script>
-<script src="js/app.js?v=20261011"></script>
+<script src="js/study.js?v=20261113d"></script>
+<script src="js/summary.js?v=20261113d"></script>
+<script src="js/app.js?v=20261113d"></script>
 
 </body>
 </html>

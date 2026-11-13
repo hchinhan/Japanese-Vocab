@@ -43,15 +43,15 @@ function startReview() {
             const data = chapter.getData();
             if (data) {
                 Object.assign(currentVocab, data);
-                if (chapter.isKanjiGroup && typeof selectedKanjiPages !== 'undefined') {
-                    if (selectedKanjiPages.size === KANJI_PAGES_CONFIG.length) {
-                        selectedNames.push(`Kanji Trang (${KANJI_PAGES_CONFIG.length} Trang)`);
+                if (chapter.isKanjiPageGroup && Array.isArray(chapter.pagesConfig) && chapter.selectedPages) {
+                    if (chapter.selectedPages.size === chapter.pagesConfig.length) {
+                        selectedNames.push(`${chapter.shortName} (${chapter.pagesConfig.length} Trang)`);
                     } else {
                         const pageShorts = [];
-                        KANJI_PAGES_CONFIG.forEach(p => {
-                            if (selectedKanjiPages.has(p.id)) pageShorts.push(p.label);
+                        chapter.pagesConfig.forEach(p => {
+                            if (chapter.selectedPages.has(p.id)) pageShorts.push(p.label);
                         });
-                        selectedNames.push(`Kanji Trang (${pageShorts.join(', ')})`);
+                        selectedNames.push(`${chapter.shortName} (${pageShorts.join(', ')})`);
                     }
                 } else if (chapter.isKanjiLessonGroup && typeof selectedKanjiLessons !== 'undefined') {
                     if (selectedKanjiLessons.size === KANJI_LESSONS_CONFIG.length) {

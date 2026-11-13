@@ -325,6 +325,7 @@ function createVocabItem(chapterId, chapterLabel, chapterTitle, vnKey, jpVal, op
         chapterLabel,
         chapterTitle,
         isKanji: !!options.isKanji,
+        kanjiGroupId: options.kanjiGroupId || null,
         isKanjiLesson: isKanjiLesson,
         meta: meta,
         vn: vnKey,
@@ -359,13 +360,16 @@ function getAggregateVocabData() {
                     list.push(createVocabItem('dem', 'Đếm số', 'Luyện đếm số', vnKey, counters[vnKey]));
                 }
             }
-        } else if (chapter.isKanjiGroup && typeof KANJI_PAGES_CONFIG !== 'undefined') {
-            // Nạp toàn bộ 9 trang Kanji vào bảng tra cứu
-            KANJI_PAGES_CONFIG.forEach(p => {
+        } else if (chapter.isKanjiPageGroup && Array.isArray(chapter.pagesConfig)) {
+            // Nạp toàn bộ các trang của Part Kanji vào bảng tra cứu
+            chapter.pagesConfig.forEach(p => {
                 const pData = p.getData ? p.getData() : null;
                 if (pData) {
                     for (let vnKey in pData) {
-                        list.push(createVocabItem(p.id, p.shortName, `${p.shortName} - ${p.title}`, vnKey, pData[vnKey], { isKanji: true }));
+                        list.push(createVocabItem(p.id, p.shortName, `${p.shortName} - ${p.title}`, vnKey, pData[vnKey], {
+                            isKanji: true,
+                            kanjiGroupId: chapter.id
+                        }));
                     }
                 }
             });
@@ -516,9 +520,9 @@ function filterVocabTable(immediate = false) {
 
     if (!query) {
         currentFilteredList = allVocabList.filter(item => {
-            return selectedChapter === 'all' || 
-                   item.chapterId === selectedChapter || 
-                   (selectedChapter === 'kanji' && item.isKanji) ||
+            return selectedChapter === 'all' ||
+                   item.chapterId === selectedChapter ||
+                   item.kanjiGroupId === selectedChapter ||
                    (selectedChapter === 'kanji_lessons' && item.isKanjiLesson);
         });
     } else {
@@ -540,7 +544,7 @@ function filterVocabTable(immediate = false) {
             const matchesChapter = (
                 selectedChapter === 'all' ||
                 item.chapterId === selectedChapter ||
-                (selectedChapter === 'kanji' && item.isKanji) ||
+                item.kanjiGroupId === selectedChapter ||
                 (selectedChapter === 'kanji_lessons' && item.isKanjiLesson)
             );
             if (!matchesChapter) return false;
