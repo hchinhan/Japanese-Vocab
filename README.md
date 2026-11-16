@@ -24,7 +24,8 @@ Japanese-Vocab/
         ├── kanji0.js -> kanji9.js     # Kanji Trang (Đông Du HT400 & cơ bản N5)
         ├── kanji_lessons.js    # Từ vựng Kanji theo bài
         ├── kanji800_1.js, kanji800_2.js  # Mục riêng "Kanji 800" (Đông Du HT800 - chỉ chữ mới)
-        └── kata.js             # Dữ liệu từ ngoại lai Katakana tổng hợp
+        ├── kata.js             # Dữ liệu từ ngoại lai Katakana tổng hợp
+        └── tha_dong_tu.js      # Dữ liệu chuyên đề Tha động từ (他動詞)
 ```
 
 ---

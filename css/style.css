@@ -1455,6 +1455,8 @@ button, input, select, textarea, label {
 .table-chapter-tag.tag-kanji    { background: #fef08a; color: #a16207; }
 .table-chapter-tag.tag-dem      { background: #f1f5f9; color: #475569; }
 .table-chapter-tag.tag-kata     { background: #e0e7ff; color: #4338ca; }
+.table-chapter-tag.tag-tha_dong_tu { background: #ede9fe; color: #6d28d9; }
+.table-chapter-tag[class*="tag-kanji_bai"] { background: #ccfbf1; color: #0f766e; }
 
 /* ── Speak Button in Table ── */
 .table-speak-btn {

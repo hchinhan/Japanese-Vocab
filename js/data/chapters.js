@@ -534,13 +534,13 @@ const CHAPTERS_CONFIG = [
     ...KANJI_PARTS_CONFIG,
     {
         id: 'kanji_lessons',
-        partBadge: 'TỪ VỰNG • BÀI 1–24',
+        partBadge: 'TỪ VỰNG • BÀI 1–25',
         label: 'Kanji Bài',
         shortName: 'Kanji Bài',
         title: 'Từ Vựng Kanji Theo Bài',
-        desc: '547 từ vựng Hán tự từ Bài 1 ➔ Bài 24 (Bấm để chọn bài)',
+        desc: '574 từ vựng Hán tự từ Bài 1 ➔ Bài 25 (Bấm để chọn bài)',
         icon: '🈴',
-        tag: '16 Bài (547 từ)',
+        tag: '17 Bài (574 từ)',
         tagClass: 'tag-emerald',
         isSpecial: true,
         isKanjiLessonGroup: true,
@@ -558,5 +558,18 @@ const CHAPTERS_CONFIG = [
         tagClass: 'tag-emerald',
         isSpecial: true,
         getData: () => (typeof vocabKata !== 'undefined' ? vocabKata : null)
+    },
+    {
+        id: 'tha_dong_tu',
+        label: 'Tha động từ',
+        shortName: 'Tha động từ',
+        title: 'Tha động từ (Trang 1)',
+        desc: '34 cụm tha động từ thông dụng (Làm nước chảy ➔ Làm âm thanh lớn)',
+        icon: '🔄',
+        tag: '34 cụm từ',
+        tagClass: 'tag-emerald',
+        isSpecial: true,
+        isThaDongTuSection: true,
+        getData: () => (typeof vocabThaDongTu !== 'undefined' ? vocabThaDongTu : null)
     }
 ];

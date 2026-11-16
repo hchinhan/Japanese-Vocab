@@ -2,9 +2,7 @@
 // Kanji 800 - Trang 1: ĐÔNG DU HT800_1 (tất cả chữ & bộ thủ chưa có trong Đông Du HT400, tách hoàn toàn khỏi Kanji cũ)
 
 const vocabKanji800Trang1 = {
-    "VẠN (Mười ngàn)": "万",
     "CỬU (Vĩnh cửu)": "久",
-    "VONG (Tử vong)": "亡",
     "NHÂN NÓN": "𠆢",
     "DĨ (Mốc thời gian)": "以",
     "THA (Khác)": "他",
@@ -12,7 +10,7 @@ const vocabKanji800Trang1 = {
     "LỆNH (Mệnh lệnh)": "令",
     "KIỆN (Sự kiện)": "件",
     "TRỌNG (Bạn bè)": "仲",
-    "VỊ (Vị trí)": "位",
+    "VỊ (Vị trí)": "位", 
     "TỰ (Giống nhau)": "似",
     "TỨ (Thăm hỏi)": "伺",
     "CUNG (Cung cấp)": "供",
@@ -29,7 +27,6 @@ const vocabKanji800Trang1 = {
     "ỨC (Trăm triệu)": "億",
     "ƯU (Ưu tú)": "優",
     "QUANG (Ánh sáng)": "光",
-    "CỤ (Dụng cụ)": "具",
     "SÁCH (Đơn vị đếm quyển)": "冊",
     "BỘ MỊCH": "冖",
     "NHŨNG (Lộn xộn)": "冗",

@@ -374,7 +374,7 @@ function getAggregateVocabData() {
                 }
             });
         } else if (chapter.isKanjiLessonGroup && typeof KANJI_LESSONS_CONFIG !== 'undefined') {
-            // Nạp toàn bộ các bài Từ vựng Kanji (16 bài - 547 từ) vào bảng tra cứu
+            // Nạp toàn bộ các bài Từ vựng Kanji (17 bài - 574 từ) vào bảng tra cứu
             KANJI_LESSONS_CONFIG.forEach(l => {
                 const lData = l.getData ? l.getData() : null;
                 if (lData) {
@@ -386,8 +386,11 @@ function getAggregateVocabData() {
         } else {
             const data = chapter.getData ? chapter.getData() : null;
             if (data) {
+                const chapterTitle = chapter.title.toLowerCase().startsWith(chapter.label.toLowerCase())
+                    ? chapter.title
+                    : `${chapter.label} - ${chapter.title}`;
                 for (let vnKey in data) {
-                    list.push(createVocabItem(chapter.id, chapter.label, `${chapter.label} - ${chapter.title}`, vnKey, data[vnKey]));
+                    list.push(createVocabItem(chapter.id, chapter.label, chapterTitle, vnKey, data[vnKey]));
                 }
             }
         }

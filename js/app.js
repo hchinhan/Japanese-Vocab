@@ -38,17 +38,39 @@ function renderKanjiGroupCardHtml(chapter, opts) {
 }
 
 /**
+ * Render thẻ bài học chuẩn (dùng cho Bài 1~26, Đếm số, Katakana, Tha động từ)
+ */
+function renderSimpleChapterCardHtml(chapter) {
+    return `
+        <label class="product-card ${chapter.isSpecial ? 'special-card' : ''}" id="card-${chapter.id}">
+            <input type="checkbox" id="chk-${chapter.id}" onchange="updateSelectedCount()">
+            <div class="card-content">
+                <div class="card-header-row">
+                    <span class="chapter-tag ${chapter.tagClass || ''}">${chapter.tag}</span>
+                    <span class="card-checkbox"></span>
+                </div>
+                <div class="card-icon">${chapter.icon}</div>
+                <div class="card-title">${chapter.title}</div>
+                <div class="card-desc">${chapter.desc}</div>
+            </div>
+        </label>
+    `;
+}
+
+/**
  * Render danh sách thẻ bài học lên giao diện Menu
  */
 function renderChapterCards() {
     const container = document.getElementById('chapter-options');
     const kanjiPartsContainer = document.getElementById('kanji-parts-options');
     const kanjiLessonsContainer = document.getElementById('kanji-lessons-options');
+    const thaDongTuContainer = document.getElementById('tha-dong-tu-options');
     if (!container) return;
 
     let mainHtml = '';
     let kanjiPartsHtml = '';
     let kanjiLessonsHtml = '';
+    let thaDongTuHtml = '';
 
     CHAPTERS_CONFIG.forEach(chapter => {
         if (chapter.isKanjiPageGroup) {
@@ -66,7 +88,7 @@ function renderChapterCards() {
                 initialBadge: `0/${totalPages}`
             });
         } else if (chapter.isKanjiLessonGroup) {
-            const totalLessons = typeof KANJI_LESSONS_CONFIG !== 'undefined' ? KANJI_LESSONS_CONFIG.length : 16;
+            const totalLessons = typeof KANJI_LESSONS_CONFIG !== 'undefined' ? KANJI_LESSONS_CONFIG.length : 17;
             kanjiLessonsHtml += renderKanjiGroupCardHtml(chapter, {
                 clickHandler: 'handleKanjiLessonCardClick(event)',
                 changeHandler: 'onKanjiLessonCardCheckboxChange(this.checked)',
@@ -79,27 +101,17 @@ function renderChapterCards() {
                 badgeId: 'kanji-lesson-badge-count',
                 initialBadge: `0/${totalLessons}`
             });
+        } else if (chapter.isThaDongTuSection) {
+            thaDongTuHtml += renderSimpleChapterCardHtml(chapter);
         } else {
-            mainHtml += `
-                <label class="product-card ${chapter.isSpecial ? 'special-card' : ''}" id="card-${chapter.id}">
-                    <input type="checkbox" id="chk-${chapter.id}" onchange="updateSelectedCount()">
-                    <div class="card-content">
-                        <div class="card-header-row">
-                            <span class="chapter-tag ${chapter.tagClass || ''}">${chapter.tag}</span>
-                            <span class="card-checkbox"></span>
-                        </div>
-                        <div class="card-icon">${chapter.icon}</div>
-                        <div class="card-title">${chapter.title}</div>
-                        <div class="card-desc">${chapter.desc}</div>
-                    </div>
-                </label>
-            `;
+            mainHtml += renderSimpleChapterCardHtml(chapter);
         }
     });
 
     container.innerHTML = mainHtml;
     if (kanjiPartsContainer) kanjiPartsContainer.innerHTML = kanjiPartsHtml;
     if (kanjiLessonsContainer) kanjiLessonsContainer.innerHTML = kanjiLessonsHtml;
+    if (thaDongTuContainer) thaDongTuContainer.innerHTML = thaDongTuHtml;
 
     if (typeof updateAllKanjiPartBadges === 'function') {
         updateAllKanjiPartBadges();
@@ -163,10 +175,10 @@ function renderChapterSelectOptions() {
         } else if (chapter.isKanjiLessonGroup) {
             const totalLessonWords = typeof KANJI_LESSONS_CONFIG !== 'undefined'
                 ? KANJI_LESSONS_CONFIG.reduce((acc, l) => acc + l.count, 0)
-                : 547;
+                : 574;
             const totalLessonCount = typeof KANJI_LESSONS_CONFIG !== 'undefined'
                 ? KANJI_LESSONS_CONFIG.length
-                : 16;
+                : 17;
             optionsHtml += `<optgroup label="🈴 Từ Vựng Kanji Theo Bài (${totalLessonWords} từ)">`;
             optionsHtml += `<option value="${chapter.id}">🈴 Tất cả ${totalLessonCount} bài Kanji (${totalLessonWords} từ)</option>`;
             if (typeof KANJI_LESSONS_CONFIG !== 'undefined') {
@@ -195,7 +207,7 @@ function updateSelectedCount() {
     });
 
     const productCards = document.querySelectorAll(
-        '#chapter-options .product-card, #kanji-parts-options .product-card, #kanji-lessons-options .product-card'
+        '#chapter-options .product-card, #kanji-parts-options .product-card, #kanji-lessons-options .product-card, #tha-dong-tu-options .product-card'
     );
     let count = 0;
     productCards.forEach(card => {
@@ -219,7 +231,7 @@ function updateSelectedCount() {
  * Chọn tất cả hoặc bỏ chọn tất cả bài học
  */
 function toggleSelectAll(selectAll) {
-    const containers = ['chapter-options', 'kanji-parts-options', 'kanji-lessons-options'];
+    const containers = ['chapter-options', 'kanji-parts-options', 'kanji-lessons-options', 'tha-dong-tu-options'];
     containers.forEach(containerId => {
         const container = document.getElementById(containerId);
         if (!container) return;

@@ -1,6 +1,6 @@
 // File: js/data/kanji_lessons.js
-// Dữ liệu Từ Vựng Kanji Theo Bài (Đông Du - 初級①・単語＆漢字 Bài 1 -> Bài 24)
-// Cập nhật đầy đủ theo tài liệu mới nhất, bao gồm 16 nhóm bài học (547 từ vựng Hán tự)
+// Dữ liệu Từ Vựng Kanji Theo Bài (Đông Du - 初級①②・単語＆漢字 Bài 1 -> Bài 25)
+// Cập nhật đầy đủ theo tài liệu mới nhất, bao gồm 17 nhóm bài học (574 từ vựng Hán tự)
 
 // ==========================================================================
 // 1. DỮ LIỆU TỪ VỰNG KANJI TỪNG BÀI (Chữ Hán -> Hiragana)
@@ -601,6 +601,36 @@ const vocabKanjiLesson22_23_24 = {
     "忘れ物": "わすれもの"
 };
 
+const vocabKanjiLesson25 = {
+    "頑張る": "がんばる",
+    "探す": "さがす",
+    "履く": "はく",
+    "合う": "あう",
+    "似合う": "にあう",
+    "撮る": "とる",
+    "直す": "なおす",
+    "間違う": "まちがう",
+    "止める (bỏ thuốc)": "やめる",
+    "辞める": "やめる",
+    "育てる": "そだてる",
+    "覚える": "おぼえる",
+    "落ちる": "おちる",
+    "合格する": "ごうかくする",
+    "引っ越しする": "ひっこしする",
+    "相談する": "そうだんする",
+    "掃除する": "そうじする",
+    "気持ちがいい": "きもちがいい",
+    "気持ちが悪い": "きもちがわるい",
+    "痛い": "いたい",
+    "怖い": "こわい",
+    "嫌い": "きらい",
+    "無理": "むり",
+    "調子": "ちょうし",
+    "理由": "りゆう",
+    "健康": "けんこう",
+    "辺": "へん"
+};
+
 // ==========================================================================
 // 2. METADATA ÂM HÁN VIỆT & NGHĨA TIẾNG VIỆT (Dùng cho tra cứu, tìm kiếm & hiển thị)
 // ==========================================================================
@@ -1152,11 +1182,38 @@ const KANJI_LESSON_META = {
     "お祝い": { hanViet: "CHÚC", nghia: "Quà mừng, lời chúc mừng", lessonId: "kanji_bai22_23_24" },
     "花束": { hanViet: "HOA THÚC", nghia: "Bó hoa", lessonId: "kanji_bai22_23_24" },
     "生け花": { hanViet: "SINH HOA", nghia: "Cắm hoa", lessonId: "kanji_bai22_23_24" },
-    "忘れ物": { hanViet: "VONG VẬT", nghia: "Đồ để quên", lessonId: "kanji_bai22_23_24" }
+    "忘れ物": { hanViet: "VONG VẬT", nghia: "Đồ để quên", lessonId: "kanji_bai22_23_24" },
+    "頑張る": { hanViet: "NGOAN TRƯƠNG", nghia: "Cố gắng", lessonId: "kanji_bai25" },
+    "探す": { hanViet: "THÁM", nghia: "Tìm, kiếm", lessonId: "kanji_bai25" },
+    "履く": { hanViet: "LÍ", nghia: "Mang, mặc", lessonId: "kanji_bai25" },
+    "合う": { hanViet: "HỢP", nghia: "Vừa (size)", lessonId: "kanji_bai25" },
+    "似合う": { hanViet: "TỰ HỢP", nghia: "Hợp, phù hợp", lessonId: "kanji_bai25" },
+    "撮る": { hanViet: "TOÁT", nghia: "Chụp hình", lessonId: "kanji_bai25" },
+    "直す": { hanViet: "TRỰC", nghia: "Sửa chữa", lessonId: "kanji_bai25" },
+    "間違う": { hanViet: "GIAN VI", nghia: "Nhầm lẫn, sai lầm", lessonId: "kanji_bai25" },
+    "止める (bỏ thuốc)": { hanViet: "CHỈ", nghia: "Bỏ (thuốc)", lessonId: "kanji_bai25" },
+    // "辞める" dùng chung metadata TỪ / Nghỉ, bỏ (việc) đã khai báo ở Bài 19-20-21
+    "育てる": { hanViet: "DỤC", nghia: "Nuôi dạy, nuôi lớn", lessonId: "kanji_bai25" },
+    "覚える": { hanViet: "GIÁC", nghia: "Ghi nhớ, học thuộc", lessonId: "kanji_bai25" },
+    "落ちる": { hanViet: "LẠC", nghia: "Rớt, rơi, rụng", lessonId: "kanji_bai25" },
+    "合格する": { hanViet: "HỢP CÁCH", nghia: "Đậu, đạt", lessonId: "kanji_bai25" },
+    "引っ越しする": { hanViet: "DẪN VIỆT", nghia: "Chuyển nhà", lessonId: "kanji_bai25" },
+    "相談する": { hanViet: "TƯƠNG ĐÀM", nghia: "Thảo luận, bàn bạc", lessonId: "kanji_bai25" },
+    "掃除する": { hanViet: "TẢO TRỪ", nghia: "Dọn dẹp", lessonId: "kanji_bai25" },
+    "気持ちがいい": { hanViet: "KHÍ TRÌ", nghia: "Cảm giác dễ chịu", lessonId: "kanji_bai25" },
+    "気持ちが悪い": { hanViet: "KHÍ TRÌ ÁC", nghia: "Cảm giác khó chịu", lessonId: "kanji_bai25" },
+    "痛い": { hanViet: "THỐNG", nghia: "Đau", lessonId: "kanji_bai25" },
+    "怖い": { hanViet: "BỐ", nghia: "Sợ", lessonId: "kanji_bai25" },
+    "嫌い": { hanViet: "HIỀM", nghia: "Ghét", lessonId: "kanji_bai25" },
+    "無理": { hanViet: "VÔ LÝ", nghia: "Quá sức, không thể", lessonId: "kanji_bai25" },
+    "調子": { hanViet: "ĐIỀU TỬ", nghia: "Tình trạng", lessonId: "kanji_bai25" },
+    "理由": { hanViet: "LÝ DO", nghia: "Lý do", lessonId: "kanji_bai25" },
+    "健康": { hanViet: "KIỆN KHANG", nghia: "Sức khỏe", lessonId: "kanji_bai25" },
+    "辺": { hanViet: "BIÊN", nghia: "Vùng, khu", lessonId: "kanji_bai25" }
 };
 
 // ==========================================================================
-// 3. CẤU HÌNH DANH MỤC 16 NHÓM BÀI HỌC KANJI
+// 3. CẤU HÌNH DANH MỤC 17 NHÓM BÀI HỌC KANJI
 // ==========================================================================
 
 const KANJI_LESSONS_CONFIG = [
@@ -1351,6 +1408,18 @@ const KANJI_LESSONS_CONFIG = [
         samples: ["安定", "連絡", "支社", "未来"],
         count: 27,
         getData: () => (typeof vocabKanjiLesson22_23_24 !== 'undefined' ? vocabKanjiLesson22_23_24 : null)
+    },
+    {
+        id: 'kanji_bai25',
+        lesson: '25',
+        label: 'Bài 25',
+        shortName: 'Kanji B.25',
+        title: 'Thử thách, Cảm giác & Sức khỏe',
+        desc: '27 từ Hán tự về cố gắng, thi cử, bỏ/chuyển đổi, cảm xúc & sức khỏe',
+        range: '頑張る (Ngoan trương) ➔ 辺 (Biên)',
+        samples: ["探す", "痛い", "無理", "健康"],
+        count: 27,
+        getData: () => (typeof vocabKanjiLesson25 !== 'undefined' ? vocabKanjiLesson25 : null)
     }
 ];
 
