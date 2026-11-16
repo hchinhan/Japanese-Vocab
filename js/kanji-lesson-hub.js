@@ -267,6 +267,10 @@ function studySingleKanjiLesson(lessonId, event) {
 
     // Bắt đầu phiên học chỉ với bài này
     currentVocab = Object.assign({}, data);
+    if (typeof kanjiLessonQuestionKeys !== 'undefined') {
+        kanjiLessonQuestionKeys.clear();
+        Object.keys(data).forEach(key => kanjiLessonQuestionKeys.add(key));
+    }
     currentChapterName = targetLesson.shortName + " (" + targetLesson.title + ")";
     questions = Object.keys(currentVocab);
     markedQuestions.clear();

@@ -875,6 +875,14 @@ button, input, select, textarea, label {
     cursor: text;
 }
 
+/* ── Câu hỏi Kanji theo bài: .word-vn chứa chữ Hán tiếng Nhật ── */
+.word-vn.word-vn-japanese {
+    font-family: var(--font-japanese), var(--font-vietnamese);
+    font-size: 3.3rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
 /* ── Chế độ Nhật -> Việt: .word-vn chứa tiếng Nhật, .word-jp chứa tiếng Việt ── */
 .card-mode-jp-to-vn .word-vn {
     font-family: var(--font-japanese);
@@ -888,6 +896,30 @@ button, input, select, textarea, label {
     font-size: 2.7rem;
     font-weight: 700;
     letter-spacing: -0.2px;
+}
+
+.word-jp-main {
+    display: block;
+    font-family: var(--font-japanese), var(--font-vietnamese);
+    font-size: 3.3rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    line-height: 1.35;
+}
+
+.word-han-viet {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 18px;
+    border-radius: var(--radius-pill);
+    background: var(--primary-light);
+    color: var(--primary-hover);
+    font-family: var(--font-vietnamese);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    line-height: 1.35;
+    vertical-align: middle;
 }
 
 @keyframes answer-reveal {
@@ -1590,7 +1622,10 @@ button, input, select, textarea, label {
     .card-desc { font-size: 0.7rem; }
 
     .word-vn { font-size: 1.9rem; }
+    .word-vn.word-vn-japanese { font-size: 2.2rem; }
     .word-jp { font-size: 2.2rem; }
+    .word-jp-main { font-size: 2.2rem; }
+    .word-han-viet { font-size: 1rem; padding: 4px 14px; }
     .card-mode-jp-to-vn .word-vn { font-size: 2.2rem; }
     .card-mode-jp-to-vn .word-jp { font-size: 1.9rem; }
     .card { margin: 20px 16px; }
@@ -1922,6 +1957,11 @@ button, input, select, textarea, label {
 
 .kpc-range b {
     color: #047857;
+}
+
+#kanji-lesson-modal .kpc-range b {
+    font-family: var(--font-japanese), var(--font-vietnamese);
+    font-weight: 600;
 }
 
 .kpc-desc {

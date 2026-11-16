@@ -10,6 +10,7 @@ let isShowingAnswer = false;
 let currentChapterName = "";
 let currentMode = "flashcard";
 const markedQuestions = new Set();
+const kanjiLessonQuestionKeys = new Set();
 let cardMouseDownPos = null;
 let hadSelectionOnMouseDown = false;
 let wordClickTimeout = null;
@@ -29,6 +30,7 @@ function shuffleArray(array) {
  */
 function startReview() {
     currentVocab = {};
+    kanjiLessonQuestionKeys.clear();
     const selectedNames = [];
 
     const selectedModeInput = document.querySelector('input[name="studyMode"]:checked');
@@ -43,6 +45,9 @@ function startReview() {
             const data = chapter.getData();
             if (data) {
                 Object.assign(currentVocab, data);
+                if (chapter.isKanjiLessonGroup) {
+                    Object.keys(data).forEach(key => kanjiLessonQuestionKeys.add(key));
+                }
                 if (chapter.isKanjiPageGroup && Array.isArray(chapter.pagesConfig) && chapter.selectedPages) {
                     if (chapter.selectedPages.size === chapter.pagesConfig.length) {
                         selectedNames.push(`${chapter.shortName} (${chapter.pagesConfig.length} Trang)`);
@@ -127,6 +132,9 @@ function showQuestion() {
     wordJpEl.style.display = 'none';
     speakBtnEl.style.display = 'none';
 
+    const isKanjiLesson = kanjiLessonQuestionKeys.has(currentVN);
+    wordVnEl.classList.toggle('word-vn-japanese', isKanjiLesson);
+
     const flashcardEl = document.getElementById('flashcard');
     if (flashcardEl) {
         if (currentMode === 'jp_to_vn') {
@@ -170,12 +178,41 @@ function playAudio(event) {
 }
 
 /**
+ * Lấy âm Hán Việt của câu hiện tại nếu thuộc bộ Từ vựng Kanji theo bài
+ */
+function getKanjiLessonHanViet(key) {
+    if (!kanjiLessonQuestionKeys.has(key)) return '';
+    if (typeof KANJI_LESSON_META !== 'undefined' && KANJI_LESSON_META[key] && KANJI_LESSON_META[key].hanViet) {
+        return KANJI_LESSON_META[key].hanViet;
+    }
+    return '';
+}
+
+/**
+ * Hiển thị đáp án kèm âm Hán Việt cho Từ vựng Kanji theo bài
+ */
+function renderAnswerWithHanViet(answerElement, mainText, hanViet) {
+    answerElement.textContent = '';
+
+    const mainSpan = document.createElement('span');
+    mainSpan.className = 'word-jp-main';
+    mainSpan.textContent = mainText;
+    answerElement.appendChild(mainSpan);
+
+    const hvSpan = document.createElement('span');
+    hvSpan.className = 'word-han-viet';
+    hvSpan.textContent = hanViet;
+    answerElement.appendChild(hvSpan);
+}
+
+/**
  * Lật thẻ hiển thị đáp án
  */
 function showAnswer() {
     isShowingAnswer = true;
     const currentVN = questions[currentIndex];
     const correctJP = currentVocab[currentVN];
+    const hanViet = getKanjiLessonHanViet(currentVN);
 
     const vnElement = document.getElementById('word-vn');
     const answerElement = document.getElementById('word-jp');
@@ -183,12 +220,20 @@ function showAnswer() {
     if (currentMode === 'flashcard') {
         vnElement.innerText = currentVN;
         vnElement.style.display = 'flex';
-        answerElement.innerText = correctJP;
+        if (hanViet) {
+            renderAnswerWithHanViet(answerElement, correctJP, hanViet);
+        } else {
+            answerElement.innerText = correctJP;
+        }
         answerElement.style.display = 'block';
     } else if (currentMode === 'jp_to_vn') {
         vnElement.innerText = correctJP;
         vnElement.style.display = 'flex';
-        answerElement.innerText = currentVN;
+        if (hanViet) {
+            renderAnswerWithHanViet(answerElement, currentVN, hanViet);
+        } else {
+            answerElement.innerText = currentVN;
+        }
         answerElement.style.display = 'block';
     } else {
         vnElement.innerText = currentVN;
