@@ -11,6 +11,7 @@ let currentChapterName = "";
 let currentMode = "flashcard";
 const markedQuestions = new Set();
 const kanjiLessonQuestionKeys = new Set();
+let customRestartHandler = null;
 let cardMouseDownPos = null;
 let hadSelectionOnMouseDown = false;
 let wordClickTimeout = null;
@@ -29,6 +30,7 @@ function shuffleArray(array) {
  * Bắt đầu phiên ôn tập với các bài học đã chọn
  */
 function startReview() {
+    customRestartHandler = null;
     currentVocab = {};
     kanjiLessonQuestionKeys.clear();
     const selectedNames = [];
@@ -38,12 +40,20 @@ function startReview() {
         currentMode = selectedModeInput.value;
     }
 
-    // Tự động duyệt qua tất cả bài học trong cấu hình
+    // Tự động duyệt qua tất cả bài học & học phần trong cấu hình
     CHAPTERS_CONFIG.forEach(chapter => {
         const chk = document.getElementById(`chk-${chapter.id}`);
-        if (chk && chk.checked) {
+        const hasGroupSelection =
+            (chapter.isKanjiPageGroup && chapter.selectedPages && chapter.selectedPages.size > 0) ||
+            (chapter.isKanjiRadicalGroup && chapter.selectedRadicals && chapter.selectedRadicals.size > 0) ||
+            (chapter.isKanjiLessonGroup && typeof selectedKanjiLessons !== 'undefined' && selectedKanjiLessons.size > 0) ||
+            (chapter.isKataGroup && chapter.selectedGroups && chapter.selectedGroups.size > 0) ||
+            (chapter.isThaDongTuGroup && chapter.selectedGroups && chapter.selectedGroups.size > 0) ||
+            (chapter.isCounterGroup && chapter.selectedGroups && chapter.selectedGroups.size > 0);
+
+        if ((chk && chk.checked) || hasGroupSelection) {
             const data = chapter.getData();
-            if (data) {
+            if (data && Object.keys(data).length > 0) {
                 Object.assign(currentVocab, data);
                 if (chapter.isKanjiLessonGroup) {
                     Object.keys(data).forEach(key => kanjiLessonQuestionKeys.add(key));
@@ -58,6 +68,13 @@ function startReview() {
                         });
                         selectedNames.push(`${chapter.shortName} (${pageShorts.join(', ')})`);
                     }
+                } else if (chapter.isKanjiRadicalGroup && chapter.selectedRadicals) {
+                    const radList = Array.from(chapter.selectedRadicals);
+                    if (radList.length <= 2) {
+                        selectedNames.push(`Bộ Kanji (${radList.join(', ')})`);
+                    } else {
+                        selectedNames.push(`Bộ Kanji (${radList.length} bộ)`);
+                    }
                 } else if (chapter.isKanjiLessonGroup && typeof selectedKanjiLessons !== 'undefined') {
                     if (selectedKanjiLessons.size === KANJI_LESSONS_CONFIG.length) {
                         selectedNames.push(`Kanji Bài (${KANJI_LESSONS_CONFIG.length} Bài)`);
@@ -67,6 +84,36 @@ function startReview() {
                             if (selectedKanjiLessons.has(l.id)) lessonShorts.push(l.label);
                         });
                         selectedNames.push(`Kanji Bài (${lessonShorts.join(', ')})`);
+                    }
+                } else if (chapter.isKataGroup && Array.isArray(chapter.groupsConfig) && chapter.selectedGroups) {
+                    if (chapter.selectedGroups.size === chapter.groupsConfig.length) {
+                        selectedNames.push(`Katakana (Toàn bộ)`);
+                    } else {
+                        const topicLabels = [];
+                        chapter.groupsConfig.forEach(g => {
+                            if (chapter.selectedGroups.has(g.id)) topicLabels.push(g.label);
+                        });
+                        selectedNames.push(`Katakana (${topicLabels.join(', ')})`);
+                    }
+                } else if (chapter.isThaDongTuGroup && Array.isArray(chapter.groupsConfig) && chapter.selectedGroups) {
+                    if (chapter.selectedGroups.size === chapter.groupsConfig.length) {
+                        selectedNames.push(`Tha động từ (Toàn bộ)`);
+                    } else {
+                        const partLabels = [];
+                        chapter.groupsConfig.forEach(g => {
+                            if (chapter.selectedGroups.has(g.id)) partLabels.push(g.label);
+                        });
+                        selectedNames.push(`Tha động từ (${partLabels.join(', ')})`);
+                    }
+                } else if (chapter.isCounterGroup && Array.isArray(chapter.groupsConfig) && chapter.selectedGroups) {
+                    if (chapter.selectedGroups.size === chapter.groupsConfig.length) {
+                        selectedNames.push(`Đếm số (7 mục)`);
+                    } else {
+                        const counterLabels = [];
+                        chapter.groupsConfig.forEach(g => {
+                            if (chapter.selectedGroups.has(g.id)) counterLabels.push(g.shortName);
+                        });
+                        selectedNames.push(`Đếm (${counterLabels.join(', ')})`);
                     }
                 } else {
                     selectedNames.push(chapter.shortName);
@@ -131,6 +178,7 @@ function showQuestion() {
 
     wordJpEl.style.display = 'none';
     speakBtnEl.style.display = 'none';
+    hideKanjiRadicalAnswerTags();
 
     const isKanjiLesson = kanjiLessonQuestionKeys.has(currentVN);
     wordVnEl.classList.toggle('word-vn-japanese', isKanjiLesson);
@@ -244,6 +292,7 @@ function showAnswer() {
 
     document.getElementById('listen-prompt').style.display = 'none';
     document.getElementById('speak-btn').style.display = 'flex';
+    renderKanjiRadicalAnswerTags(correctJP);
 
     const actionBtn = document.getElementById('action-btn');
     if (currentIndex === questions.length - 1) {
@@ -330,12 +379,98 @@ function updateStarUI() {
     }
 }
 
+function hideKanjiRadicalAnswerTags() {
+    const el = document.getElementById('kanji-radical-tags');
+    if (el) {
+        el.style.display = 'none';
+        el.innerHTML = '';
+    }
+}
+
+function renderKanjiRadicalAnswerTags(kanjiChar) {
+    if (typeof getKanjiRadicalTagInfo !== 'function') return;
+    const info = getKanjiRadicalTagInfo(kanjiChar);
+    if (!info || !info.primaryRadical) {
+        hideKanjiRadicalAnswerTags();
+        return;
+    }
+
+    const answerBox = document.querySelector('.answer-box');
+    if (!answerBox) return;
+
+    let container = document.getElementById('kanji-radical-tags');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'kanji-radical-tags';
+        container.className = 'kanji-radical-tags-row';
+        const speakBtn = document.getElementById('speak-btn');
+        if (speakBtn && speakBtn.parentNode === answerBox) {
+            answerBox.insertBefore(container, speakBtn);
+        } else {
+            answerBox.appendChild(container);
+        }
+    }
+
+    container.textContent = '';
+    const primarySpan = document.createElement('span');
+    primarySpan.className = 'krt-pill krt-primary';
+    primarySpan.textContent = `📌 Bộ chính: ${info.primaryRadical}`;
+    container.appendChild(primarySpan);
+
+    const comps = (info.radicals || []).filter(r => r !== info.primaryRadical);
+    comps.forEach(rad => {
+        const compSpan = document.createElement('span');
+        compSpan.className = 'krt-pill krt-comp';
+        compSpan.textContent = `🧩 ${rad}`;
+        container.appendChild(compSpan);
+    });
+
+    container.style.display = 'flex';
+}
+
+/**
+ * Khởi chạy phiên học flashcard tùy biến (dùng cho trang Kanji riêng / học theo bộ / học nhanh 1 mục)
+ */
+function startFlashcardSession(vocabMap, sessionTitle, restartFn = null, opts = {}) {
+    const keys = vocabMap ? Object.keys(vocabMap) : [];
+    if (keys.length === 0) {
+        alert("Không có dữ liệu từ vựng trong lựa chọn hiện tại!");
+        return;
+    }
+
+    customRestartHandler = typeof restartFn === 'function' ? restartFn : null;
+    kanjiLessonQuestionKeys.clear();
+    if (opts && opts.isKanjiLesson) {
+        keys.forEach(k => kanjiLessonQuestionKeys.add(k));
+    }
+    currentVocab = Object.assign({}, vocabMap);
+    currentChapterName = sessionTitle;
+    questions = keys;
+    markedQuestions.clear();
+
+    const selectedModeInput = document.querySelector('input[name="studyMode"]:checked');
+    if (selectedModeInput) {
+        currentMode = selectedModeInput.value;
+    }
+
+    const menuEl = document.getElementById('menu');
+    const flashcardEl = document.getElementById('flashcard');
+    if (menuEl) menuEl.style.display = 'none';
+    if (flashcardEl) flashcardEl.style.display = 'block';
+
+    initRound();
+}
+
 /**
  * Ôn lại toàn bộ bộ từ hiện tại từ đầu
  */
 function restartAll(event) {
     if (event) event.stopPropagation();
-    startReview();
+    if (typeof customRestartHandler === 'function') {
+        customRestartHandler();
+    } else if (typeof startReview === 'function') {
+        startReview();
+    }
 }
 
 /**

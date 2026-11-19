@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanji N5 & N4 | Học Theo Trang & Bộ Thủ - Japanese-Vocab</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css?v=20261118">
+    <link rel="stylesheet" href="css/kanji.css?v=20261118">
+
+    <!-- Kanji Data Files (N5 + N4 + Radical Tags) -->
+    <script src="js/data/kanji0.js?v=20260903"></script>
+    <script src="js/data/kanji1.js?v=20260903"></script>
+    <script src="js/data/kanji2.js?v=20260903"></script>
+    <script src="js/data/kanji3.js?v=20260903"></script>
+    <script src="js/data/kanji4.js?v=20261118"></script>
+    <script src="js/data/kanji5.js?v=20261118"></script>
+    <script src="js/data/kanji6.js?v=20260903"></script>
+    <script src="js/data/kanji7.js?v=20260903"></script>
+    <script src="js/data/kanji8.js?v=20260903"></script>
+    <script src="js/data/kanji9.js?v=20260923"></script>
+    <script src="js/data/kanji800_1.js?v=20261113b"></script>
+    <script src="js/data/kanji800_2.js?v=20261113b"></script>
+    <script src="js/data/kanji800_3.js?v=20261118"></script>
+    <script src="js/data/kanji800_4.js?v=20261118"></script>
+    <script src="js/data/kanji800_5.js?v=20261118"></script>
+    <script src="js/data/kanji800_6.js?v=20261118"></script>
+    <script src="js/data/kanji800_7.js?v=20261118"></script>
+    <script src="js/data/kanji800_8.js?v=20261118"></script>
+    <script src="js/data/kanji800_9.js?v=20261118"></script>
+    <script src="js/data/kanji800_10.js?v=20261118"></script>
+    <script src="js/data/kanji_lessons.js?v=20261116"></script>
+    <script src="js/data/chapters.js?v=20261119"></script>
+    <script src="js/data/kanji_radicals.js?v=20261118"></script>
+</head>
+<body>
+
+<!-- Header Navigation -->
+<header class="app-header">
+    <div class="header-container">
+        <div class="kanji-page-brand">
+            <a href="index.html" class="back-home-pill" title="Quay về trang ôn tập Từ vựng">⬅ Trang chủ</a>
+            <div class="brand">
+                <span class="brand-logo">🈁</span>
+                <h1 class="brand-name">Kanji Studio</h1>
+            </div>
+        </div>
+        <div class="header-right">
+            <button type="button" class="nav-vocab-btn" onclick="switchKanjiTab('explorer')">
+                📖 Tra cứu Kanji &amp; Bộ
+            </button>
+            <div class="header-status" id="kanji-selected-count-badge">
+                <span class="status-dot"></span> Đã chọn: <strong id="kanji-count-num">0</strong> mục (<strong id="kanji-char-count-num">0</strong> chữ)
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <!-- Menu / Studio View -->
+    <div class="menu-container" id="menu">
+
+        <!-- Hero Summary Banner -->
+        <div class="kanji-hero-banner">
+            <div class="kanji-hero-stats" id="kanji-hero-stats">
+                <!-- Populated dynamically by js/kanji-page.js -->
+            </div>
+        </div>
+
+        <!-- Section 01: Study Mode -->
+        <div class="section-block">
+            <div class="section-title-wrap">
+                <span class="section-badge">01</span>
+                <h3 class="section-heading">Chế độ khảo Kanji</h3>
+            </div>
+
+            <div class="mode-grid">
+                <label class="mode-card active">
+                    <input type="radio" name="studyMode" value="flashcard" checked onchange="syncKanjiModeCards()">
+                    <div class="mode-card-inner">
+                        <div class="mode-icon">👁️</div>
+                        <div class="mode-info">
+                            <div class="mode-title">FlashCard (Hán-Việt ➔ Chữ Hán)</div>
+                            <div class="mode-desc">Nhìn âm Hán-Việt &amp; nghĩa ➔ Đoán chữ Kanji</div>
+                        </div>
+                        <div class="radio-indicator"></div>
+                    </div>
+                </label>
+
+                <label class="mode-card">
+                    <input type="radio" name="studyMode" value="jp_to_vn" onchange="syncKanjiModeCards()">
+                    <div class="mode-card-inner">
+                        <div class="mode-icon">🈁</div>
+                        <div class="mode-info">
+                            <div class="mode-title">FlashCard (Chữ Hán ➔ Hán-Việt)</div>
+                            <div class="mode-desc">Nhìn mặt chữ Kanji ➔ Đoán Hán-Việt &amp; nghĩa</div>
+                        </div>
+                        <div class="radio-indicator"></div>
+                    </div>
+                </label>
+
+                <label class="mode-card">
+                    <input type="radio" name="studyMode" value="listening" onchange="syncKanjiModeCards()">
+                    <div class="mode-card-inner">
+                        <div class="mode-icon">🎧</div>
+                        <div class="mode-info">
+                            <div class="mode-title">Luyện Nghe</div>
+                            <div class="mode-desc">Nghe phát âm ➔ Đoán Hán-Việt &amp; chữ Hán</div>
+                        </div>
+                        <div class="radio-indicator"></div>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Workspace Tabs -->
+        <div class="kanji-tabs-bar" id="kanji-tabs">
+            <button type="button" class="kanji-tab-btn active" id="tab-btn-pages" onclick="switchKanjiTab('pages')">
+                <span>📘 Kanji Theo Trang</span>
+                <span class="kanji-tab-count" id="tab-count-pages">20 trang</span>
+            </button>
+            <button type="button" class="kanji-tab-btn" id="tab-btn-radicals" onclick="switchKanjiTab('radicals')">
+                <span>🧩 Theo Bộ Chữ</span>
+                <span class="kanji-tab-count" id="tab-count-radicals">178 bộ</span>
+            </button>
+            <button type="button" class="kanji-tab-btn" id="tab-btn-lessons" onclick="switchKanjiTab('lessons')">
+                <span>📗 Từ Vựng Kanji Theo Bài</span>
+                <span class="kanji-tab-count" id="tab-count-lessons">17 bài</span>
+            </button>
+            <button type="button" class="kanji-tab-btn" id="tab-btn-explorer" onclick="switchKanjiTab('explorer')">
+                <span>📖 Tra Cứu &amp; Phân Loại</span>
+                <span class="kanji-tab-count" id="tab-count-explorer">0 chữ</span>
+            </button>
+        </div>
+
+        <!-- TAB 1: Học Theo Trang (Xếp gọn theo Session Part 1 N5 & Part 2 N4) -->
+        <div id="tab-panel-pages">
+            <!-- Part 1: N5 -->
+            <div class="kanji-part-panel" id="kanji-n5-panel">
+                <div class="kanji-part-header" style="cursor: pointer;" onclick="toggleStudioPartAccordion('n5', event)">
+                    <div class="kph-title-group">
+                        <div class="kph-icon">🈁</div>
+                        <div>
+                            <h3 class="kph-title">Session 1 • N5 — Cơ Bản &amp; Đông Du HT400 (Bấm để đóng/mở)</h3>
+                            <p class="kph-sub" id="n5-pages-status">10 trang (Trang 0 ➔ 9) • 541 mục</p>
+                        </div>
+                    </div>
+                    <div class="kph-actions" onclick="event.stopPropagation()">
+                        <button type="button" class="mini-btn btn-mint" onclick="selectAllPartPages('kanji', true)">✓ Chọn tất cả N5</button>
+                        <button type="button" class="mini-btn btn-ghost" onclick="selectAllPartPages('kanji', false)">✕ Bỏ chọn</button>
+                        <button type="button" class="mini-btn btn-ghost" id="studio-part-toggle-n5" onclick="toggleStudioPartAccordion('n5', event)">▴ Thu gọn</button>
+                    </div>
+                </div>
+                <div class="kanji-pages-grid" id="kanji-n5-pages-grid"></div>
+            </div>
+
+            <!-- Part 2: N4 -->
+            <div class="kanji-part-panel" id="kanji-n4-panel">
+                <div class="kanji-part-header" style="cursor: pointer;" onclick="toggleStudioPartAccordion('n4', event)">
+                    <div class="kph-title-group">
+                        <div class="kph-icon kph-icon-n4">🈯</div>
+                        <div>
+                            <h3 class="kph-title">Session 2 • N4 — Đông Du HT800 Mở Rộng (Bấm để đóng/mở)</h3>
+                            <p class="kph-sub" id="n4-pages-status">10 trang (Trang 1 ➔ 10) • 477 mục mới ngoài HT400</p>
+                        </div>
+                    </div>
+                    <div class="kph-actions" onclick="event.stopPropagation()">
+                        <button type="button" class="mini-btn btn-mint" onclick="selectAllPartPages('kanji800', true)">✓ Chọn tất cả N4</button>
+                        <button type="button" class="mini-btn btn-ghost" onclick="selectAllPartPages('kanji800', false)">✕ Bỏ chọn</button>
+                        <button type="button" class="mini-btn btn-ghost" id="studio-part-toggle-n4" onclick="toggleStudioPartAccordion('n4', event)">▾ Mở 10 trang N4</button>
+                    </div>
+                </div>
+                <div class="kanji-pages-grid" id="kanji-n4-pages-grid" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- TAB 3 (MỚI): Từ Vựng Kanji Theo Bài (17 Bài • 574 Từ) -->
+        <div id="tab-panel-lessons" style="display: none;">
+            <div class="kanji-part-panel">
+                <div class="kanji-part-header">
+                    <div class="kph-title-group">
+                        <div class="kph-icon">📗</div>
+                        <div>
+                            <h3 class="kph-title">Từ Vựng Kanji Theo Bài (Đông Du Bài 1 ➔ Bài 25)</h3>
+                            <p class="kph-sub" id="studio-lessons-status">17 bài chuyên đề • 574 từ vựng Hán tự</p>
+                        </div>
+                    </div>
+                    <div class="kph-actions">
+                        <button type="button" class="mini-btn btn-mint" onclick="selectAllStudioKanjiLessons(true)">✓ Chọn cả 17 bài</button>
+                        <button type="button" class="mini-btn btn-ghost" onclick="selectAllStudioKanjiLessons(false)">✕ Bỏ chọn</button>
+                    </div>
+                </div>
+                <div class="kanji-pages-grid" id="studio-kanji-lessons-grid"></div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Học Theo Bộ Chữ -->
+        <div id="tab-panel-radicals" style="display: none;">
+            <div class="radical-filter-panel">
+                <div class="radical-search-row">
+                    <div class="radical-search-box" onclick="document.getElementById('radical-search-input').focus()">
+                        <span>🔍</span>
+                        <input type="text" id="radical-search-input" placeholder="Tìm bộ chữ (VD: nhân đứng, thủy, mộc, 氵, 心, nước, cây...)" oninput="renderRadicalCards()" autocomplete="off">
+                        <button type="button" class="search-clear-btn" id="radical-search-clear" onclick="clearRadicalSearch()" style="display: none;">✕</button>
+                    </div>
+                    <div class="select-all-bar">
+                        <button type="button" class="mini-btn btn-mint" onclick="selectVisibleRadicals(true)">✓ Chọn bộ đang lọc</button>
+                        <button type="button" class="mini-btn btn-ghost" onclick="selectVisibleRadicals(false)">✕ Bỏ chọn tất cả bộ</button>
+                    </div>
+                </div>
+
+                <div class="filter-chips-row">
+                    <div class="filter-chip-group">
+                        <span class="filter-group-label">Phân loại:</span>
+                        <button type="button" class="filter-pill-btn active" id="rad-mode-all" onclick="setRadicalMatchMode(true)">🎯 Cả Bộ chính &amp; Cấu thành</button>
+                        <button type="button" class="filter-pill-btn" id="rad-mode-primary" onclick="setRadicalMatchMode(false)">📌 Chỉ Bộ chính</button>
+                    </div>
+
+                    <div class="filter-chip-group">
+                        <span class="filter-group-label">Cấp độ:</span>
+                        <button type="button" class="filter-pill-btn active" id="rad-lvl-all" onclick="setRadicalLevelFilter('all')">Tất cả (N5+N4)</button>
+                        <button type="button" class="filter-pill-btn" id="rad-lvl-N5" onclick="setRadicalLevelFilter('N5')">Chỉ N5</button>
+                        <button type="button" class="filter-pill-btn" id="rad-lvl-N4" onclick="setRadicalLevelFilter('N4')">Chỉ N4</button>
+                    </div>
+                </div>
+
+                <div class="filter-chips-row">
+                    <div class="filter-chip-group">
+                        <span class="filter-group-label">Số nét bộ:</span>
+                        <button type="button" class="filter-pill-btn active" data-stroke="all" onclick="setRadicalStrokeFilter('all')">Tất cả</button>
+                        <button type="button" class="filter-pill-btn" data-stroke="1-2" onclick="setRadicalStrokeFilter('1-2')">1–2 nét</button>
+                        <button type="button" class="filter-pill-btn" data-stroke="3" onclick="setRadicalStrokeFilter('3')">3 nét</button>
+                        <button type="button" class="filter-pill-btn" data-stroke="4" onclick="setRadicalStrokeFilter('4')">4 nét</button>
+                        <button type="button" class="filter-pill-btn" data-stroke="5-6" onclick="setRadicalStrokeFilter('5-6')">5–6 nét</button>
+                        <button type="button" class="filter-pill-btn" data-stroke="7+" onclick="setRadicalStrokeFilter('7+')">7+ nét</button>
+                    </div>
+                </div>
+
+                <div class="radical-toolbar-status">
+                    <span id="radical-filter-stats">Đang hiển thị 0 bộ thủ</span>
+                    <span id="radical-selected-stats">Đã chọn: <b>0 bộ</b></span>
+                </div>
+            </div>
+
+            <div class="radicals-grid" id="radical-cards-grid"></div>
+        </div>
+
+        <!-- TAB 3: Tra Cứu & Phân Loại Kanji -->
+        <div id="tab-panel-explorer" style="display: none;">
+            <div class="explorer-panel">
+                <div class="radical-search-row" style="margin-bottom: 12px;">
+                    <div class="radical-search-box" onclick="document.getElementById('explorer-search-input').focus()">
+                        <span>🔍</span>
+                        <input type="text" id="explorer-search-input" placeholder="Tìm chữ Hán, Hán-Việt, nghĩa tiếng Việt hoặc tên bộ chữ..." oninput="handleExplorerFilterChange()" autocomplete="off">
+                        <button type="button" class="search-clear-btn" id="explorer-search-clear" onclick="clearExplorerSearch()" style="display: none;">✕</button>
+                    </div>
+                </div>
+
+                <div class="explorer-controls">
+                    <select class="explorer-select" id="explorer-level-filter" onchange="handleExplorerFilterChange()">
+                        <option value="all">📚 Tất cả cấp độ (N5 + N4)</option>
+                        <option value="N5">🈁 Chỉ N5 (Cơ bản &amp; HT400)</option>
+                        <option value="N4">🈯 Chỉ N4 (HT800)</option>
+                    </select>
+
+                    <select class="explorer-select" id="explorer-page-filter" onchange="handleExplorerFilterChange()">
+                        <option value="all">📄 Tất cả các trang</option>
+                    </select>
+
+                    <select class="explorer-select" id="explorer-radical-filter" onchange="handleExplorerFilterChange()">
+                        <option value="all">🧩 Tất cả bộ chữ</option>
+                    </select>
+
+                    <select class="explorer-select" id="explorer-match-filter" onchange="handleExplorerFilterChange()">
+                        <option value="all">🎯 Gồm cả bộ cấu thành</option>
+                        <option value="primary">📌 Chỉ trùng bộ chính</option>
+                    </select>
+
+                    <select class="explorer-select" id="explorer-sort-filter" onchange="handleExplorerFilterChange()">
+                        <option value="hv_az">🈴 Từ điển Hán-Việt (A ➔ Y)</option>
+                        <option value="vn_az">🔤 Từ điển Nghĩa Việt (A ➔ Y)</option>
+                        <option value="page">📄 Theo Thứ Tự Trang</option>
+                    </select>
+                </div>
+
+                <div class="explorer-actions-bar">
+                    <span id="explorer-count-info" class="count-badge-text">Đang tải...</span>
+                    <div class="toolbar-actions">
+                        <button type="button" class="km-btn km-btn-select-all" onclick="studyExplorerFiltered()">🚀 Ôn tập danh sách này</button>
+                        <button type="button" class="btn-md-export" onclick="exportExplorerMarkdown()">📥 Xuất .MD</button>
+                        <button type="button" class="btn-md-copy" onclick="copyExplorerMarkdown()">📋 Copy MD</button>
+                    </div>
+                </div>
+
+                <div class="explorer-table-wrap" id="explorer-table-wrap">
+                    <table class="vocab-data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 52px; text-align: center;">STT</th>
+                                <th style="width: 76px; text-align: center;">Chữ</th>
+                                <th>Hán-Việt &amp; Nghĩa</th>
+                                <th>Tag Bộ Chữ (Bấm vào bộ để lọc)</th>
+                                <th style="width: 68px; text-align: center;">Đọc</th>
+                            </tr>
+                        </thead>
+                        <tbody id="explorer-table-body"></tbody>
+                    </table>
+                    <div class="vocab-empty-view" id="explorer-empty-state" style="display: none;">
+                        <div class="empty-emoji">🔍</div>
+                        <h4>Không tìm thấy chữ Hán phù hợp</h4>
+                        <p>Thử đổi từ khóa hoặc đặt lại bộ lọc cấp độ / bộ chữ.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Start Action Bar -->
+        <div class="action-footer">
+            <button type="button" class="start-btn-main" onclick="startKanjiStudioReview()">
+                <span class="btn-text">✨ Bắt đầu ôn tập Kanji ngay</span>
+                <span class="btn-badge" id="kanji-start-count-badge">0 chữ được chọn</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Flashcard Interface (Dùng chung engine js/study.js) -->
+    <div class="card" id="flashcard" onmousedown="handleCardMouseDown(event)" ontouchstart="handleCardTouchStart(event)" onclick="handleCardClick(event)">
+        <div class="header-bar" id="flashcard-header">
+            <button type="button" class="back-menu-btn" onclick="returnToMenu(event)">⬅ Menu Kanji</button>
+            <div class="progress" id="progress">Câu 0/0</div>
+            <button type="button" id="star-btn" class="star-btn" onclick="toggleMark(event)" title="Đánh dấu câu này (Phím M)">☆</button>
+        </div>
+
+        <div id="flashcard-content">
+            <div class="word-vn" id="word-vn">Đang tải...</div>
+
+            <div class="listen-prompt" id="listen-prompt" style="display: none;" onclick="playAudio(event)">
+                <div class="big-icon">🔊</div>
+                <div class="small-text">Bấm để nghe lại phát âm</div>
+            </div>
+
+            <div class="answer-box">
+                <div class="word-jp" id="word-jp" style="display: none;"></div>
+                <button type="button" class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)" title="Nghe phát âm">🔊 Phát âm</button>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-prev" id="prev-btn" onclick="prevQuestion(event)">Quay lại</button>
+                <button type="button" class="btn btn-main" id="action-btn" onclick="handleActionClick(event)">Xem đáp án</button>
+            </div>
+        </div>
+
+        <!-- End Screen -->
+        <div id="end-screen">
+            <h2>🎉 Hoàn thành xuất sắc!</h2>
+            <p>Bạn đã hoàn thành xong bộ chữ Hán đã chọn.</p>
+            <div class="end-actions">
+                <button type="button" class="start-btn-main" onclick="restartAll(event)">🔄 Ôn lại bộ này từ đầu</button>
+                <button type="button" class="start-btn-main btn-star-marked" id="btn-review-marked" onclick="reviewMarked(event)" style="display: none;">⭐ Ôn lại câu đã đánh dấu (0)</button>
+                <button type="button" class="start-btn-main btn-secondary" onclick="returnToMenu(event)">🏠 Trở về Menu Kanji</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detail Preview Modal (Xem danh sách chữ của 1 Trang hoặc 1 Bộ) -->
+<div class="modal-overlay" id="kanji-detail-modal" style="display: none;" onclick="closeKanjiDetailModalOnOverlay(event)">
+    <div class="modal-card kanji-modal-card" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-title-group">
+                <div class="modal-title-icon kanji-header-icon" id="kdm-icon">🈁</div>
+                <div>
+                    <h2 class="modal-heading" id="kdm-heading">Chi tiết danh sách chữ Hán</h2>
+                    <p class="modal-subheading" id="kdm-subheading">0 chữ Hán</p>
+                </div>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closeKanjiDetailModal()" title="Đóng cửa sổ">✕</button>
+        </div>
+
+        <div class="kanji-modal-body">
+            <div class="preview-kanji-grid" id="kdm-grid"></div>
+        </div>
+
+        <div class="kanji-modal-footer">
+            <button type="button" class="km-footer-btn km-btn-close" onclick="closeKanjiDetailModal()">Đóng</button>
+            <button type="button" class="km-footer-btn km-btn-start" id="kdm-start-btn">🚀 Học ngay bộ này</button>
+        </div>
+    </div>
+</div>
+
+<!-- Application Core Scripts -->
+<script src="js/audio.js?v=20260908"></script>
+<script src="js/study.js?v=20261118"></script>
+<script src="js/kanji-page.js?v=20261118"></script>
+
+</body>
+</html>

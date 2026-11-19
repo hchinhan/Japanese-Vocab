@@ -1,6 +1,14 @@
-# 🇯🇵 Japanese-Vocab | Ứng Dụng Khảo & Tra Cứu Từ Vựng Tiếng Nhật N5
+# 🇯🇵 Japanese-Vocab | Ứng Dụng Khảo & Tra Cứu Từ Vựng Tiếng Nhật N5 & N4
 
-Ứng dụng web ôn tập từ vựng tiếng Nhật N5 dạng Flashcard tương tác, luyện nghe phát âm chuẩn và tra cứu/xuất dữ liệu Markdown.
+Ứng dụng web ôn tập từ vựng & Hán tự tiếng Nhật N5 • N4 dạng Flashcard tương tác, luyện nghe phát âm chuẩn và tra cứu/xuất dữ liệu Markdown. Giao diện được thiết kế tinh gọn theo **từng Session phân cấp (Accordion & Drill-down)**:
+- **📚 Session 1 — Từ Vựng Minna N5:** Chia thành 3 chặng nhỏ (`Chặng 1: Bài 01–10`, `Chặng 2: Bài 11–19`, `Chặng 3: Bài 21–26`).
+- **🈁 Session 2 — Kanji 漢字 (N5 & N4 Đông Du):** Tách thành 3 thành phần con:
+  1. **🧩 Theo Bộ Kanji:** 178 Bộ thủ Đông Du (Bộ chính & Bộ cấu thành).
+  2. **📗 Từ Vựng Kanji Theo Bài:** 17 Bài chuyên đề Đông Du (574 từ vựng Hán tự).
+  3. **📘 Kanji Theo Trang:** Part 1 • N5 HT400 (10 trang: Trang 0 ➔ 9) & Part 2 • N4 HT800 (10 trang: Trang 1 ➔ 10).
+- **🅰️ Session 3 — Katakana カタカナ:** Tách thành 7 chủ đề từ ngoại lai.
+- **🔄 Session 4 — Tha Động Từ 他動詞:** Tách thành 3 phần cụm tha động từ thông dụng.
+- **🔢 Session 5 — Luyện Đếm Số & Thời Gian:** Tách thành 7 chuyên mục đếm tiếng Nhật.
 
 ---
 
@@ -9,21 +17,27 @@
 ```text
 Japanese-Vocab/
 ├── index.html                  # Giao diện chính tinh gọn & semantic
+├── kanji.html                  # Trang chuyên biệt học Kanji N5 & N4 theo Trang và Bộ thủ
 ├── README.md                   # Hướng dẫn dự án & tài liệu thêm bài học
 ├── css/
-│   └── style.css               # Toàn bộ CSS được tổ chức theo module & section rõ ràng
+│   ├── style.css               # Toàn bộ CSS chính được tổ chức theo module & section rõ ràng
+│   └── kanji.css               # CSS chuyên biệt cho trang Kanji Studio (kanji.html)
 └── js/
-    ├── app.js                  # Entry point, render UI động, quản lý chọn bài & phím tắt
+    ├── app.js                  # Entry point trang chủ, render UI động, quản lý chọn bài & phím tắt
     ├── audio.js                # Quản lý phát âm tiếng Nhật (Web Speech API)
-    ├── study.js                # Quản lý luồng Flashcard, Luyện nghe, Đánh dấu sao
+    ├── kanji-hub.js            # Modal chọn trang Kanji trên trang chủ
+    ├── kanji-lesson-hub.js     # Modal chọn bài Từ vựng Kanji theo bài
+    ├── kanji-page.js           # Controller cho trang Kanji Studio (Theo trang, Theo bộ, Tra cứu)
+    ├── study.js                # Quản lý luồng Flashcard, Luyện nghe, Đánh dấu sao & tag bộ
     ├── summary.js              # Quản lý tra cứu từ vựng, tìm kiếm & xuất Markdown (.md)
     └── data/
         ├── chapters.js         # Danh mục metadata cấu hình bài học (tự động đồng bộ UI)
         ├── chuong1.js -> chuong26.js  # Dữ liệu từ vựng theo từng bài học
         ├── dem.js              # Logic & dữ liệu đếm số tiếng Nhật
-        ├── kanji0.js -> kanji9.js     # Kanji Trang (Đông Du HT400 & cơ bản N5)
+        ├── kanji0.js -> kanji9.js     # Kanji Part 1 N5 (Cơ bản & Đông Du HT400 - 541 mục)
+        ├── kanji800_1.js -> kanji800_10.js  # Kanji Part 2 N4 (Đông Du HT800 - 477 mục mới)
+        ├── kanji_radicals.js   # Danh mục 178 Bộ thủ Đông Du & tag Bộ chính/Cấu thành cho 927 chữ
         ├── kanji_lessons.js    # Từ vựng Kanji theo bài
-        ├── kanji800_1.js, kanji800_2.js  # Mục riêng "Kanji 800" (Đông Du HT800 - chỉ chữ mới)
         ├── kata.js             # Dữ liệu từ ngoại lai Katakana tổng hợp
         └── tha_dong_tu.js      # Dữ liệu chuyên đề Tha động từ (他動詞)
 ```

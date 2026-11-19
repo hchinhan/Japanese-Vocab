@@ -2,7 +2,7 @@
 // Kanji Trang 4: ĐÔNG DU HT400 - Bài 4 (Cân 巾 ➔ Bộ Ấp 阝)
 
 const vocabKanjiTrang4 = {
-    "BỘ CÂN": "巾",
+    "BỘ CÂN (Khăn)": "巾",
     "THỊ (Thị trường)": "市",
     "BỐ (Vải)": "布",
     "SƯ (Giáo sư)": "師",

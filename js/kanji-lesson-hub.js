@@ -45,6 +45,15 @@ function closeKanjiLessonModal() {
         modal.style.display = 'none';
         document.body.style.overflow = '';
     }
+    if (typeof KANJI_LESSONS_CONFIG !== 'undefined') {
+        KANJI_LESSONS_CONFIG.forEach(l => {
+            const isChecked = selectedKanjiLessons.has(l.id);
+            const card = document.getElementById(`home-klc-${l.id}`);
+            const chk = document.getElementById(`chk-home-klc-${l.id}`);
+            if (card) card.classList.toggle('active', isChecked);
+            if (chk) chk.checked = isChecked;
+        });
+    }
     updateKanjiLessonBadgeOnMenu();
 }
 
@@ -265,25 +274,33 @@ function studySingleKanjiLesson(lessonId, event) {
 
     closeKanjiLessonModal();
 
-    // Bắt đầu phiên học chỉ với bài này
-    currentVocab = Object.assign({}, data);
-    if (typeof kanjiLessonQuestionKeys !== 'undefined') {
-        kanjiLessonQuestionKeys.clear();
-        Object.keys(data).forEach(key => kanjiLessonQuestionKeys.add(key));
+    if (typeof startFlashcardSession === 'function') {
+        startFlashcardSession(
+            data,
+            `${targetLesson.shortName} (${targetLesson.title})`,
+            () => studySingleKanjiLesson(lessonId, null),
+            { isKanjiLesson: true }
+        );
+    } else {
+        currentVocab = Object.assign({}, data);
+        if (typeof kanjiLessonQuestionKeys !== 'undefined') {
+            kanjiLessonQuestionKeys.clear();
+            Object.keys(data).forEach(key => kanjiLessonQuestionKeys.add(key));
+        }
+        currentChapterName = targetLesson.shortName + " (" + targetLesson.title + ")";
+        questions = Object.keys(currentVocab);
+        markedQuestions.clear();
+
+        const selectedModeInput = document.querySelector('input[name="studyMode"]:checked');
+        if (selectedModeInput) {
+            currentMode = selectedModeInput.value;
+        }
+
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('flashcard').style.display = 'block';
+
+        initRound();
     }
-    currentChapterName = targetLesson.shortName + " (" + targetLesson.title + ")";
-    questions = Object.keys(currentVocab);
-    markedQuestions.clear();
-
-    const selectedModeInput = document.querySelector('input[name="studyMode"]:checked');
-    if (selectedModeInput) {
-        currentMode = selectedModeInput.value;
-    }
-
-    document.getElementById('menu').style.display = 'none';
-    document.getElementById('flashcard').style.display = 'block';
-
-    initRound();
     showToast(`🚀 Đang ôn tập riêng: ${targetLesson.shortName} (${Object.keys(data).length} từ)!`);
 }
 

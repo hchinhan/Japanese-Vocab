@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japanese-Vocab | Khảo Từ Vựng Tiếng Nhật</title>
+    <title>Japanese-Vocab | Khảo Từ Vựng &amp; Từ Điển Tiếng Nhật</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,9 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="css/style.css?v=20261116c">
+    <link rel="stylesheet" href="css/style.css?v=20261119b">
 
-    <!-- Vocabulary Data Files -->
+    <!-- Vocabulary & Kanji Data Files -->
     <script src="js/data/chuong1.js?v=20260903"></script>
     <script src="js/data/chuong2.js?v=20260903"></script>
     <script src="js/data/chuong3.js?v=20260903"></script>
@@ -44,8 +44,8 @@
     <script src="js/data/kanji1.js?v=20260903"></script>
     <script src="js/data/kanji2.js?v=20260903"></script>
     <script src="js/data/kanji3.js?v=20260903"></script>
-    <script src="js/data/kanji4.js?v=20260903"></script>
-    <script src="js/data/kanji5.js?v=20260903"></script>
+    <script src="js/data/kanji4.js?v=20261118"></script>
+    <script src="js/data/kanji5.js?v=20261118"></script>
     <script src="js/data/kanji6.js?v=20260903"></script>
     <script src="js/data/kanji7.js?v=20260903"></script>
     <script src="js/data/kanji8.js?v=20260903"></script>
@@ -53,11 +53,20 @@
     <script src="js/data/kanji_lessons.js?v=20261116"></script>
     <script src="js/data/kanji800_1.js?v=20261113b"></script>
     <script src="js/data/kanji800_2.js?v=20261113b"></script>
+    <script src="js/data/kanji800_3.js?v=20261118"></script>
+    <script src="js/data/kanji800_4.js?v=20261118"></script>
+    <script src="js/data/kanji800_5.js?v=20261118"></script>
+    <script src="js/data/kanji800_6.js?v=20261118"></script>
+    <script src="js/data/kanji800_7.js?v=20261118"></script>
+    <script src="js/data/kanji800_8.js?v=20261118"></script>
+    <script src="js/data/kanji800_9.js?v=20261118"></script>
+    <script src="js/data/kanji800_10.js?v=20261118"></script>
     <script src="js/data/kata.js?v=20261113"></script>
     <script src="js/data/tha_dong_tu.js?v=20261116"></script>
-    <script src="js/data/chapters.js?v=20261116"></script>
-    <script src="js/kanji-hub.js?v=20261113d"></script>
-    <script src="js/kanji-lesson-hub.js?v=20261116b"></script>
+    <script src="js/data/chapters.js?v=20261119b"></script>
+    <script src="js/data/kanji_radicals.js?v=20261118"></script>
+    <script src="js/kanji-hub.js?v=20261119b"></script>
+    <script src="js/kanji-lesson-hub.js?v=20261119b"></script>
 </head>
 <body>
 
@@ -69,11 +78,14 @@
             <h1 class="brand-name">Japanese-Vocab</h1>
         </div>
         <div class="header-right">
-            <button type="button" class="nav-vocab-btn" onclick="openVocabSummaryModal()" title="Tra cứu từ vựng & Xuất MD">
-                📖 Tổng hợp từ vựng
+            <a href="kanji.html" class="nav-kanji-btn">
+                🈁 Kanji Studio
+            </a>
+            <button type="button" class="nav-vocab-btn" onclick="openVocabSummaryModal()">
+                📖 Từ điển A–Z
             </button>
             <div class="header-status" id="selected-count-badge">
-                <span class="status-dot"></span> Đã chọn: <strong id="count-num">0</strong> bài học
+                <span class="status-dot"></span> Đã chọn: <strong id="count-num">0</strong> mục
             </div>
         </div>
     </div>
@@ -82,38 +94,25 @@
 <div class="container">
     <!-- Menu View -->
     <div class="menu-container" id="menu">
-        
-        <!-- Summary Quick Banner -->
-        <div class="vocab-summary-banner" onclick="openVocabSummaryModal()">
-            <div class="banner-icon-wrap">📚</div>
-            <div class="banner-info">
-                <div class="banner-badge flex-align gap-8">
-                    <span>MỚI</span>
-                    <span>•</span>
-                    <span>Tra cứu & Xuất MD</span>
-                </div>
-                <h3 class="banner-title">Tổng Hợp & Tra Cứu Từ Vựng Tiếng Nhật N5</h3>
-                <p class="banner-desc">Xem toàn bộ từ vựng, tìm kiếm từ thông minh và xuất danh sách ra file Markdown (.md)</p>
-            </div>
-            <button type="button" class="banner-action-btn">🔍 Mở bảng từ vựng & Xuất MD</button>
-        </div>
 
-        <!-- Section 1: Mode Selection -->
-        <div class="section-block">
-            <div class="section-title-wrap">
-                <span class="section-badge">01</span>
-                <h3 class="section-heading">Chế độ học</h3>
+        <!-- Section 01: Mode Selection (Compact 4-Column Row) -->
+        <div class="section-block compact-section">
+            <div class="section-title-wrap compact-title-wrap">
+                <div class="flex-align gap-8">
+                    <span class="section-badge">01</span>
+                    <h3 class="section-heading">Chế độ học</h3>
+                </div>
             </div>
             
-            <div class="mode-grid">
+            <div class="mode-grid mode-grid-compact">
                 <!-- Mode 1: VN -> JP -->
                 <label class="mode-card active">
                     <input type="radio" name="studyMode" value="flashcard" checked onchange="updateSelectedCount()">
                     <div class="mode-card-inner">
                         <div class="mode-icon">👁️</div>
                         <div class="mode-info">
-                            <div class="mode-title">FlashCard (Việt ➔ Nhật)</div>
-                            <div class="mode-desc">Nhìn tiếng Việt ➔ Đoán tiếng Nhật</div>
+                            <div class="mode-title">Việt ➔ Nhật</div>
+                            <div class="mode-desc">Nhìn Việt đoán Nhật</div>
                         </div>
                         <div class="radio-indicator"></div>
                     </div>
@@ -125,8 +124,8 @@
                     <div class="mode-card-inner">
                         <div class="mode-icon">🇯🇵</div>
                         <div class="mode-info">
-                            <div class="mode-title">FlashCard (Nhật ➔ Việt)</div>
-                            <div class="mode-desc">Nhìn tiếng Nhật ➔ Đoán tiếng Việt</div>
+                            <div class="mode-title">Nhật ➔ Việt</div>
+                            <div class="mode-desc">Nhìn Nhật đoán Việt</div>
                         </div>
                         <div class="radio-indicator"></div>
                     </div>
@@ -139,7 +138,7 @@
                         <div class="mode-icon">🎧</div>
                         <div class="mode-info">
                             <div class="mode-title">Luyện Nghe</div>
-                            <div class="mode-desc">Nghe tiếng Nhật ➔ Đoán nghĩa</div>
+                            <div class="mode-desc">Nghe đoán từ &amp; nghĩa</div>
                         </div>
                         <div class="radio-indicator"></div>
                     </div>
@@ -152,80 +151,54 @@
                         <div class="mode-info">
                             <div class="mode-title flex-align gap-8">
                                 Ngữ pháp
-                                <span class="coming-soon-badge">COMING SOON</span>
+                                <span class="coming-soon-badge">SOON</span>
                             </div>
-                            <div class="mode-desc">Cấu trúc câu & Mẫu ngữ pháp N5</div>
+                            <div class="mode-desc">Mẫu câu &amp; Ngữ pháp</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Section 2: Chapter Selection -->
-        <div class="section-block">
-            <div class="section-title-wrap flex-between">
+        <!-- Section 02: Session-based Nested Curriculum & Dictionary -->
+        <div class="section-block compact-section">
+            <div class="section-title-wrap flex-between compact-title-wrap">
                 <div class="flex-align gap-8">
                     <span class="section-badge">02</span>
-                    <h3 class="section-heading">Chọn bài học ôn tập</h3>
+                    <h3 class="section-heading">Học phần &amp; Từ điển</h3>
                 </div>
                 <div class="select-all-bar">
+                    <button type="button" class="mini-btn btn-ghost" onclick="collapseAllSessions()">↕ Thu gọn</button>
                     <button type="button" class="mini-btn btn-mint" onclick="toggleSelectAll(true)">✓ Chọn tất cả</button>
                     <button type="button" class="mini-btn btn-ghost" onclick="toggleSelectAll(false)">✕ Bỏ chọn</button>
                 </div>
             </div>
 
-            <!-- Dynamic Chapter Grid (Từ vựng + Đếm số + Katakana) -->
-            <div class="chapter-grid" id="chapter-options">
-                <!-- Được render tự động từ js/data/chapters.js -->
-            </div>
-        </div>
-
-        <!-- Section 3: Kanji -->
-        <div class="section-block">
-            <div class="section-title-wrap">
-                <div class="flex-align gap-8">
-                    <span class="section-badge">03</span>
-                    <h3 class="section-heading">Kanji 漢字</h3>
+            <!-- Active Selection Summary Strip -->
+            <div class="active-selection-bar" id="active-selection-bar" style="display: none;">
+                <div class="asb-left">
+                    <span class="asb-label">Đang chọn:</span>
+                    <div class="asb-chips" id="active-selection-chips"></div>
+                </div>
+                <div class="asb-right">
+                    <button type="button" class="asb-start-btn" onclick="startReview()">🚀 Ôn ngay</button>
                 </div>
             </div>
 
-            <!-- Subsection 3A: Kanji theo Part (Part 1 N5, Part 2 N4, ...) -->
-            <div class="kanji-subsection">
-                <div class="kanji-subsection-label">📘 Chữ Hán Theo Cấp Độ (Part 1 ➔ Part 2...)</div>
-                <div class="chapter-grid" id="kanji-parts-options">
-                    <!-- Được render tự động từ KANJI_PARTS_CONFIG -->
-                </div>
+            <!-- Accordion Sessions Container (Từ vựng • Kanji • Katakana • Tha động từ • Đếm số • Từ điển A-Z) -->
+            <div class="sessions-accordion" id="sessions-accordion">
+                <!-- Được render tự động từ js/app.js -->
             </div>
 
-            <!-- Subsection 3B: Từ vựng Kanji theo bài -->
-            <div class="kanji-subsection">
-                <div class="kanji-subsection-label">📗 Từ Vựng Hán Tự Theo Bài</div>
-                <div class="chapter-grid" id="kanji-lessons-options">
-                    <!-- Được render tự động từ js/data/chapters.js -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 4: Tha động từ -->
-        <div class="section-block">
-            <div class="section-title-wrap">
-                <div class="flex-align gap-8">
-                    <span class="section-badge">04</span>
-                    <h3 class="section-heading">Tha động từ 他動詞</h3>
-                </div>
-            </div>
-
-            <!-- Dynamic Tha động từ Grid -->
-            <div class="chapter-grid" id="tha-dong-tu-options">
-                <!-- Được render tự động từ js/data/chapters.js -->
-            </div>
+            <!-- Hidden legacy checkbox mount -->
+            <div id="legacy-checkbox-mount" style="display: none;"></div>
         </div>
 
         <!-- Floating Start Action Bar -->
         <div class="action-footer">
             <button type="button" class="start-btn-main" onclick="startReview()">
                 <span class="btn-text">✨ Bắt đầu ôn tập ngay</span>
-                <span class="btn-badge" id="start-count-badge">0 bài được chọn</span>
+                <span class="btn-badge" id="start-count-badge">0 mục được chọn</span>
             </button>
         </div>
     </div>
@@ -235,7 +208,7 @@
         <div class="header-bar" id="flashcard-header">
             <button type="button" class="back-menu-btn" onclick="returnToMenu(event)">⬅ Menu chọn bài</button>
             <div class="progress" id="progress">Câu 0/0</div>
-            <button type="button" id="star-btn" class="star-btn" onclick="toggleMark(event)" title="Đánh dấu câu này (Phím M)">☆</button>
+            <button type="button" id="star-btn" class="star-btn" onclick="toggleMark(event)" title="Đánh dấu (Phím M)">☆</button>
         </div>
         
         <div id="flashcard-content">
@@ -248,15 +221,13 @@
             
             <div class="answer-box">
                 <div class="word-jp" id="word-jp" style="display: none;"></div>
-                <button type="button" class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)" title="Nghe phát âm">🔊 Phát âm</button>
+                <button type="button" class="speak-btn" id="speak-btn" style="display: none;" onclick="playAudio(event)">🔊 Phát âm</button>
             </div>
             
             <div class="button-group">
                 <button type="button" class="btn btn-prev" id="prev-btn" onclick="prevQuestion(event)">Quay lại</button>
                 <button type="button" class="btn btn-main" id="action-btn" onclick="handleActionClick(event)">Xem đáp án</button>
             </div>
-            
-            <div class="hint">💡 Phím tắt: Bấm <b>Enter / Mũi tên phải</b> để đi tiếp. Bấm <b>Mũi tên trái</b> để quay lại. Bấm <b>M</b> để đánh dấu sao (★).</div>
         </div>
 
         <!-- End Screen -->
@@ -272,173 +243,110 @@
     </div>
 </div>
 
-<!-- Kanji Page Selector & Wheel Hub Modal (dùng chung cho mọi Part Kanji) -->
+<!-- Quick Item Preview Modal -->
+<div class="modal-overlay" id="item-preview-modal" style="display: none;" onclick="closeItemPreviewModalOnOverlay(event)">
+    <div class="modal-card kanji-modal-card" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-title-group">
+                <div class="modal-title-icon kanji-header-icon" id="ipm-icon">📖</div>
+                <div>
+                    <h2 class="modal-heading" id="ipm-heading">Chi tiết mục học</h2>
+                    <p class="modal-subheading" id="ipm-subheading">0 mục</p>
+                </div>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closeItemPreviewModal()">✕</button>
+        </div>
+
+        <div class="kanji-modal-body" id="ipm-body">
+            <div class="preview-items-grid" id="ipm-grid"></div>
+        </div>
+
+        <div class="kanji-modal-footer">
+            <button type="button" class="km-footer-btn km-btn-close" onclick="closeItemPreviewModal()">Đóng</button>
+            <button type="button" class="km-footer-btn km-btn-start" id="ipm-start-btn">🚀 Học ngay mục này</button>
+        </div>
+    </div>
+</div>
+
+<!-- Kanji Page Selector Modal -->
 <div class="modal-overlay" id="kanji-selector-modal" style="display: none;" onclick="closeKanjiModalOnOverlay(event)">
     <div class="modal-card kanji-modal-card" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
-        <!-- Modal Header -->
         <div class="modal-header">
             <div class="modal-title-group">
                 <div class="modal-title-icon kanji-header-icon" id="kanji-modal-icon">🈁</div>
                 <div>
                     <h2 class="modal-heading" id="kanji-modal-heading">Kho Hán Tự Kanji</h2>
-                    <p class="modal-subheading" id="kanji-modal-subheading">Chọn các trang bạn muốn ôn tập</p>
+                    <p class="modal-subheading" id="kanji-modal-subheading">Chọn các trang ôn tập</p>
                 </div>
             </div>
-            <button type="button" class="modal-close-btn" onclick="closeKanjiModal()" title="Đóng cửa sổ">✕</button>
+            <button type="button" class="modal-close-btn" onclick="closeKanjiModal()">✕</button>
         </div>
 
-        <!-- Kanji Modal Toolbar -->
         <div class="kanji-modal-toolbar">
             <div class="kanji-modal-stats">
                 <span class="km-stat-icon">📌</span>
-                <span>Trạng thái: <b id="kanji-modal-selected-count">0 / 0 trang (0 chữ Hán)</b></span>
+                <span>Đã chọn: <b id="kanji-modal-selected-count">0 / 0 trang (0 chữ Hán)</b></span>
             </div>
             <div class="kanji-modal-quick-actions">
-                <button type="button" class="km-btn km-btn-select-all" id="kanji-modal-select-all-btn" onclick="selectAllKanjiModalPages(true)">✨ Chọn tất cả</button>
-                <button type="button" class="km-btn km-btn-deselect" onclick="selectAllKanjiModalPages(false)">🧹 Bỏ chọn tất cả</button>
+                <button type="button" class="km-btn km-btn-select-all" id="kanji-modal-select-all-btn" onclick="selectAllKanjiModalPages(true)">✓ Chọn tất cả</button>
+                <button type="button" class="km-btn km-btn-deselect" onclick="selectAllKanjiModalPages(false)">✕ Bỏ chọn</button>
             </div>
         </div>
 
-        <!-- Kanji Pages Wheel & Interactive Grid -->
         <div class="kanji-modal-body">
-            <div class="kanji-wheel-grid" id="kanji-wheel-grid">
-                <!-- Rendered dynamically by js/kanji-hub.js -->
-            </div>
+            <div class="kanji-wheel-grid" id="kanji-wheel-grid"></div>
         </div>
 
-        <!-- Kanji Modal Footer -->
         <div class="kanji-modal-footer">
             <button type="button" class="km-footer-btn km-btn-close" onclick="closeKanjiModal()">Đóng</button>
-            <button type="button" class="km-footer-btn km-btn-save" onclick="closeKanjiModal()">✅ Xác nhận lựa chọn</button>
-            <button type="button" class="km-footer-btn km-btn-start" onclick="startStudyFromKanjiModal()">🚀 Bắt đầu ôn tập ngay</button>
+            <button type="button" class="km-footer-btn km-btn-save" onclick="closeKanjiModal()">✅ Xác nhận</button>
+            <button type="button" class="km-footer-btn km-btn-start" onclick="startStudyFromKanjiModal()">🚀 Bắt đầu ôn tập</button>
         </div>
     </div>
 </div>
 
-<!-- Kanji Lesson Selector & Wheel Hub Modal -->
+<!-- Kanji Lesson Selector Modal -->
 <div class="modal-overlay" id="kanji-lesson-modal" style="display: none;" onclick="closeKanjiLessonModalOnOverlay(event)">
     <div class="modal-card kanji-modal-card" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
-        <!-- Modal Header -->
         <div class="modal-header">
             <div class="modal-title-group">
-                <div class="modal-title-icon kanji-header-icon" style="background: linear-gradient(135deg, #0d9488, #14b8a6) !important;">🈴</div>
+                <div class="modal-title-icon kanji-header-icon">🈴</div>
                 <div>
-                    <h2 class="modal-heading">Kho Từ Vựng Kanji Theo Bài (Đông Du)</h2>
-                    <p class="modal-subheading">Chọn các bài học bạn muốn ôn tập • 17 bài chuyên đề (574 từ vựng Hán tự)</p>
+                    <h2 class="modal-heading">Từ Vựng Kanji Theo Bài (Đông Du)</h2>
+                    <p class="modal-subheading">17 bài chuyên đề (574 từ vựng Hán tự)</p>
                 </div>
             </div>
-            <button type="button" class="modal-close-btn" onclick="closeKanjiLessonModal()" title="Đóng cửa sổ">✕</button>
+            <button type="button" class="modal-close-btn" onclick="closeKanjiLessonModal()">✕</button>
         </div>
 
-        <!-- Kanji Modal Toolbar -->
         <div class="kanji-modal-toolbar">
             <div class="kanji-modal-stats">
                 <span class="km-stat-icon">📌</span>
-                <span>Trạng thái: <b id="kanji-lesson-modal-selected-count">17 / 17 bài (574 từ Hán tự)</b></span>
+                <span>Đã chọn: <b id="kanji-lesson-modal-selected-count">0 / 17 bài (0 từ Hán tự)</b></span>
             </div>
             <div class="kanji-modal-quick-actions">
-                <button type="button" class="km-btn km-btn-select-all" onclick="selectAllKanjiLessonCards(true)">✨ Chọn tất cả 17 bài</button>
-                <button type="button" class="km-btn km-btn-deselect" onclick="selectAllKanjiLessonCards(false)">🧹 Bỏ chọn tất cả</button>
+                <button type="button" class="km-btn km-btn-select-all" onclick="selectAllKanjiLessonCards(true)">✓ Chọn tất cả 17 bài</button>
+                <button type="button" class="km-btn km-btn-deselect" onclick="selectAllKanjiLessonCards(false)">✕ Bỏ chọn</button>
             </div>
         </div>
 
-        <!-- Kanji Lessons Interactive Grid -->
         <div class="kanji-modal-body">
-            <div class="kanji-wheel-grid" id="kanji-lesson-wheel-grid">
-                <!-- Rendered dynamically by js/kanji-lesson-hub.js -->
-            </div>
+            <div class="kanji-wheel-grid" id="kanji-lesson-wheel-grid"></div>
         </div>
 
-        <!-- Kanji Modal Footer -->
         <div class="kanji-modal-footer">
             <button type="button" class="km-footer-btn km-btn-close" onclick="closeKanjiLessonModal()">Đóng</button>
-            <button type="button" class="km-footer-btn km-btn-save" onclick="closeKanjiLessonModal()">✅ Xác nhận lựa chọn</button>
-            <button type="button" class="km-footer-btn km-btn-start" onclick="startStudyFromKanjiLessonModal()">🚀 Bắt đầu ôn tập ngay</button>
-        </div>
-    </div>
-</div>
-
-<!-- Vocabulary Summary & Search Modal -->
-<div class="modal-overlay" id="vocab-summary-modal" style="display: none;" onclick="closeVocabSummaryOnOverlay(event)">
-    <div class="modal-card" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
-        <!-- Modal Header -->
-        <div class="modal-header">
-            <div class="modal-title-group">
-                <div class="modal-title-icon">📖</div>
-                <div>
-                    <h2 class="modal-heading">Tổng Hợp & Tra Cứu Từ Vựng</h2>
-                    <p class="modal-subheading">Tìm kiếm từ vựng tiếng Nhật, nghe phát âm & xuất file Markdown (.md)</p>
-                </div>
-            </div>
-            <button type="button" class="modal-close-btn" onclick="closeVocabSummaryModal()" title="Đóng cửa sổ">✕</button>
-        </div>
-
-        <!-- Modal Toolbar -->
-        <div class="modal-toolbar">
-            <!-- Search Box (Full Width) -->
-            <div class="search-input-box" onclick="document.getElementById('vocab-search-input').focus()">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="vocab-search-input" placeholder="Tìm kiếm từ vựng (sensei, watashi, thầy giáo, 先生, せんせい...)" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="handleVocabSearchInput()">
-                <button type="button" class="search-clear-btn" id="search-clear-btn" onclick="clearVocabSearch(event)" style="display: none;" title="Xóa từ khóa">✕</button>
-            </div>
-
-            <!-- Bottom Row: Filter & Export Actions -->
-            <div class="modal-toolbar-bottom">
-                <div class="filter-select-box">
-                    <select id="vocab-chapter-filter" onchange="filterVocabTable(true)">
-                        <!-- Được render tự động từ js/data/chapters.js -->
-                    </select>
-                </div>
-
-                <div class="toolbar-actions">
-                    <button type="button" class="btn-md-export" onclick="exportVocabToMarkdown()">
-                        <span>📥</span> Xuất File .MD
-                    </button>
-                    <button type="button" class="btn-md-copy" onclick="copyVocabMarkdown()">
-                        <span>📋</span> Copy MD
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Info Bar -->
-        <div class="modal-info-bar">
-            <span id="vocab-count-info" class="count-badge-text">Đang tải dữ liệu...</span>
-            <span class="tip-sound-text">💡 Bấm biểu tượng 🔊 bên cạnh từ để nghe phát âm chuẩn</span>
-        </div>
-
-        <!-- Table Container -->
-        <div class="vocab-table-wrapper">
-            <table class="vocab-data-table">
-                <thead>
-                    <tr>
-                        <th style="width: 55px; text-align: center;">STT</th>
-                        <th style="width: 140px;">Bài học</th>
-                        <th>Tiếng Nhật</th>
-                        <th>Nghĩa Tiếng Việt</th>
-                        <th style="width: 75px; text-align: center;">Phát âm</th>
-                    </tr>
-                </thead>
-                <tbody id="vocab-table-body">
-                    <!-- Dynamic vocabulary rows -->
-                </tbody>
-            </table>
-
-            <!-- Empty Search Results -->
-            <div class="vocab-empty-view" id="vocab-empty-state" style="display: none;">
-                <div class="empty-emoji">🔍</div>
-                <h4>Không tìm thấy từ vựng nào</h4>
-                <p>Thử tìm với từ khóa khác hoặc chuyển sang bài học khác.</p>
-            </div>
+            <button type="button" class="km-footer-btn km-btn-save" onclick="closeKanjiLessonModal()">✅ Xác nhận</button>
+            <button type="button" class="km-footer-btn km-btn-start" onclick="startStudyFromKanjiLessonModal()">🚀 Bắt đầu ôn tập</button>
         </div>
     </div>
 </div>
 
 <!-- Application Core Scripts -->
 <script src="js/audio.js?v=20260908"></script>
-<script src="js/study.js?v=20261116c"></script>
-<script src="js/summary.js?v=20261116"></script>
-<script src="js/app.js?v=20261116"></script>
+<script src="js/study.js?v=20261119b"></script>
+<script src="js/summary.js?v=20261119b"></script>
+<script src="js/app.js?v=20261119b"></script>
 
 </body>
 </html>

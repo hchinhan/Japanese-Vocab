@@ -35,7 +35,7 @@ const vocabKanjiTrang5 = {
     "SỐ (Số)": "数",
     "VĂN (Văn học)": "文",
     "LIỆU (Vật liệu)": "料",
-    "BỘ CÂN": "斤",
+    "BỘ CÂN (Búa)": "斤",
     "TÂN (Mới)": "新",
     "PHƯƠNG (Phương hướng)": "方",
     "LỮ (Du lịch)": "旅",

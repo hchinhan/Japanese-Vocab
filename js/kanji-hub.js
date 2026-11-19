@@ -81,6 +81,16 @@ function closeKanjiModal() {
         modal.style.display = 'none';
         document.body.style.overflow = '';
     }
+    const part = getKanjiPartById(activeKanjiPartId);
+    if (part && Array.isArray(part.pagesConfig)) {
+        part.pagesConfig.forEach(p => {
+            const isChecked = part.selectedPages.has(p.id);
+            const card = document.getElementById(`home-kpc-${p.id}`);
+            const chk = document.getElementById(`chk-home-kpc-${p.id}`);
+            if (card) card.classList.toggle('active', isChecked);
+            if (chk) chk.checked = isChecked;
+        });
+    }
     updateKanjiPartBadgeOnMenu(activeKanjiPartId);
 }
 
@@ -279,20 +289,28 @@ function studySingleKanjiPage(pageId, event, partId = activeKanjiPartId) {
 
     closeKanjiModal();
 
-    currentVocab = Object.assign({}, data);
-    currentChapterName = `${part.shortName} • ${targetPage.shortName} (${targetPage.title})`;
-    questions = Object.keys(currentVocab);
-    markedQuestions.clear();
+    if (typeof startFlashcardSession === 'function') {
+        startFlashcardSession(
+            data,
+            `${part.shortName} • ${targetPage.shortName} (${targetPage.title})`,
+            () => studySingleKanjiPage(pageId, null, partId)
+        );
+    } else {
+        currentVocab = Object.assign({}, data);
+        currentChapterName = `${part.shortName} • ${targetPage.shortName} (${targetPage.title})`;
+        questions = Object.keys(currentVocab);
+        markedQuestions.clear();
 
-    const selectedModeInput = document.querySelector('input[name="studyMode"]:checked');
-    if (selectedModeInput) {
-        currentMode = selectedModeInput.value;
+        const selectedModeInput = document.querySelector('input[name="studyMode"]:checked');
+        if (selectedModeInput) {
+            currentMode = selectedModeInput.value;
+        }
+
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('flashcard').style.display = 'block';
+
+        initRound();
     }
-
-    document.getElementById('menu').style.display = 'none';
-    document.getElementById('flashcard').style.display = 'block';
-
-    initRound();
     showToast(`🚀 Đang ôn tập riêng: ${part.shortName} • ${targetPage.shortName} (${Object.keys(data).length} chữ)!`);
 }
 
