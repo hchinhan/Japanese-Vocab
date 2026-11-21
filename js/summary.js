@@ -363,7 +363,7 @@ let searchDebounceTimer = null;
 let isOverlayGesture = false;
 
 function escapeHtml(str) {
-    if (!str) return '';
+    if (str === null || str === undefined) return '';
     return String(str)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -745,70 +745,522 @@ function compareItemsByDictionaryOrder(a, b) {
 }
 
 // ==========================================================================
-// 5. ĐIỀU KHIỂN GIAO DIỆN & LỌC BẢNG TỪ ĐIỂN
+// 5. POPUP TỪ ĐIỂN TOÀN CỤC (HOẠT ĐỘNG MỌI TRANG & MỌI TÌNH HUỐNG)
 // ==========================================================================
 
-function openVocabSummaryModal(fullscreen = false) {
+let vocabPopupPreviousOverflow = '';
+let pendingSelectionQuery = '';
+let pendingSelectionTimestamp = 0;
+
+function showDictToast(message) {
+    if (typeof showToast === 'function') {
+        showToast(message);
+        return;
+    }
+    let toast = document.getElementById('app-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'app-toast';
+        toast.className = 'app-toast';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toast._hideTimer);
+    toast._hideTimer = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+function isVocabSearchModalOpen() {
+    const modal = document.getElementById('vocab-summary-modal');
+    return !!(modal && modal.style.display !== 'none');
+}
+
+function isOtherModalOpen() {
+    const overlays = document.querySelectorAll('.modal-overlay');
+    for (let i = 0; i < overlays.length; i++) {
+        const el = overlays[i];
+        if (el.id !== 'vocab-summary-modal' && el.style.display !== 'none') {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Ghi nhận đoạn chữ người dùng đang bôi đen (trước khi click nút làm mất vùng chọn)
+ */
+function captureVocabSearchSelection() {
+    if (isVocabSearchModalOpen()) {
+        pendingSelectionQuery = '';
+        return '';
+    }
+    const sel = window.getSelection ? window.getSelection() : null;
+    if (!sel || sel.rangeCount === 0) {
+        pendingSelectionQuery = '';
+        return '';
+    }
+    const anchorNode = sel.anchorNode;
+    const anchorEl = anchorNode && anchorNode.nodeType === 1 ? anchorNode : anchorNode?.parentElement;
+    if (anchorEl && anchorEl.closest && anchorEl.closest('#vocab-summary-modal')) {
+        pendingSelectionQuery = '';
+        return '';
+    }
+    const text = sel.toString().replace(/\s+/g, ' ').trim();
+    if (text && text.length >= 1 && text.length <= 45) {
+        pendingSelectionQuery = text;
+        pendingSelectionTimestamp = Date.now();
+        return text;
+    }
+    pendingSelectionQuery = '';
+    return '';
+}
+
+function consumePendingSelectionQuery() {
+    const liveSel = captureVocabSearchSelection();
+    if (liveSel) {
+        pendingSelectionQuery = '';
+        return liveSel;
+    }
+    if (pendingSelectionQuery && (Date.now() - pendingSelectionTimestamp) < 800) {
+        const q = pendingSelectionQuery;
+        pendingSelectionQuery = '';
+        return q;
+    }
+    pendingSelectionQuery = '';
+    return '';
+}
+
+/**
+ * Đổ danh sách chương/học phần vào dropdown #vocab-chapter-filter (dùng chung mọi trang)
+ */
+function populateVocabChapterFilterOptions() {
+    const select = document.getElementById('vocab-chapter-filter');
+    if (!select || typeof CHAPTERS_CONFIG === 'undefined') return;
+
+    const prevVal = select.value || 'all';
+    let optionsHtml = '<option value="all">📚 Tất cả học phần (Toàn bộ)</option>';
+
+    CHAPTERS_CONFIG.forEach(chapter => {
+        if (chapter.skipInSummary) return;
+        if (chapter.isKanjiPageGroup && Array.isArray(chapter.pagesConfig)) {
+            const totalChars = chapter.pagesConfig.reduce((acc, p) => acc + p.count, 0);
+            const totalPages = chapter.pagesConfig.length;
+            optionsHtml += `<optgroup label="${escapeHtml(chapter.icon)} ${escapeHtml(chapter.title)} (${totalChars} chữ)">`;
+            optionsHtml += `<option value="${escapeHtml(chapter.id)}">${escapeHtml(chapter.icon)} Tất cả ${totalPages} trang ${escapeHtml(chapter.shortName)} (${totalChars} chữ)</option>`;
+            chapter.pagesConfig.forEach(p => {
+                optionsHtml += `<option value="${escapeHtml(p.id)}">&nbsp;&nbsp;&nbsp;↳ ${escapeHtml(p.shortName)}: ${escapeHtml(p.title)} (${p.count} chữ)</option>`;
+            });
+            optionsHtml += `</optgroup>`;
+        } else if (chapter.isKanjiLessonGroup) {
+            const totalLessonWords = typeof KANJI_LESSONS_CONFIG !== 'undefined'
+                ? KANJI_LESSONS_CONFIG.reduce((acc, l) => acc + l.count, 0)
+                : 574;
+            const totalLessonCount = typeof KANJI_LESSONS_CONFIG !== 'undefined'
+                ? KANJI_LESSONS_CONFIG.length
+                : 17;
+            optionsHtml += `<optgroup label="📗 Từ Vựng Kanji Theo Bài (${totalLessonWords} từ)">`;
+            optionsHtml += `<option value="${escapeHtml(chapter.id)}">📗 Tất cả ${totalLessonCount} bài Kanji (${totalLessonWords} từ)</option>`;
+            if (typeof KANJI_LESSONS_CONFIG !== 'undefined') {
+                KANJI_LESSONS_CONFIG.forEach(l => {
+                    optionsHtml += `<option value="${escapeHtml(l.id)}">&nbsp;&nbsp;&nbsp;↳ ${escapeHtml(l.shortName)}: ${escapeHtml(l.title)} (${l.count} từ)</option>`;
+                });
+            }
+            optionsHtml += `</optgroup>`;
+        } else {
+            const hasData = (chapter.id === 'dem')
+                ? (typeof generateMixedCounters === 'function')
+                : !!(chapter.getAllData ? chapter.getAllData() : (chapter.getData ? chapter.getData() : null));
+            if (!hasData) return;
+            const prefix = chapter.isSpecial ? `${chapter.icon} ` : `${chapter.label} - `;
+            optionsHtml += `<option value="${escapeHtml(chapter.id)}">${escapeHtml(prefix + chapter.title)}</option>`;
+        }
+    });
+
+    select.innerHTML = optionsHtml;
+    if (select.querySelector(`option[value="${prevVal}"]`)) {
+        select.value = prevVal;
+    }
+}
+
+/**
+ * Tự động gắn Popup Từ điển (#vocab-summary-modal) trực tiếp vào <body> để mở được từ mọi trang & khi đang học
+ */
+function ensureVocabSearchModalMounted() {
+    let modal = document.getElementById('vocab-summary-modal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'vocab-summary-modal';
+    modal.className = 'modal-overlay vocab-popup-overlay';
+    modal.style.display = 'none';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'vocab-popup-heading');
+
+    modal.innerHTML = `
+        <div class="modal-card vocab-popup-card" id="dictionary-workspace" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
+            <!-- Header gọn gàng -->
+            <div class="vocab-popup-header">
+                <div class="modal-title-group">
+                    <div class="modal-title-icon vocab-popup-icon">📖</div>
+                    <div>
+                        <h2 class="modal-heading" id="vocab-popup-heading">Tra cứu Từ vựng &amp; Từ điển</h2>
+                        <p class="modal-subheading" id="vocab-popup-subtitle">Tra nhanh Việt • Nhật • Kanji • Romaji • Hán-Việt</p>
+                    </div>
+                </div>
+                <div class="vocab-popup-header-actions">
+                    <button type="button" class="mini-pill-btn dict-fs-btn" id="dict-fullscreen-btn" onclick="toggleDictionaryFullscreen()" title="Phóng to / Thu gọn cửa sổ">⛶ Mở rộng</button>
+                    <button type="button" class="modal-close-btn" onclick="closeVocabSummaryModal()" title="Đóng (Esc)">✕</button>
+                </div>
+            </div>
+
+            <!-- Khu vực tìm kiếm & bộ lọc -->
+            <div class="vocab-popup-controls">
+                <!-- Hàng 1: Ô nhập tìm kiếm + Chế độ Chính xác / Mở rộng -->
+                <div class="dict-top-bar">
+                    <div class="search-input-box dict-search-box" onclick="document.getElementById('vocab-search-input').focus()">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="vocab-search-input" placeholder="Nhập từ cần tìm (VD: ăn, cá, điện thoại, sensei, 先生, せんせい...)" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="handleVocabSearchInput()" onkeydown="handleVocabSearchKeydown(event)">
+                        <button type="button" class="search-clear-btn" id="search-clear-btn" onclick="clearVocabSearch(event)" style="display: none;" title="Xóa từ khóa">✕</button>
+                    </div>
+
+                    <div class="dict-precision-switch">
+                        <button type="button" class="dict-prec-btn active" id="search-mode-exact" onclick="setSearchPrecisionMode('exact')" title="Chỉ hiển thị từ khớp đúng trọng tâm, loại bỏ từ nhiễu">🎯 Chính xác</button>
+                        <button type="button" class="dict-prec-btn" id="search-mode-broad" onclick="setSearchPrecisionMode('broad')" title="Hiển thị thêm các từ có chứa chuỗi ký tự liên quan">🔎 Mở rộng</button>
+                    </div>
+                </div>
+
+                <!-- Hàng 2: 4 Tab Thứ Tự Từ Điển + Bộ lọc bài học -->
+                <div class="dict-order-tabs-bar">
+                    <div class="dict-order-tabs">
+                        <button type="button" class="dict-order-tab active" id="dict-mode-btn-vn_az" onclick="setDictionaryOrderMode('vn_az')">
+                            🔤 Việt (A ➔ Y)
+                        </button>
+                        <button type="button" class="dict-order-tab" id="dict-mode-btn-jp_50" onclick="setDictionaryOrderMode('jp_50')">
+                            🇯🇵 Nhật (50 Âm)
+                        </button>
+                        <button type="button" class="dict-order-tab" id="dict-mode-btn-hv_az" onclick="setDictionaryOrderMode('hv_az')">
+                            🈴 Hán-Việt (A ➔ Y)
+                        </button>
+                        <button type="button" class="dict-order-tab" id="dict-mode-btn-chapter" onclick="setDictionaryOrderMode('chapter')">
+                            📚 Theo Bài
+                        </button>
+                    </div>
+
+                    <div class="dict-chapter-select-wrap">
+                        <select id="vocab-chapter-filter" onchange="filterVocabTable(true)"></select>
+                    </div>
+                </div>
+
+                <!-- Hàng 3: Thanh Chỉ Mục Chữ Cái A-Y / Hàng 50 Âm あ-わ -->
+                <div class="dict-alphabet-bar" id="dict-alphabet-bar"></div>
+                <div class="dict-subkana-bar" id="dict-subkana-bar" style="display: none;"></div>
+
+                <!-- Hàng 4: Thống kê kết quả & Thao tác Ôn tập / Xuất Markdown -->
+                <div class="dict-actions-strip">
+                    <span id="vocab-count-info" class="count-badge-text">Đang tải dữ liệu...</span>
+                    <div class="toolbar-actions">
+                        <button type="button" class="btn-md-export" onclick="studyCurrentFilteredVocab()" title="Mở Flashcard ôn riêng danh sách đang lọc">
+                            🚀 Ôn danh sách này
+                        </button>
+                        <button type="button" class="btn-md-export" onclick="exportVocabToMarkdown()">
+                            📥 Xuất .MD
+                        </button>
+                        <button type="button" class="btn-md-copy" onclick="copyVocabMarkdown()">
+                            📋 Copy MD
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng dữ liệu Từ điển -->
+            <div class="vocab-table-wrapper vocab-popup-table-wrap">
+                <table class="vocab-data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px; text-align: center;">STT</th>
+                            <th style="width: 118px;">Học phần</th>
+                            <th>Tiếng Nhật</th>
+                            <th>Nghĩa Tiếng Việt &amp; Hán-Việt</th>
+                            <th style="width: 64px; text-align: center;">Đọc</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vocab-table-body"></tbody>
+                </table>
+
+                <div class="vocab-empty-view" id="vocab-empty-state" style="display: none;">
+                    <div class="empty-emoji">🔍</div>
+                    <h4>Không tìm thấy mục từ phù hợp</h4>
+                    <p id="vocab-empty-desc">Thử chuyển sang vần khác hoặc bật chế độ Mở rộng.</p>
+                    <button type="button" class="mini-pill-btn vocab-reset-filter-btn" id="vocab-reset-filter-btn" onclick="resetVocabDictionaryFilters(true)" style="display: none;">
+                        🔄 Tìm trên toàn bộ từ điển
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    modal.addEventListener('mousedown', (e) => {
+        isOverlayGesture = (e.target === modal);
+    });
+    modal.addEventListener('touchstart', (e) => {
+        isOverlayGesture = (e.target === modal);
+    }, { passive: true });
+    modal.addEventListener('click', closeVocabSummaryModalOnOverlay);
+
+    document.body.appendChild(modal);
+    populateVocabChapterFilterOptions();
+    renderDictionaryIndexBar();
+    initVocabTableListeners();
+    return modal;
+}
+
+/**
+ * Tự động gắn nút Tra cứu nổi góc dưới phải để bấm được ở bất kỳ vị trí/màn hình nào
+ */
+function ensureGlobalSearchFabMounted() {
+    if (document.getElementById('global-search-fab')) return;
+    const fab = document.createElement('button');
+    fab.type = 'button';
+    fab.id = 'global-search-fab';
+    fab.className = 'global-search-fab';
+    fab.setAttribute('aria-label', 'Tra cứu từ vựng nhanh');
+    fab.title = 'Tra từ điển nhanh (Ctrl + K hoặc /)';
+    fab.innerHTML = `<span class="gsf-icon">🔍</span><span class="gsf-label">Tra từ</span>`;
+
+    fab.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        captureVocabSearchSelection();
+    });
+    fab.addEventListener('touchstart', (e) => {
+        e.stopPropagation();
+        captureVocabSearchSelection();
+    }, { passive: true });
+    fab.addEventListener('click', (e) => {
+        openVocabSummaryModal(e);
+    });
+
+    document.body.appendChild(fab);
+}
+
+function handleVocabSearchKeydown(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        filterVocabTable(true);
+    }
+}
+
+function resetVocabDictionaryFilters(keepQuery = true) {
+    currentDictOrderMode = 'vn_az';
+    currentDictLetter = 'all';
+    currentDictSubKana = 'all';
+    searchPrecisionMode = 'broad';
+
+    ['vn_az', 'jp_50', 'hv_az', 'chapter'].forEach(m => {
+        document.getElementById(`dict-mode-btn-${m}`)?.classList.toggle('active', m === 'vn_az');
+    });
+    document.getElementById('search-mode-exact')?.classList.remove('active');
+    document.getElementById('search-mode-broad')?.classList.add('active');
+
+    const chapterFilter = document.getElementById('vocab-chapter-filter');
+    if (chapterFilter) chapterFilter.value = 'all';
+
+    if (!keepQuery) {
+        const searchInput = document.getElementById('vocab-search-input');
+        if (searchInput) searchInput.value = '';
+    }
+
+    renderDictionaryIndexBar();
+    filterVocabTable(true);
+    document.getElementById('vocab-search-input')?.focus();
+}
+
+function openVocabSummaryModal(arg = null) {
+    let fullscreen = false;
+    let initialQuery = null;
+
+    if (arg && typeof arg === 'object') {
+        if (typeof arg.stopPropagation === 'function') arg.stopPropagation();
+        if (typeof arg.preventDefault === 'function') arg.preventDefault();
+        if (typeof arg.fullscreen === 'boolean') fullscreen = arg.fullscreen;
+        if (typeof arg.query === 'string') initialQuery = arg.query;
+    } else if (typeof arg === 'boolean') {
+        fullscreen = arg;
+    } else if (typeof arg === 'string') {
+        initialQuery = arg;
+    }
+
+    const modal = ensureVocabSearchModalMounted();
+    if (!modal) return;
+
     if (allVocabList.length === 0) {
         allVocabList = getAggregateVocabData();
     }
 
-    // Nếu trên trang chủ có Session Từ điển (#session-card-dictionary), mở Session đó
-    const dictSessionCard = document.getElementById('session-card-dictionary');
-    if (dictSessionCard && !fullscreen) {
-        if (typeof activeSessionId !== 'undefined' && activeSessionId !== 'dictionary') {
-            toggleSessionAccordion('dictionary', null);
+    const chapterFilter = document.getElementById('vocab-chapter-filter');
+    if (chapterFilter && chapterFilter.options.length <= 1) {
+        populateVocabChapterFilterOptions();
+    }
+
+    const subtitleEl = document.getElementById('vocab-popup-subtitle');
+    if (subtitleEl && allVocabList.length > 0) {
+        subtitleEl.textContent = `${allVocabList.length.toLocaleString('vi-VN')} mục • Từ vựng Minna, Kanji N5–N4, Katakana & Tha động từ`;
+    }
+
+    // Kiểm tra xem người dùng có đang bôi đen từ vựng nào trên màn hình để tra nhanh không
+    const autoQuery = initialQuery !== null ? initialQuery.trim() : consumePendingSelectionQuery();
+    const searchInput = document.getElementById('vocab-search-input');
+
+    if (autoQuery && searchInput) {
+        searchInput.value = autoQuery;
+        // Khi tra nhanh từ đang bôi đen, tự động gỡ bộ lọc hạn chế để luôn tìm ra kết quả
+        currentDictLetter = 'all';
+        currentDictSubKana = 'all';
+        if (currentDictOrderMode === 'hv_az' || currentDictOrderMode === 'jp_50') {
+            currentDictOrderMode = 'vn_az';
+            ['vn_az', 'jp_50', 'hv_az', 'chapter'].forEach(m => {
+                document.getElementById(`dict-mode-btn-${m}`)?.classList.toggle('active', m === 'vn_az');
+            });
         }
+        if (chapterFilter) chapterFilter.value = 'all';
+    }
+
+    if (!isVocabSearchModalOpen()) {
+        vocabPopupPreviousOverflow = document.body.style.overflow;
+    }
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    const fab = document.getElementById('global-search-fab');
+    if (fab) fab.classList.add('is-hidden');
+
+    if (fullscreen) {
+        toggleDictionaryFullscreen(true);
+    } else {
+        syncDictionaryFullscreenUI();
         renderDictionaryIndexBar();
         initVocabTableListeners();
         filterVocabTable(true);
-        dictSessionCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setTimeout(() => {
-            document.getElementById('vocab-search-input')?.focus();
-        }, 120);
-        return;
     }
 
-    toggleDictionaryFullscreen(true);
+    requestAnimationFrame(() => {
+        if (searchInput) {
+            searchInput.focus();
+            if (searchInput.value && !autoQuery) {
+                searchInput.select();
+            }
+        }
+    });
+}
+
+function syncDictionaryFullscreenUI() {
+    const modal = document.getElementById('vocab-summary-modal');
+    const card = document.getElementById('dictionary-workspace');
+    const fsBtn = document.getElementById('dict-fullscreen-btn');
+    if (modal) modal.classList.toggle('is-fullscreen', isDictionaryFullscreen);
+    if (card) card.classList.toggle('is-fullscreen', isDictionaryFullscreen);
+    if (fsBtn) {
+        fsBtn.innerHTML = isDictionaryFullscreen ? '🗗 Thu gọn' : '⛶ Mở rộng';
+    }
 }
 
 function toggleDictionaryFullscreen(forceState = null) {
-    const workspace = document.getElementById('dictionary-workspace');
-    if (!workspace) return;
-
-    if (allVocabList.length === 0) {
-        allVocabList = getAggregateVocabData();
-    }
+    const modal = ensureVocabSearchModalMounted();
+    if (!modal) return;
 
     const nextState = forceState !== null ? forceState : !isDictionaryFullscreen;
     isDictionaryFullscreen = nextState;
 
-    const dictSessionBody = document.getElementById('session-body-dictionary');
-    const dictSessionCard = document.getElementById('session-card-dictionary');
-    if (nextState && dictSessionBody && dictSessionBody.style.display === 'none') {
-        if (dictSessionCard) dictSessionCard.classList.add('expanded');
-        dictSessionBody.style.display = 'block';
-        if (typeof activeSessionId !== 'undefined') activeSessionId = 'dictionary';
+    if (nextState && !isVocabSearchModalOpen()) {
+        vocabPopupPreviousOverflow = document.body.style.overflow;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        const fab = document.getElementById('global-search-fab');
+        if (fab) fab.classList.add('is-hidden');
     }
 
-    workspace.classList.toggle('dict-fullscreen-overlay', nextState);
-    document.body.style.overflow = nextState ? 'hidden' : '';
-
-    const fsBtn = document.getElementById('dict-fullscreen-btn');
-    if (fsBtn) {
-        fsBtn.innerHTML = nextState ? '✕ Thu nhỏ' : '⛶ Toàn màn hình';
-    }
-
+    syncDictionaryFullscreenUI();
     renderDictionaryIndexBar();
     initVocabTableListeners();
     filterVocabTable(true);
 }
 
 function closeVocabSummaryModal() {
-    if (isDictionaryFullscreen) {
-        toggleDictionaryFullscreen(false);
+    const modal = document.getElementById('vocab-summary-modal');
+    if (!modal || modal.style.display === 'none') return;
+
+    const searchInput = document.getElementById('vocab-search-input');
+    if (searchInput && document.activeElement === searchInput) {
+        searchInput.blur();
     }
+
+    modal.style.display = 'none';
+    isDictionaryFullscreen = false;
+    syncDictionaryFullscreenUI();
+
+    if (isOtherModalOpen()) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = vocabPopupPreviousOverflow || '';
+    }
+
+    const fab = document.getElementById('global-search-fab');
+    if (fab) fab.classList.remove('is-hidden');
 }
+
+function closeVocabSummaryModalOnOverlay(event) {
+    if (isOverlayGesture && event && event.target && event.target.id === 'vocab-summary-modal') {
+        closeVocabSummaryModal();
+    }
+    isOverlayGesture = false;
+}
+
+// Phím tắt toàn cục cho Popup Tra cứu (Ctrl+K / Cmd+K, /, Esc) — hoạt động ở mọi trang
+window.addEventListener('keydown', function(event) {
+    const keyLower = (event.key || '').toLowerCase();
+
+    // Ctrl+K hoặc Cmd+K: Bật / tắt nhanh Popup Từ điển ở mọi tình huống
+    if ((event.ctrlKey || event.metaKey) && !event.altKey && keyLower === 'k') {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (isVocabSearchModalOpen()) {
+            closeVocabSummaryModal();
+        } else {
+            openVocabSummaryModal();
+        }
+        return;
+    }
+
+    // Khi Popup Từ điển đang mở: Esc chỉ đóng Popup Từ điển (không làm đóng modal nền phía dưới)
+    if (isVocabSearchModalOpen()) {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            closeVocabSummaryModal();
+        }
+        return;
+    }
+
+    // Phím '/' (khi không đang nhập liệu trong ô input/textarea/select): Mở nhanh Popup Từ điển
+    if (event.key === '/' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+        const target = event.target;
+        const tag = target ? target.tagName : '';
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) || (target && target.isContentEditable)) {
+            return;
+        }
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        openVocabSummaryModal();
+    }
+}, true);
+
+document.addEventListener('DOMContentLoaded', () => {
+    ensureVocabSearchModalMounted();
+    ensureGlobalSearchFabMounted();
+});
 
 function handleVocabSearchInput() {
     if (searchDebounceTimer) {
@@ -975,8 +1427,10 @@ function filterVocabTable(immediate = false) {
 function renderVocabTable(list, append = false) {
     const tbody = document.getElementById('vocab-table-body');
     const emptyState = document.getElementById('vocab-empty-state');
+    const emptyDesc = document.getElementById('vocab-empty-desc');
+    const resetFilterBtn = document.getElementById('vocab-reset-filter-btn');
     const countInfo = document.getElementById('vocab-count-info');
-    const tableWrapper = document.querySelector('.vocab-table-wrapper');
+    const tableWrapper = document.querySelector('#vocab-summary-modal .vocab-table-wrapper') || document.querySelector('.vocab-table-wrapper');
 
     if (!tbody) return;
 
@@ -988,6 +1442,20 @@ function renderVocabTable(list, append = false) {
         if (list.length === 0) {
             if (emptyState) emptyState.style.display = 'flex';
             if (countInfo) countInfo.innerText = '0 kết quả phù hợp';
+            const selectedChapter = document.getElementById('vocab-chapter-filter')?.value || 'all';
+            const hasActiveFilter = (
+                selectedChapter !== 'all' ||
+                currentDictLetter !== 'all' ||
+                currentDictOrderMode === 'hv_az' ||
+                currentDictOrderMode === 'jp_50' ||
+                searchPrecisionMode !== 'broad'
+            );
+            if (resetFilterBtn) resetFilterBtn.style.display = hasActiveFilter ? 'inline-flex' : 'none';
+            if (emptyDesc) {
+                emptyDesc.textContent = hasActiveFilter
+                    ? 'Bộ lọc học phần / vần hiện tại có thể đang giới hạn kết quả.'
+                    : 'Thử nhập từ khóa khác (Tiếng Việt, Kana, Kanji hoặc Romaji).';
+            }
             return;
         } else {
             if (emptyState) emptyState.style.display = 'none';
@@ -1082,7 +1550,7 @@ function initVocabTableListeners() {
         });
     }
 
-    const wrapper = document.querySelector('.vocab-table-wrapper');
+    const wrapper = document.querySelector('#vocab-summary-modal .vocab-table-wrapper') || document.querySelector('.vocab-table-wrapper');
     if (wrapper && !wrapper._hasScrollListener) {
         wrapper._hasScrollListener = true;
         wrapper.addEventListener('scroll', () => {
@@ -1104,9 +1572,11 @@ function studyCurrentFilteredVocab() {
         return;
     }
 
-    if (isDictionaryFullscreen) {
-        toggleDictionaryFullscreen(false);
-    }
+    closeVocabSummaryModal();
+    if (typeof closeItemPreviewModal === 'function') closeItemPreviewModal();
+    if (typeof closeKanjiModal === 'function') closeKanjiModal();
+    if (typeof closeKanjiLessonModal === 'function') closeKanjiLessonModal();
+    if (typeof closeKanjiDetailModal === 'function') closeKanjiDetailModal();
 
     const vocabMap = {};
     const usedKeys = new Set();
@@ -1210,7 +1680,7 @@ function exportVocabToMarkdown() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    showToast(`✅ Đã xuất file ${fileName}!`);
+    showDictToast(`✅ Đã xuất file ${fileName}!`);
 }
 
 function copyVocabMarkdown() {
@@ -1222,7 +1692,7 @@ function copyVocabMarkdown() {
     const mdContent = generateMarkdownContent();
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(mdContent).then(() => {
-            showToast("📋 Đã sao chép bảng Markdown vào bộ nhớ tạm!");
+            showDictToast("📋 Đã sao chép bảng Markdown vào bộ nhớ tạm!");
         }).catch(() => {
             fallbackCopy(mdContent);
         });
@@ -1238,5 +1708,5 @@ function fallbackCopy(text) {
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    showToast("📋 Đã sao chép bảng Markdown vào bộ nhớ tạm!");
+    showDictToast("📋 Đã sao chép bảng Markdown vào bộ nhớ tạm!");
 }

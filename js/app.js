@@ -706,105 +706,20 @@ function renderCounterSessionHtml() {
 
 function renderDictionarySessionHtml() {
     return `
-        <div class="session-card" id="session-card-dictionary">
-            <div class="session-header" onclick="toggleSessionAccordion('dictionary', event)">
+        <div class="session-card dict-session-launch-card" id="session-card-dictionary" onmousedown="if (typeof captureVocabSearchSelection === 'function') captureVocabSearchSelection()" onclick="openVocabSummaryModal(event)">
+            <div class="session-header">
                 <div class="sh-left">
                     <div class="sh-icon-box sh-icon-vocab">📖</div>
                     <div class="sh-title-group">
                         <div class="sh-title-row">
-                            <h3 class="sh-title">Tìm Kiếm Từ Vựng Theo Thứ Tự Từ Điển</h3>
+                            <h3 class="sh-title">Tìm Kiếm Từ Vựng &amp; Từ Điển A–Z</h3>
                             <span class="sh-meta-pill">A ➔ Y • 50 Âm あ ➔ わ • Hán-Việt</span>
                         </div>
-                        <p class="sh-subtitle">Tra cứu chính xác theo từ khóa &amp; duyệt theo Bảng chữ cái Tiếng Việt, Bảng 50 âm Tiếng Nhật hoặc Âm Hán-Việt</p>
+                        <p class="sh-subtitle">Mở cửa sổ tra cứu nhanh mọi lúc kể cả khi đang học Flashcard (Phím tắt Ctrl + K hoặc /)</p>
                     </div>
                 </div>
                 <div class="sh-right">
-                    <span class="sh-selection-badge active">Tra cứu &amp; Xuất MD</span>
-                    <span class="sh-chevron">▾</span>
-                </div>
-            </div>
-
-            <div class="session-body" id="session-body-dictionary" style="display: none;">
-                <div class="dictionary-workspace" id="dictionary-workspace">
-                    <!-- Hàng 1: Thanh tìm kiếm chính xác + Chế độ khớp + Nút toàn màn hình -->
-                    <div class="dict-top-bar">
-                        <div class="search-input-box dict-search-box" onclick="document.getElementById('vocab-search-input').focus()">
-                            <span class="search-icon">🔍</span>
-                            <input type="text" id="vocab-search-input" placeholder="Nhập từ cần tìm (VD: ăn, cá, điện thoại, sensei, 先生, せんせい...)" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="handleVocabSearchInput()">
-                            <button type="button" class="search-clear-btn" id="search-clear-btn" onclick="clearVocabSearch(event)" style="display: none;">✕</button>
-                        </div>
-
-                        <div class="dict-precision-switch">
-                            <button type="button" class="dict-prec-btn active" id="search-mode-exact" onclick="setSearchPrecisionMode('exact')" title="Chỉ hiển thị từ khớp đúng trọng tâm, loại bỏ từ nhiễu">🎯 Chính xác</button>
-                            <button type="button" class="dict-prec-btn" id="search-mode-broad" onclick="setSearchPrecisionMode('broad')" title="Hiển thị thêm các từ có chứa chuỗi ký tự liên quan">🔎 Mở rộng</button>
-                        </div>
-
-                        <button type="button" class="mini-pill-btn dict-fs-btn" id="dict-fullscreen-btn" onclick="toggleDictionaryFullscreen()">⛶ Toàn màn hình</button>
-                    </div>
-
-                    <!-- Hàng 2: 4 Tab Thứ Tự Từ Điển + Bộ lọc bài học -->
-                    <div class="dict-order-tabs-bar">
-                        <div class="dict-order-tabs">
-                            <button type="button" class="dict-order-tab active" id="dict-mode-btn-vn_az" onclick="setDictionaryOrderMode('vn_az')">
-                                🔤 Từ điển Việt (A ➔ Y)
-                            </button>
-                            <button type="button" class="dict-order-tab" id="dict-mode-btn-jp_50" onclick="setDictionaryOrderMode('jp_50')">
-                                🇯🇵 Từ điển Nhật (50 Âm あ ➔ わ)
-                            </button>
-                            <button type="button" class="dict-order-tab" id="dict-mode-btn-hv_az" onclick="setDictionaryOrderMode('hv_az')">
-                                🈴 Từ điển Hán-Việt (A ➔ Y)
-                            </button>
-                            <button type="button" class="dict-order-tab" id="dict-mode-btn-chapter" onclick="setDictionaryOrderMode('chapter')">
-                                📚 Theo Bài Học
-                            </button>
-                        </div>
-
-                        <div class="dict-chapter-select-wrap">
-                            <select id="vocab-chapter-filter" onchange="filterVocabTable(true)"></select>
-                        </div>
-                    </div>
-
-                    <!-- Hàng 3: Thanh Chỉ Mục Chữ Cái A-Y / Hàng 50 Âm あ-わ -->
-                    <div class="dict-alphabet-bar" id="dict-alphabet-bar"></div>
-                    <div class="dict-subkana-bar" id="dict-subkana-bar" style="display: none;"></div>
-
-                    <!-- Hàng 4: Thống kê kết quả & Thao tác Ôn tập / Xuất Markdown -->
-                    <div class="dict-actions-strip">
-                        <span id="vocab-count-info" class="count-badge-text">Đang tải dữ liệu...</span>
-                        <div class="toolbar-actions">
-                            <button type="button" class="btn-md-export" onclick="studyCurrentFilteredVocab()">
-                                🚀 Ôn danh sách này
-                            </button>
-                            <button type="button" class="btn-md-export" onclick="exportVocabToMarkdown()">
-                                📥 Xuất .MD
-                            </button>
-                            <button type="button" class="btn-md-copy" onclick="copyVocabMarkdown()">
-                                📋 Copy MD
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Hàng 5: Bảng dữ liệu Từ điển -->
-                    <div class="vocab-table-wrapper dict-table-wrapper">
-                        <table class="vocab-data-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 52px; text-align: center;">STT</th>
-                                    <th style="width: 120px;">Học phần</th>
-                                    <th>Tiếng Nhật</th>
-                                    <th>Nghĩa Tiếng Việt &amp; Hán-Việt</th>
-                                    <th style="width: 68px; text-align: center;">Đọc</th>
-                                </tr>
-                            </thead>
-                            <tbody id="vocab-table-body"></tbody>
-                        </table>
-
-                        <div class="vocab-empty-view" id="vocab-empty-state" style="display: none;">
-                            <div class="empty-emoji">🔍</div>
-                            <h4>Không tìm thấy mục từ phù hợp</h4>
-                            <p>Thử chuyển sang vần khác hoặc bật chế độ Mở rộng.</p>
-                        </div>
-                    </div>
+                    <span class="dict-launch-pill">🔍 Mở Tra cứu</span>
                 </div>
             </div>
         </div>
@@ -818,10 +733,17 @@ function renderDictionarySessionHtml() {
 function toggleSessionAccordion(sessionId, event) {
     if (event && event.target.closest('.sh-checkbox-wrap')) return;
 
+    if (sessionId === 'dictionary') {
+        if (typeof openVocabSummaryModal === 'function') {
+            openVocabSummaryModal(event);
+        }
+        return;
+    }
+
     const isOpening = activeSessionId !== sessionId;
     activeSessionId = isOpening ? sessionId : null;
 
-    ['vocab', 'kanji', 'katakana', 'thadongtu', 'dem', 'dictionary'].forEach(id => {
+    ['vocab', 'kanji', 'katakana', 'thadongtu', 'dem'].forEach(id => {
         const card = document.getElementById(`session-card-${id}`);
         const body = document.getElementById(`session-body-${id}`);
         const open = (id === activeSessionId);
@@ -834,18 +756,12 @@ function toggleSessionAccordion(sessionId, event) {
         applyVocabStageFilter();
     } else if (activeSessionId === 'kanji') {
         syncKanjiSubPanelsVisibility();
-    } else if (activeSessionId === 'dictionary') {
-        if (typeof renderDictionaryIndexBar === 'function') {
-            renderDictionaryIndexBar();
-            initVocabTableListeners();
-            filterVocabTable(true);
-        }
     }
 }
 
 function collapseAllSessions() {
     activeSessionId = null;
-    ['vocab', 'kanji', 'katakana', 'thadongtu', 'dem', 'dictionary'].forEach(id => {
+    ['vocab', 'kanji', 'katakana', 'thadongtu', 'dem'].forEach(id => {
         const card = document.getElementById(`session-card-${id}`);
         const body = document.getElementById(`session-body-${id}`);
         if (card) card.classList.remove('expanded');
@@ -1957,43 +1873,9 @@ function previewCounterGroup(groupId, event) {
 // ==========================================================================
 
 function renderChapterSelectOptions() {
-    const select = document.getElementById('vocab-chapter-filter');
-    if (!select) return;
-
-    let optionsHtml = '<option value="all">📚 Tất cả các bài (Toàn bộ từ vựng)</option>';
-    CHAPTERS_CONFIG.forEach(chapter => {
-        if (chapter.skipInSummary) return;
-        if (chapter.isKanjiPageGroup && Array.isArray(chapter.pagesConfig)) {
-            const totalChars = chapter.pagesConfig.reduce((acc, p) => acc + p.count, 0);
-            const totalPages = chapter.pagesConfig.length;
-            optionsHtml += `<optgroup label="${chapter.icon} ${chapter.title} (${totalChars} chữ)">`;
-            optionsHtml += `<option value="${chapter.id}">${chapter.icon} Tất cả ${totalPages} trang ${chapter.shortName} (${totalChars} chữ)</option>`;
-            chapter.pagesConfig.forEach(p => {
-                optionsHtml += `<option value="${p.id}">&nbsp;&nbsp;&nbsp;↳ ${p.shortName}: ${p.title} (${p.count} chữ)</option>`;
-            });
-            optionsHtml += `</optgroup>`;
-        } else if (chapter.isKanjiLessonGroup) {
-            const totalLessonWords = typeof KANJI_LESSONS_CONFIG !== 'undefined'
-                ? KANJI_LESSONS_CONFIG.reduce((acc, l) => acc + l.count, 0)
-                : 574;
-            const totalLessonCount = typeof KANJI_LESSONS_CONFIG !== 'undefined'
-                ? KANJI_LESSONS_CONFIG.length
-                : 17;
-            optionsHtml += `<optgroup label="📗 Từ Vựng Kanji Theo Bài (${totalLessonWords} từ)">`;
-            optionsHtml += `<option value="${chapter.id}">📗 Tất cả ${totalLessonCount} bài Kanji (${totalLessonWords} từ)</option>`;
-            if (typeof KANJI_LESSONS_CONFIG !== 'undefined') {
-                KANJI_LESSONS_CONFIG.forEach(l => {
-                    optionsHtml += `<option value="${l.id}">&nbsp;&nbsp;&nbsp;↳ ${l.shortName}: ${l.title} (${l.count} từ)</option>`;
-                });
-            }
-            optionsHtml += `</optgroup>`;
-        } else {
-            const prefix = chapter.isSpecial ? `${chapter.icon} ` : `${chapter.label} - `;
-            optionsHtml += `<option value="${chapter.id}">${prefix}${chapter.title}</option>`;
-        }
-    });
-
-    select.innerHTML = optionsHtml;
+    if (typeof populateVocabChapterFilterOptions === 'function') {
+        populateVocabChapterFilterOptions();
+    }
 }
 
 function showToast(message) {
@@ -2013,12 +1895,12 @@ function showToast(message) {
 }
 
 window.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        if (typeof isDictionaryFullscreen !== 'undefined' && isDictionaryFullscreen) {
-            toggleDictionaryFullscreen(false);
-            return;
-        }
+    // Khi Popup Tra cứu từ vựng đang mở, không xử lý phím tắt của trang / flashcard phía dưới
+    if (typeof isVocabSearchModalOpen === 'function' && isVocabSearchModalOpen()) {
+        return;
+    }
 
+    if (event.key === 'Escape') {
         const previewModal = document.getElementById('item-preview-modal');
         if (previewModal && previewModal.style.display !== 'none') {
             closeItemPreviewModal();
@@ -2036,12 +1918,6 @@ window.addEventListener('keydown', function(event) {
             closeKanjiLessonModal();
             return;
         }
-
-        const modal = document.getElementById('vocab-summary-modal');
-        if (modal && modal.style.display !== 'none') {
-            closeVocabSummaryModal();
-            return;
-        }
     }
 
     const targetTag = event.target ? event.target.tagName : '';
@@ -2050,8 +1926,6 @@ window.addEventListener('keydown', function(event) {
     }
     const previewModal = document.getElementById('item-preview-modal');
     if (previewModal && previewModal.style.display !== 'none') return;
-    const summaryModal = document.getElementById('vocab-summary-modal');
-    if (summaryModal && summaryModal.style.display !== 'none') return;
     const kanjiModal = document.getElementById('kanji-selector-modal');
     if (kanjiModal && kanjiModal.style.display !== 'none') return;
     const kanjiLessonModal = document.getElementById('kanji-lesson-modal');

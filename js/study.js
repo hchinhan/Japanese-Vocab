@@ -535,6 +535,7 @@ function handleActionClick(event) {
  * Xử lý click trên thẻ flashcard (cho phép bôi đen từ mà không vô tình lật thẻ)
  */
 function handleCardClick(event) {
+    if (typeof isVocabSearchModalOpen === 'function' && isVocabSearchModalOpen()) return;
     if (document.getElementById('end-screen').style.display === 'block') return;
     if (event.target.closest('button') || event.target.closest('input') || event.target.closest('.listen-prompt')) return;
 

@@ -11,10 +11,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Klee+One:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/style.css?v=20261118">
-    <link rel="stylesheet" href="css/kanji.css?v=20261118">
+    <link rel="stylesheet" href="css/style.css?v=20261120">
+    <link rel="stylesheet" href="css/kanji.css?v=20261120">
 
-    <!-- Kanji Data Files (N5 + N4 + Radical Tags) -->
+    <!-- Vocabulary & Kanji Data Files (Full Dictionary + Kanji N5/N4 + Radical Tags) -->
+    <script src="js/data/chuong1.js?v=20260903"></script>
+    <script src="js/data/chuong2.js?v=20260903"></script>
+    <script src="js/data/chuong3.js?v=20260903"></script>
+    <script src="js/data/chuong4.js?v=20260908"></script>
+    <script src="js/data/chuong5.js?v=20260908"></script>
+    <script src="js/data/chuong6.js?v=20260903"></script>
+    <script src="js/data/chuong7.js?v=20260903"></script>
+    <script src="js/data/chuong8.js?v=20260903"></script>
+    <script src="js/data/chuong9.js?v=20260903"></script>
+    <script src="js/data/chuong10.js?v=20260903"></script>
+    <script src="js/data/chuong11.js?v=20260903"></script>
+    <script src="js/data/chuong12.js?v=20260909"></script>
+    <script src="js/data/chuong13a.js?v=20260903"></script>
+    <script src="js/data/chuong13b.js?v=20260909"></script>
+    <script src="js/data/chuong15.js?v=20260903"></script>
+    <script src="js/data/chuong16.js?v=20260903"></script>
+    <script src="js/data/chuong17.js?v=20260914"></script>
+    <script src="js/data/chuong18.js?v=20260915"></script>
+    <script src="js/data/chuong19.js?v=20260917"></script>
+    <script src="js/data/chuong21.js?v=20261023"></script>
+    <script src="js/data/chuong22.js?v=20261023"></script>
+    <script src="js/data/chuong23.js?v=20261023"></script>
+    <script src="js/data/chuong24.js?v=20261023"></script>
+    <script src="js/data/chuong25.js?v=20261113"></script>
+    <script src="js/data/chuong26.js?v=20261113"></script>
+    <script src="js/data/dem.js?v=20260903"></script>
     <script src="js/data/kanji0.js?v=20260903"></script>
     <script src="js/data/kanji1.js?v=20260903"></script>
     <script src="js/data/kanji2.js?v=20260903"></script>
@@ -36,7 +62,9 @@
     <script src="js/data/kanji800_9.js?v=20261118"></script>
     <script src="js/data/kanji800_10.js?v=20261118"></script>
     <script src="js/data/kanji_lessons.js?v=20261116"></script>
-    <script src="js/data/chapters.js?v=20261119"></script>
+    <script src="js/data/kata.js?v=20261113"></script>
+    <script src="js/data/tha_dong_tu.js?v=20261116"></script>
+    <script src="js/data/chapters.js?v=20261119b"></script>
     <script src="js/data/kanji_radicals.js?v=20261118"></script>
 </head>
 <body>
@@ -52,8 +80,9 @@
             </div>
         </div>
         <div class="header-right">
-            <button type="button" class="nav-vocab-btn" onclick="switchKanjiTab('explorer')">
-                📖 Tra cứu Kanji &amp; Bộ
+            <button type="button" class="nav-vocab-btn" onmousedown="if (typeof captureVocabSearchSelection === 'function') captureVocabSearchSelection()" onclick="openVocabSummaryModal(event)" title="Tra cứu từ vựng &amp; Kanji nhanh mọi lúc (Ctrl + K hoặc /)">
+                <span>🔍 Tra từ điển</span>
+                <kbd class="nav-kbd-hint">Ctrl K</kbd>
             </button>
             <div class="header-status" id="kanji-selected-count-badge">
                 <span class="status-dot"></span> Đã chọn: <strong id="kanji-count-num">0</strong> mục (<strong id="kanji-char-count-num">0</strong> chữ)
@@ -334,7 +363,10 @@
         <div class="header-bar" id="flashcard-header">
             <button type="button" class="back-menu-btn" onclick="returnToMenu(event)">⬅ Menu Kanji</button>
             <div class="progress" id="progress">Câu 0/0</div>
-            <button type="button" id="star-btn" class="star-btn" onclick="toggleMark(event)" title="Đánh dấu câu này (Phím M)">☆</button>
+            <div class="flashcard-header-actions">
+                <button type="button" class="card-search-btn" onmousedown="event.stopPropagation(); if (typeof captureVocabSearchSelection === 'function') captureVocabSearchSelection()" ontouchstart="event.stopPropagation()" onclick="openVocabSummaryModal(event)" title="Tra nhanh từ vựng (Ctrl + K hoặc /)">🔍</button>
+                <button type="button" id="star-btn" class="star-btn" onclick="toggleMark(event)" title="Đánh dấu câu này (Phím M)">☆</button>
+            </div>
         </div>
 
         <div id="flashcard-content">
@@ -396,8 +428,9 @@
 
 <!-- Application Core Scripts -->
 <script src="js/audio.js?v=20260908"></script>
-<script src="js/study.js?v=20261118"></script>
-<script src="js/kanji-page.js?v=20261118"></script>
+<script src="js/study.js?v=20261120"></script>
+<script src="js/summary.js?v=20261120"></script>
+<script src="js/kanji-page.js?v=20261120"></script>
 
 </body>
 </html>

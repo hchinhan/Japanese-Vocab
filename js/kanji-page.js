@@ -1256,6 +1256,11 @@ function closeKanjiDetailModalOnOverlay(event) {
 // ==========================================================================
 
 window.addEventListener('keydown', function(event) {
+    // Khi Popup Tra cứu từ vựng đang mở, không xử lý phím tắt của trang / flashcard phía dưới
+    if (typeof isVocabSearchModalOpen === 'function' && isVocabSearchModalOpen()) {
+        return;
+    }
+
     if (event.key === 'Escape') {
         const detailModal = document.getElementById('kanji-detail-modal');
         if (detailModal && detailModal.style.display !== 'none') {

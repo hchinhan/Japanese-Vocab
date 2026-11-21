@@ -1517,7 +1517,7 @@ button, input, select, textarea, label {
     font-size: 0.85rem;
     font-weight: 600;
     box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-    z-index: 2000;
+    z-index: 2500;
     opacity: 0;
     transition: all 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     pointer-events: none;
@@ -3401,7 +3401,9 @@ button, input, select, textarea, label {
 }
 
 .dict-chapter-select-wrap {
-    min-width: 220px;
+    flex: 0 1 250px;
+    min-width: 190px;
+    max-width: 260px;
 }
 
 .dict-chapter-select-wrap select {
@@ -3415,6 +3417,9 @@ button, input, select, textarea, label {
     font-weight: 600;
     outline: none;
     cursor: pointer;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .dict-alphabet-bar,
@@ -3514,13 +3519,381 @@ button, input, select, textarea, label {
     vertical-align: middle;
 }
 
-/* ── Responsive Adjustments for Compact Sessions ── */
+/* ── 18.8 Global Vocabulary Search Popup, Header Shortcut, Card Button & FAB ── */
+.nav-kbd-hint {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    margin-left: 2px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    font-family: 'Outfit', var(--font-vietnamese);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+    color: #ffffff;
+}
+
+.flashcard-header-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-search-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid #a7f3d0;
+    background: #ecfdf5;
+    color: var(--primary);
+    font-size: 0.98rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.card-search-btn:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+    transform: translateY(-1px) scale(1.06);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.28);
+}
+
+.dict-session-launch-card {
+    cursor: pointer;
+    border-color: #a7f3d0;
+    background: linear-gradient(135deg, #ffffff 65%, #ecfdf5 100%);
+}
+
+.dict-session-launch-card:hover {
+    border-color: #059669;
+    box-shadow: 0 8px 24px rgba(5, 150, 105, 0.14);
+}
+
+.dict-launch-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: #ffffff;
+    font-size: 0.76rem;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 3px 10px rgba(5, 150, 105, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dict-session-launch-card:hover .dict-launch-pill {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(5, 150, 105, 0.34);
+}
+
+/* Universal Search Popup Modal Overlay */
+.vocab-popup-overlay {
+    z-index: 1500;
+    padding: 18px;
+    background: rgba(2, 44, 34, 0.42);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+}
+
+.vocab-popup-overlay.is-fullscreen {
+    padding: 10px;
+}
+
+.vocab-popup-card {
+    max-width: 1080px;
+    width: 100%;
+    height: min(88vh, 840px);
+    max-height: calc(100vh - 36px);
+    border-radius: 22px;
+    border: 1.5px solid #a7f3d0;
+    background: #ffffff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 28px 80px rgba(2, 44, 34, 0.28), 0 6px 20px rgba(5, 150, 105, 0.12);
+    transition: max-width 0.22s ease, height 0.22s ease, border-radius 0.22s ease;
+}
+
+.vocab-popup-card.is-fullscreen {
+    max-width: 100%;
+    width: 100%;
+    height: calc(100vh - 20px);
+    max-height: calc(100vh - 20px);
+    border-radius: 16px;
+}
+
+.vocab-popup-header {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 70%);
+    border-bottom: 1px solid #d1fae5;
+    flex-shrink: 0;
+}
+
+.vocab-popup-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+    border-radius: 12px;
+    background: #d1fae5;
+    border: 1px solid #a7f3d0;
+    flex-shrink: 0;
+}
+
+.vocab-popup-header .modal-heading {
+    font-size: 1.08rem;
+    line-height: 1.25;
+}
+
+.vocab-popup-header .modal-subheading {
+    font-size: 0.74rem;
+    margin-top: 1px;
+}
+
+.vocab-popup-header-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.vocab-popup-controls {
+    padding: 12px 20px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    background: #ffffff;
+    border-bottom: 1px solid #e2f5ec;
+    flex-shrink: 0;
+}
+
+.vocab-popup-table-wrap {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    background: #ffffff;
+}
+
+.vocab-popup-table-wrap .vocab-data-table th {
+    padding: 11px 16px;
+    background: #f8faf9;
+    border-bottom: 1.5px solid #d1fae5;
+}
+
+.vocab-popup-table-wrap .vocab-data-table td {
+    padding: 11px 16px;
+}
+
+.vocab-reset-filter-btn {
+    margin-top: 14px;
+    padding: 8px 16px;
+    background: #ecfdf5;
+    border: 1px solid #6ee7b7;
+    color: #047857;
+    font-weight: 700;
+}
+
+.vocab-reset-filter-btn:hover {
+    background: #059669;
+    border-color: #059669;
+    color: #ffffff;
+}
+
+/* Global Floating Quick-Search Action Button (FAB) */
+.global-search-fab {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 1200;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 17px;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid rgba(255, 255, 255, 0.35);
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    color: #ffffff;
+    font-family: var(--font-vietnamese);
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 28px rgba(5, 150, 105, 0.35), 0 2px 6px rgba(2, 44, 34, 0.14);
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease, opacity 0.2s ease;
+}
+
+.global-search-fab:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 14px 34px rgba(5, 150, 105, 0.45), 0 4px 10px rgba(2, 44, 34, 0.16);
+}
+
+.global-search-fab:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.global-search-fab.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.85) translateY(10px);
+}
+
+.gsf-icon {
+    font-size: 1.05rem;
+    line-height: 1;
+}
+
+.gsf-label {
+    line-height: 1;
+}
+
+/* ── Responsive Adjustments for Compact Sessions & Universal Search Popup ── */
 @media (max-width: 860px) {
     .mode-grid-compact {
         grid-template-columns: repeat(2, 1fr);
     }
     .subsessions-grid-3 {
         grid-template-columns: 1fr;
+    }
+    .nav-kbd-hint {
+        display: none;
+    }
+}
+
+@media (max-width: 680px) {
+    .vocab-popup-overlay {
+        padding: 8px;
+    }
+    .vocab-popup-card {
+        height: calc(100dvh - 16px);
+        max-height: calc(100dvh - 16px);
+        border-radius: 18px;
+    }
+    .vocab-popup-header {
+        padding: 11px 14px;
+    }
+    .vocab-popup-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 1.05rem;
+    }
+    .vocab-popup-header .modal-heading {
+        font-size: 0.96rem;
+    }
+    .vocab-popup-header .modal-subheading {
+        display: none;
+    }
+    .vocab-popup-header-actions .dict-fs-btn {
+        display: none;
+    }
+    .vocab-popup-controls {
+        padding: 10px 12px 8px;
+        gap: 7px;
+    }
+    .dict-search-box {
+        min-width: 100%;
+    }
+    .dict-precision-switch {
+        width: 100%;
+        justify-content: stretch;
+    }
+    .dict-prec-btn {
+        flex: 1;
+        text-align: center;
+    }
+    .dict-order-tabs-bar {
+        padding: 6px 8px;
+        gap: 7px;
+    }
+    .dict-order-tabs {
+        width: 100%;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .dict-order-tabs::-webkit-scrollbar,
+    .dict-alphabet-bar::-webkit-scrollbar,
+    .dict-subkana-bar::-webkit-scrollbar {
+        display: none;
+        height: 0;
+    }
+    .dict-order-tab {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 5px 10px;
+        font-size: 0.72rem;
+    }
+    .dict-chapter-select-wrap {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+    .dict-alphabet-bar,
+    .dict-subkana-bar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        padding: 6px 8px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .dict-idx-pill {
+        flex-shrink: 0;
+    }
+    .dict-actions-strip {
+        gap: 6px;
+    }
+    .dict-actions-strip .toolbar-actions {
+        display: flex;
+        width: 100%;
+        justify-content: flex-start;
+        margin-left: 0;
+        flex-wrap: nowrap;
+        gap: 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .dict-actions-strip .toolbar-actions::-webkit-scrollbar {
+        display: none;
+        height: 0;
+    }
+    .dict-actions-strip .btn-md-export,
+    .dict-actions-strip .btn-md-copy {
+        padding: 6px 10px;
+        font-size: 0.71rem;
+        flex-shrink: 0;
+    }
+    .vocab-popup-table-wrap .vocab-data-table th:first-child,
+    .vocab-popup-table-wrap .vocab-data-table td.td-index {
+        display: none;
+    }
+    .vocab-popup-table-wrap .vocab-data-table th,
+    .vocab-popup-table-wrap .vocab-data-table td {
+        padding: 9px 10px;
+    }
+    .global-search-fab {
+        right: 14px;
+        bottom: 14px;
+        padding: 12px;
+        width: 48px;
+        height: 48px;
+        justify-content: center;
+    }
+    .global-search-fab .gsf-label {
+        display: none;
     }
 }
 
